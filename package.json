@@ -1,0 +1,31 @@
+{
+  "name": "react-components-utils",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "antd": "^3.6.6",
+    "firebase": "^5.2.0",
+    "react": "^16.4.1",
+    "react-dom": "^16.4.1",
+    "react-firebaseui": "^3.0.4",
+    "react-router-dom": "^4.3.1",
+    "react-scripts-ts": "2.16.0"
+  },
+  "scripts": {
+    "start": "react-app-rewired start --scripts-version react-scripts-ts",
+    "build": "react-app-rewired build --scripts-version react-scripts-ts",
+    "test": "react-app-rewired test --env=jsdom --watchAll --scripts-version react-scripts-ts",
+    "eject": "react-app-rewired eject --scripts-version react-scripts-ts"
+  },
+  "devDependencies": {
+    "@types/jest": "^23.1.5",
+    "@types/node": "^10.5.2",
+    "@types/react": "^16.4.6",
+    "@types/react-dom": "^16.0.6",
+    "@types/react-router-dom": "^4.2.7",
+    "react-app-rewire-less": "^2.1.2",
+    "react-app-rewired": "^1.5.2",
+    "ts-import-plugin": "^1.5.4",
+    "typescript": "^2.9.2"
+  }
+}
