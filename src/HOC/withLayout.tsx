@@ -1,7 +1,7 @@
 import { Layout, Affix } from 'antd';
 import * as React from 'react';
 import getComponentDisplayName from './utils';
-import NavBar from '../shared/ui/navbar2';
+import NavBar from '../shared/ui/navbar';
 const { Content, Footer } = Layout;
 
 interface State {

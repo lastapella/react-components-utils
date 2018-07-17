@@ -9,9 +9,12 @@ interface PassedProps extends React.Props<any> {
 
 const getFirebaseUser = async (firebaseAuth: firebase.auth.Auth) => {
 	const p : Promise<firebase.User> =  new Promise((resolve) => {
-		firebaseAuth.onAuthStateChanged((u: firebase.User) => resolve(u));
+		firebaseAuth.onAuthStateChanged((u: firebase.User) => {
+			console.log("onAUthStatechanged :: ", u);
+			resolve(u);
+		})
 	});
-	return p;
+	return p.then(u=>u);
 };
 
 export default (

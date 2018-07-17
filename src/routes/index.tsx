@@ -4,6 +4,7 @@ import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import HomeComponent from '../modules/home';
 import withLayout from '../HOC/withLayout';
 import LoginComponent from '../modules/login';
+import LogoutComponent from '../modules/logout';
 
 // import { RegisterConnector } from "../modules/register/RegisterConnector";
 // import { LoginConnector } from "../modules/login/LoginConnector";
@@ -32,6 +33,8 @@ const SwitchRoutes = () => (
 		<Route exact={true} path="/topic" component={Topic} />
 		<Route exact={true} path="/autre" component={Autre} />
 		<Route exact={true} path="/login" component={LoginComponent} />
+		{/*  tslint:disable-next-line:jsx-no-lambda */}
+		<Route exact={true} path="/logout" component={LogoutComponent} />
 	</Switch>
 );
 const SwitchRoutesWithLayout = withLayout(SwitchRoutes);
