@@ -5,11 +5,14 @@
   "dependencies": {
     "antd": "^3.6.6",
     "firebase": "^5.2.0",
+    "formik": "^1.0.1",
+    "moment": "^2.22.2",
     "react": "^16.4.1",
     "react-dom": "^16.4.1",
     "react-firebaseui": "^3.0.4",
     "react-router-dom": "^4.3.1",
-    "react-scripts-ts": "2.16.0"
+    "react-scripts-ts": "2.16.0",
+    "yup": "^0.25.1"
   },
   "scripts": {
     "start": "react-app-rewired start --scripts-version react-scripts-ts",

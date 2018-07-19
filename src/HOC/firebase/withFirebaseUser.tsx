@@ -2,10 +2,10 @@ import * as React from 'react';
 import { FirebaseContext } from './firebaseContext';
 import getComponentDisplayName from './../utils';
 
-interface PassedProps extends React.Props<any> {
-	firebaseUser: firebase.User | Promise<firebase.User>;
-	firebaseCurrentUser? : firebase.User | null
-}
+// interface PassedProps extends React.Props<any> {
+// 	firebaseUser: firebase.User | Promise<firebase.User>;
+// 	firebaseCurrentUser? : firebase.User | null
+// }
 
 const getFirebaseUser = async (firebaseAuth: firebase.auth.Auth) => {
 	const p : Promise<firebase.User> =  new Promise((resolve) => {
@@ -18,7 +18,7 @@ const getFirebaseUser = async (firebaseAuth: firebase.auth.Auth) => {
 };
 
 export default (
-	ComposedComponent: React.ComponentClass<PassedProps> | React.SFC<PassedProps>
+	ComposedComponent: React.ComponentClass<any> | React.SFC<any>
 ) => {
 	class WithFirebaseUser extends React.Component<any, any> {
 		public static displayName = `WithFirebaseUser(${getComponentDisplayName(
@@ -30,8 +30,8 @@ export default (
 					{firebaseInst => (
 						<ComposedComponent
 							{...this.props}
-							firebaseUser={getFirebaseUser(firebaseInst.auth())}
-							firebaseCurrentUser={firebaseInst.auth().currentUser}
+							user={getFirebaseUser(firebaseInst.auth())} // Observer
+							currentUser={firebaseInst.auth().currentUser} // Variable
 						/>
 					)}
 				</FirebaseContext.Consumer>

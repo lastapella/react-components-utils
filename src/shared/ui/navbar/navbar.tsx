@@ -1,7 +1,6 @@
 import * as React from 'react';
-import { Menu } from 'antd';
+import { Menu, Icon } from 'antd';
 import { Link } from 'react-router-dom';
-import withFirebaseUser from '../../HOC/firebase/withFirebaseUser';
 
 const { SubMenu } = Menu;
 interface LinkType {
@@ -16,12 +15,21 @@ interface NavBarState {
 	activeKeys: string[];
 	linksLeft: LinkType[];
 	linksRight: LinkType[];
+	user?: firebase.UserInfo;
 }
 
 interface NavBarProps extends React.Props<any> {
-	firebaseUser: Promise<firebase.User>;
-	firebaseCurrentUser: firebase.User;
+	user: Promise<firebase.User>;
+	currentUser: firebase.User;
 }
+const userSubMenuTitle = (username: string) => {
+	return (
+		<React.Fragment>
+			<Icon style={{ color: '#1890ff', fontSize: 28 }} type="user" />
+			{username}
+		</React.Fragment>
+	);
+};
 
 const linksLeftInit: LinkType[] = [
 	{ to: '/', label: 'Home', key: 'home' },
@@ -51,6 +59,11 @@ const linksRightNoUser = [
 
 const linksRightWithuser = [
 	{
+		to: '/profile',
+		label: 'profile',
+		key: 'profile'
+	},
+	{
 		to: '/logout',
 		label: 'Logout',
 		key: 'logout'
@@ -70,8 +83,8 @@ const initActiveKeys = (
 class NavBar extends React.Component<NavBarProps, NavBarState> {
 	public constructor(props: any) {
 		super(props);
-		const { firebaseCurrentUser } = props;
-		if (firebaseCurrentUser) {
+		const { currentUser } = props;
+		if (currentUser) {
 			this.state = {
 				activeKeys: initActiveKeys(
 					window.location.pathname,
@@ -79,7 +92,8 @@ class NavBar extends React.Component<NavBarProps, NavBarState> {
 					linksRightWithuser
 				),
 				linksLeft: linksLeftInit,
-				linksRight: linksRightWithuser
+				linksRight: linksRightWithuser,
+				user: currentUser
 			};
 		} else {
 			this.state = {
@@ -89,26 +103,23 @@ class NavBar extends React.Component<NavBarProps, NavBarState> {
 					linksRightNoUser
 				),
 				linksLeft: linksLeftInit,
-				linksRight: linksRightNoUser
+				linksRight: linksRightNoUser,
 			};
 		}
 	}
 
 	public async componentDidMount() {
-		console.log(this.props.firebaseUser);
-		const firebaseUser = await this.props.firebaseUser;
-		console.log(this.props.firebaseUser);
-		if (firebaseUser) {
-			console.log('USER SIGNED IN 2');
-			console.log(firebaseUser);
+		const user = await this.props.user;
+		if (user) {
 			this.setState(() => ({
-				linksRight: linksRightWithuser
+				linksRight: linksRightWithuser,
+				user
 			}));
 		} else {
 			// No user is signed in.
-			console.log('NO USER SIGNED IN 2');
 			this.setState(() => ({
-				linksRight: linksRightNoUser
+				linksRight: linksRightNoUser,
+				user: undefined
 			}));
 		}
 	}
@@ -148,14 +159,12 @@ class NavBar extends React.Component<NavBarProps, NavBarState> {
 				onClick={this.linkClicked.bind(this, linkElement.key)}
 				to={linkElement.to ? linkElement.to : ''}
 			>
-				{' '}
 				{linkElement.label}
 			</Link>
 		</Menu.Item>
 	);
 
 	public renderLinks = (linksTree: LinkType[], other?: any): JSX.Element[] => {
-		console.log("RENDERLINKS");
 		return linksTree.map(link => {
 			if (link.children) {
 				return (
@@ -167,15 +176,14 @@ class NavBar extends React.Component<NavBarProps, NavBarState> {
 				return this.renderLink(link, other);
 			}
 		});
-	}
+	};
 	public linkClicked = (key: string) => {
-		console.log(key);
 		this.setState(() => ({
 			activeKeys: [key]
 		}));
 	};
 	public render() {
-		const { activeKeys, linksLeft, linksRight } = this.state;
+		const { activeKeys, linksLeft, linksRight, user } = this.state;
 		console.log(this.props);
 		console.log('RNEDER');
 		console.log(this.state);
@@ -187,9 +195,19 @@ class NavBar extends React.Component<NavBarProps, NavBarState> {
 				style={{ lineHeight: '64px' }}
 			>
 				{this.renderLinks(linksLeft)}
-				{this.renderLinks(linksRight, { style: { float: 'right' } })}
+				{user  ? (
+					<SubMenu
+						key="userSubMenu"
+						title={userSubMenuTitle(user.displayName as string)}
+						style={{ float: 'right' }}
+					>
+						{this.renderLinks(linksRight)}
+					</SubMenu>
+				) : (
+					this.renderLinks(linksRight, { style: { float: 'right' } })
+				)}
 			</Menu>
 		);
 	}
 }
-export default withFirebaseUser(NavBar);
+export default NavBar;
