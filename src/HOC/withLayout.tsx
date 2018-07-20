@@ -1,4 +1,4 @@
-import { Layout, Affix } from 'antd';
+import { Layout } from 'antd';
 import * as React from 'react';
 import getComponentDisplayName from './utils';
 import NavBar from '../shared/ui/navbar/navBarWithFirebase';
@@ -19,9 +19,8 @@ const withLayout = (ComposedComponent: React.ComponentClass | React.SFC) => {
 				<Layout className="layout">
 					{/* <Header> */}
 					{/* <div className="logo" /> */}
-					<Affix>
-						<NavBar />
-					</Affix>
+
+					<NavBar />
 					{/* </Header> */}
 					<Content style={{ padding: '0 50px', height: '1000px' }}>
 						<div style={{ background: '#fff', padding: 24, minHeight: 280 }}>

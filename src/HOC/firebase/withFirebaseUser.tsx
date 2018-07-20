@@ -18,7 +18,7 @@ const getFirebaseUser = async (firebaseAuth: firebase.auth.Auth) => {
 };
 
 export default (
-	ComposedComponent: React.ComponentClass<any> | React.SFC<any>
+	ComposedComponent: React.ComponentType<any> 
 ) => {
 	class WithFirebaseUser extends React.Component<any, any> {
 		public static displayName = `WithFirebaseUser(${getComponentDisplayName(

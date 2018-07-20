@@ -6,6 +6,7 @@ import withLayout from '../HOC/withLayout';
 import LoginComponent from '../modules/login';
 import LogoutComponent from '../modules/logout';
 import ProfileEditComponent from '../modules/user_profile_edit';
+import ClearanceFormComponent from '../modules/clearance_edit/databaseConnector';
 
 // import { RegisterConnector } from "../modules/register/RegisterConnector";
 // import { LoginConnector } from "../modules/login/LoginConnector";
@@ -16,11 +17,11 @@ const Autre = () => (
 	</div>
 );
 
-const About = () => (
-	<div>
-		<h2>About</h2>
-	</div>
-);
+// const About = () => (
+// 	<div>
+// 		<h2>About</h2>
+// 	</div>
+// );
 
 const Topic = () => (
 	<div>
@@ -30,7 +31,7 @@ const Topic = () => (
 const SwitchRoutes = () => (
 	<Switch>
 		<Route exact={true} path="/" component={HomeComponent} />
-		<Route exact={true} path="/about" component={About} />
+		<Route exact={true} path="/parkinguser/:id" component={ClearanceFormComponent} />
 		<Route exact={true} path="/topic" component={Topic} />
 		<Route exact={true} path="/autre" component={Autre} />
 		<Route exact={true} path="/login" component={LoginComponent} />

@@ -22,7 +22,6 @@ export const SelectField: React.SFC<
 		setFieldTouched(field.name);
 	};
 
-	console.log(props.children);
 	return (
 		<FormItem
 			{...props}

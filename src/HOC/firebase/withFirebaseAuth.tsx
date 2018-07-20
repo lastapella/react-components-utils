@@ -10,7 +10,7 @@ interface PassedProps extends React.Props<any> {
 	firebaseAuth: firebase.auth.Auth;
 }
 export default (
-	ComposedComponent: React.ComponentClass<PassedProps> | React.SFC<PassedProps>
+	ComposedComponent: React.ComponentType<PassedProps>
 ) => {
 	class WithFirebaseAuth extends React.Component<any, any> {
 		public static displayName = `WithFirebase(${getComponentDisplayName(

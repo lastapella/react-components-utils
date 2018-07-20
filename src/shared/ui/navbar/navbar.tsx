@@ -1,6 +1,8 @@
 import * as React from 'react';
-import { Menu, Icon } from 'antd';
+import { Menu, Icon, Affix } from 'antd';
 import { Link } from 'react-router-dom';
+
+import logo from '../../../modules/home/logo.svg';
 
 const { SubMenu } = Menu;
 interface LinkType {
@@ -77,7 +79,7 @@ const initActiveKeys = (
 ) =>
 	linksLeft
 		.concat(linksRight)
-		.filter(link => window.location.pathname === link.to)
+		.filter(link => pathname === link.to)
 		.map(link => link.key);
 
 class NavBar extends React.Component<NavBarProps, NavBarState> {
@@ -103,7 +105,7 @@ class NavBar extends React.Component<NavBarProps, NavBarState> {
 					linksRightNoUser
 				),
 				linksLeft: linksLeftInit,
-				linksRight: linksRightNoUser,
+				linksRight: linksRightNoUser
 			};
 		}
 	}
@@ -113,12 +115,22 @@ class NavBar extends React.Component<NavBarProps, NavBarState> {
 		if (user) {
 			this.setState(() => ({
 				linksRight: linksRightWithuser,
+				activeKeys: initActiveKeys(
+					window.location.pathname,
+					linksLeftInit,
+					linksRightWithuser
+				),
 				user
 			}));
 		} else {
 			// No user is signed in.
 			this.setState(() => ({
 				linksRight: linksRightNoUser,
+				activeKeys: initActiveKeys(
+					window.location.pathname,
+					linksLeftInit,
+					linksRightNoUser
+				),
 				user: undefined
 			}));
 		}
@@ -188,25 +200,28 @@ class NavBar extends React.Component<NavBarProps, NavBarState> {
 		console.log('RNEDER');
 		console.log(this.state);
 		return (
-			<Menu
-				theme="light"
-				mode="horizontal"
-				defaultSelectedKeys={activeKeys}
-				style={{ lineHeight: '64px' }}
-			>
-				{this.renderLinks(linksLeft)}
-				{user  ? (
-					<SubMenu
-						key="userSubMenu"
-						title={userSubMenuTitle(user.displayName as string)}
-						style={{ float: 'right' }}
-					>
-						{this.renderLinks(linksRight)}
-					</SubMenu>
-				) : (
-					this.renderLinks(linksRight, { style: { float: 'right' } })
-				)}
-			</Menu>
+			<Affix>
+				<img src={logo} width="64" height="64" style={{ float: 'left' }} />
+				<Menu
+					theme="light"
+					mode="horizontal"
+					defaultSelectedKeys={activeKeys}
+					style={{ lineHeight: '64px' }}
+				>
+					{this.renderLinks(linksLeft)}
+					{user ? (
+						<SubMenu
+							key="userSubMenu"
+							title={userSubMenuTitle(user.displayName as string)}
+							style={{ float: 'right' }}
+						>
+							{this.renderLinks(linksRight)}
+						</SubMenu>
+					) : (
+						this.renderLinks(linksRight, { style: { float: 'right' } })
+					)}
+				</Menu>
+			</Affix>
 		);
 	}
 }
