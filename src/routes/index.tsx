@@ -6,7 +6,7 @@ import withLayout from '../HOC/withLayout';
 import LoginComponent from '../modules/login';
 import LogoutComponent from '../modules/logout';
 import ProfileEditComponent from '../modules/user_profile_edit';
-import ClearanceFormComponent from '../modules/clearance_edit/databaseConnector';
+import ClearanceFormComponent from '../modules/parking_user_edit/databaseConnector';
 
 // import { RegisterConnector } from "../modules/register/RegisterConnector";
 // import { LoginConnector } from "../modules/login/LoginConnector";
