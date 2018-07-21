@@ -1,31 +1,31 @@
 import * as React from 'react';
 import * as firebase from 'firebase';
-import { FirebaseContext } from './firebaseContext';
+import {
+	firebaseUIConfig,
+	firebaseApp,
+	IFirebaseUIConfig
+} from './firebaseContext';
 import getComponentDisplayName from './../utils';
 // tslint:disable-next-line:no-var-requires
 // const StyledFirebaseAuth = require('react-firebaseui/StyledFirebaseAuth')
 // 	.default;
 
-interface PassedProps extends React.Props<any> {
+export interface InjectedProps extends React.Props<any> {
 	firebaseAuth: firebase.auth.Auth;
+	firebaseUIConfig: IFirebaseUIConfig;
 }
-export default (
-	ComposedComponent: React.ComponentType<PassedProps>
-) => {
+export default (ComposedComponent: React.ComponentType<InjectedProps>) => {
 	class WithFirebaseAuth extends React.Component<any, any> {
 		public static displayName = `WithFirebase(${getComponentDisplayName(
 			ComposedComponent
 		)})`;
 		public render() {
 			return (
-				<FirebaseContext.Consumer>
-					{firebaseInst => (
-						<ComposedComponent
-							{...this.props}
-							firebaseAuth={firebaseInst.auth()}
-						/>
-					)}
-				</FirebaseContext.Consumer>
+				<ComposedComponent
+					{...this.props}
+					firebaseAuth={firebaseApp.auth()}
+					firebaseUIConfig={firebaseUIConfig}
+				/>
 			);
 		}
 	}

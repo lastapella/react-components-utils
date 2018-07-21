@@ -1,16 +1,17 @@
 import * as React from 'react';
 // import { Redirect } from 'react-router';
 import { Spin } from 'antd';
-import withFirebaseAuth from '../../HOC/firebase/withFirebaseAuth';
+import withFirebaseAuth, {
+	InjectedProps
+} from '../../shared/HOC/firebase/withFirebaseAuth';
 
 // import {Redirect } from 'react-router-dom';
 
-interface LogoutProps {
-	firebaseAuth: firebase.auth.Auth;
-}
-
-class LogoutComponent extends React.Component<LogoutProps, any> {
-	public constructor(props: LogoutProps) {
+class LogoutComponent extends React.Component<
+	React.Props<any> & InjectedProps,
+	any
+> {
+	public constructor(props: React.Props<any> & InjectedProps) {
 		super(props);
 		this.state = {
 			signedOut: false
@@ -23,7 +24,19 @@ class LogoutComponent extends React.Component<LogoutProps, any> {
 		}, 1000);
 	}
 	public render() {
-		return <div style={{display: 'flex', height:'300px', justifyContent:'center', alignItems:'center'}}> <Spin size="large"/></div>;
+		return (
+			<div
+				style={{
+					display: 'flex',
+					height: '300px',
+					justifyContent: 'center',
+					alignItems: 'center'
+				}}
+			>
+				{' '}
+				<Spin size="large" />
+			</div>
+		);
 	}
 }
 export default withFirebaseAuth(LogoutComponent);

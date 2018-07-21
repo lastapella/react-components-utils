@@ -1,4 +1,4 @@
 import FormComponent from './form';
-import withFirebaseDatabase from '../../HOC/firebase/withFirebaseDatabase';
+import withFirebaseDatabase from '../../shared/HOC/firebase/withFirebaseDatabase';
 
 export default withFirebaseDatabase(FormComponent);

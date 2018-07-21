@@ -1,9 +1,14 @@
 import * as React from 'react';
-import config from '../../firebase.config';
+import config from '../../../firebase.config';
 import * as firebase from 'firebase';
 
 export const firebaseApp = firebase.initializeApp(config);
 
+export interface IFirebaseUIConfig {
+	signInFlow: string;
+	signInSuccessUrl: string;
+	signInOptions: string[];
+}
 export const firebaseUIConfig = {
 	// Popup signin flow rather than redirect flow.
 	signInFlow: 'popup',
