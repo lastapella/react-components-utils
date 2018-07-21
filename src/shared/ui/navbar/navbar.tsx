@@ -13,29 +13,20 @@ interface LinkType {
 	props?: { [key: string]: any };
 }
 
-interface NavBarState {
-	activeKeys: string[];
-	linksLeft: LinkType[];
-	linksRight: LinkType[];
-	user?: firebase.UserInfo;
-}
+// interface NavBarState {
+// 	activeKeys: string[];
+// 	linksLeft: LinkType[];
+// 	linksRight: LinkType[];
+// 	user?: firebase.UserInfo;
+// }
 
-interface NavBarProps extends React.Props<any> {
-	user: Promise<firebase.User>;
-	currentUser: firebase.User;
-}
-const userSubMenuTitle = (username: string) => {
-	return (
-		<React.Fragment>
-			<Icon style={{ color: '#1890ff', fontSize: 28 }} type="user" />
-			{username}
-		</React.Fragment>
-	);
-};
+// interface NavBarProps extends React.Props<any> {
+// 	user: Promise<firebase.User>;
+// }
 
 const linksLeftInit: LinkType[] = [
 	{ to: '/', label: 'Home', key: 'home' },
-	{ to: '/About', label: 'About', key: 'about' },
+	{ to: '/parkinguser', label: 'About', key: 'about' },
 	{
 		to: '/topic',
 		label: 'Topic',
@@ -72,6 +63,15 @@ const linksRightWithuser = [
 	}
 ];
 
+const userSubMenuTitle = (username: string) => {
+	return (
+		<React.Fragment>
+			<Icon style={{ color: '#1890ff', fontSize: 28 }} type="user" />
+			{username}
+		</React.Fragment>
+	);
+};
+
 const initActiveKeys = (
 	pathname: string,
 	linksLeft: LinkType[],
@@ -82,89 +82,7 @@ const initActiveKeys = (
 		.filter(link => pathname === link.to)
 		.map(link => link.key);
 
-class NavBar extends React.Component<NavBarProps, NavBarState> {
-	public constructor(props: any) {
-		super(props);
-		const { currentUser } = props;
-		if (currentUser) {
-			this.state = {
-				activeKeys: initActiveKeys(
-					window.location.pathname,
-					linksLeftInit,
-					linksRightWithuser
-				),
-				linksLeft: linksLeftInit,
-				linksRight: linksRightWithuser,
-				user: currentUser
-			};
-		} else {
-			this.state = {
-				activeKeys: initActiveKeys(
-					window.location.pathname,
-					linksLeftInit,
-					linksRightNoUser
-				),
-				linksLeft: linksLeftInit,
-				linksRight: linksRightNoUser
-			};
-		}
-	}
-
-	public async componentDidMount() {
-		const user = await this.props.user;
-		if (user) {
-			this.setState(() => ({
-				linksRight: linksRightWithuser,
-				activeKeys: initActiveKeys(
-					window.location.pathname,
-					linksLeftInit,
-					linksRightWithuser
-				),
-				user
-			}));
-		} else {
-			// No user is signed in.
-			this.setState(() => ({
-				linksRight: linksRightNoUser,
-				activeKeys: initActiveKeys(
-					window.location.pathname,
-					linksLeftInit,
-					linksRightNoUser
-				),
-				user: undefined
-			}));
-		}
-	}
-
-	// public async componentDidUpdate(prevProps: NavBarProps) {
-	// 	console.log(this.props);
-	// 	console.log(prevProps);
-	// 	const firebaseUser = await this.props.firebaseUser;
-	// 	const prevFirebaseUser = await prevProps.firebaseCurrentUser;
-	// 	console.log(firebaseUser);
-	// 	console.log(prevFirebaseUser);
-	// 	if (firebaseUser) {
-	// 		if (
-	// 			prevFirebaseUser.uid &&
-	// 			prevFirebaseUser.uid !== firebaseUser.uid
-	// 		) {
-	// 			console.log('USER SIGNED IN 2 will receib=ve props');
-	// 			console.log(firebaseUser);
-	// 			this.setState(() => ({
-	// 				linksRight: linksRightWithuser
-	// 			}));
-	// 		}
-	// 	} else {
-	// 		// No user is signed in.
-	// 		// console.log("ELSE", prevFirebaseUser.uid);
-	// 		if (prevFirebaseUser && prevFirebaseUser.uid) {
-	// 			console.log('NO USER SIGNED IN 2 will receive props');
-	// 			this.setState(() => ({
-	// 				linksRight: linksRightNoUser
-	// 			}));
-	// 		}
-	// 	}
-	// }
+class NavBar extends React.Component<any, any> {
 	public renderLink = (linkElement: LinkType, other: any) => (
 		<Menu.Item key={linkElement.key} {...other}>
 			<Link
@@ -195,10 +113,15 @@ class NavBar extends React.Component<NavBarProps, NavBarState> {
 		}));
 	};
 	public render() {
-		const { activeKeys, linksLeft, linksRight, user } = this.state;
-		console.log(this.props);
-		console.log('RNEDER');
-		console.log(this.state);
+		// const { activeKeys, linksLeft, linksRight, user } = this.state;
+		const { user } = this.props;
+		const linksLeft = linksLeftInit;
+		const linksRight = user ? linksRightWithuser : linksRightNoUser;
+		const activeKeys = initActiveKeys(
+			window.location.pathname,
+			linksLeft,
+			linksRight
+		);
 		return (
 			<Affix>
 				<img src={logo} width="64" height="64" style={{ float: 'left' }} />

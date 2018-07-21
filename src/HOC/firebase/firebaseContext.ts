@@ -2,7 +2,7 @@ import * as React from 'react';
 import config from '../../firebase.config';
 import * as firebase from 'firebase';
 
-firebase.initializeApp(config);
+export const firebaseApp = firebase.initializeApp(config);
 
 export const firebaseUIConfig = {
 	// Popup signin flow rather than redirect flow.

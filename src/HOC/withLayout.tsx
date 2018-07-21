@@ -8,7 +8,7 @@ interface State {
 	activeKeys: string[];
 }
 
-const withLayout = (ComposedComponent: React.ComponentClass | React.SFC) => {
+const withLayout = (ComposedComponent: React.ComponentType<any>) => {
 	class WithLayout extends React.Component<any, State> {
 		public static displayName = `WithLayout(${getComponentDisplayName(
 			ComposedComponent

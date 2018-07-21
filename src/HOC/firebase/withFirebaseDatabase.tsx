@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { FirebaseContext } from './firebaseContext';
+import { firebaseApp } from './firebaseContext';
 import getComponentDisplayName from './../utils';
 import { addRef, updateRef, readRef } from './utils';
 
@@ -45,14 +45,10 @@ export default <P extends InjectedProps>(
 		)})`;
 		public render() {
 			return (
-				<FirebaseContext.Consumer>
-					{firebaseInst => (
-						<ComposedComponent
-							{...this.props}
-							databaseAction={actions(firebaseInst.database())}
-						/>
-					)}
-				</FirebaseContext.Consumer>
+				<ComposedComponent
+					{...this.props}
+					databaseAction={actions(firebaseApp.database())}
+				/>
 			);
 		}
 	}
