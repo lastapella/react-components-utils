@@ -2,13 +2,13 @@ import * as React from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 
 import HomeComponent from '../modules/home';
-import withLayout from '../HOC/withLayout';
+import withLayout from '../shared/HOC/withLayout';
 import LoginComponent from '../modules/login';
 import LogoutComponent from '../modules/logout';
 import ProfileEditComponent from '../modules/user_profile_edit';
 import ParkingUserFormComponent from '../modules/parking_user_edit/databaseConnector';
 import PrivateRoute from './privateRoute';
-import withFirebaseUser from '../HOC/firebase/withFirebaseUser';
+import withFirebaseUserContext from '../shared/HOC/firebase/withFirebaseUserContext';
 // import { RegisterConnector } from "../modules/register/RegisterConnector";
 // import { LoginConnector } from "../modules/login/LoginConnector";
 
@@ -31,67 +31,67 @@ const Topic = () => (
 );
 const SwitchRoutes = ({ isAuthenticated }: { isAuthenticated: boolean }) => (
 	<React.Fragment>
-	{isAuthenticated}
-	<Switch>
-		<PrivateRoute
-			isAuthenticated={isAuthenticated}
-			exact={true}
-			path="/"
-			component={HomeComponent}
-		/>
-		<PrivateRoute
-			isAuthenticated={isAuthenticated}
-			// exact={true}
-			path="/parkinguser/:id"
-			component={ParkingUserFormComponent}
-		/>
-		<PrivateRoute
-			isAuthenticated={isAuthenticated}
-			// exact={true}
-			path="/parkinguser"
-			component={ParkingUserFormComponent}
-		/>
-		<PrivateRoute
-			isAuthenticated={isAuthenticated}
-			exact={true}
-			path="/topic"
-			component={Topic}
-		/>
-		<PrivateRoute
-			isAuthenticated={isAuthenticated}
-			exact={true}
-			path="/autre"
-			component={Autre}
-		/>
-		<Route exact={true} path="/login" component={LoginComponent} />
-		<PrivateRoute
-			isAuthenticated={isAuthenticated}
-			exact={true}
-			path="/profile"
-			component={ProfileEditComponent}
-		/>
-		{/*  tslint:disable-next-line:jsx-no-lambda */}
-		<PrivateRoute
-			isAuthenticated={isAuthenticated}
-			exact={true}
-			path="/logout"
-			component={LogoutComponent}
-		/>
-	</Switch>
+		{isAuthenticated}
+		<Switch>
+			<PrivateRoute
+				isAuthenticated={isAuthenticated}
+				exact={true}
+				path="/"
+				component={HomeComponent}
+			/>
+			<PrivateRoute
+				isAuthenticated={isAuthenticated}
+				// exact={true}
+				path="/parkinguser/:id"
+				component={ParkingUserFormComponent}
+			/>
+			<PrivateRoute
+				isAuthenticated={isAuthenticated}
+				// exact={true}
+				path="/parkinguser"
+				component={ParkingUserFormComponent}
+			/>
+			<PrivateRoute
+				isAuthenticated={isAuthenticated}
+				exact={true}
+				path="/topic"
+				component={Topic}
+			/>
+			<PrivateRoute
+				isAuthenticated={isAuthenticated}
+				exact={true}
+				path="/autre"
+				component={Autre}
+			/>
+			<Route exact={true} path="/login" component={LoginComponent} />
+			<PrivateRoute
+				isAuthenticated={isAuthenticated}
+				exact={true}
+				path="/profile"
+				component={ProfileEditComponent}
+			/>
+			{/*  tslint:disable-next-line:jsx-no-lambda */}
+			<PrivateRoute
+				isAuthenticated={isAuthenticated}
+				exact={true}
+				path="/logout"
+				component={LogoutComponent}
+			/>
+		</Switch>
 	</React.Fragment>
 );
 const SwitchRoutesWithLayout = withLayout(SwitchRoutes);
 
 interface WithUserProps extends React.Props<any> {
-	user: Promise<firebase.User>;
+	authUser: Promise<firebase.User>;
 	currentUser: firebase.User;
 }
 
-const Routes = ({ user }: WithUserProps) => {
-	const isAuthenticated = () => {	
-		console.log("object");
-		console.log(user);
-		return user !== null;
+const Routes = ({ authUser }: WithUserProps) => {
+	const isAuthenticated = () => {
+		console.log('object');
+		console.log(authUser);
+		return !!authUser;
 	};
 	console.log('IS AUTHENTICATED ::: ', isAuthenticated());
 	return (
@@ -101,4 +101,4 @@ const Routes = ({ user }: WithUserProps) => {
 	);
 };
 
-export default withFirebaseUser(Routes);
+export default withFirebaseUserContext(Routes);

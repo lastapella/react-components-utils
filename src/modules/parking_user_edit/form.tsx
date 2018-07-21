@@ -5,7 +5,7 @@
 import * as React from 'react';
 import { withFormik, FormikProps, Form, Field } from 'formik';
 import { Form as AntForm, Icon, Button, Divider, Row, Col } from 'antd';
-import { InjectedProps as withDatabaseInjectedProps } from '../../HOC/firebase/withFirebaseDatabase';
+import { InjectedProps as withDatabaseInjectedProps } from '../../shared/HOC/firebase/withFirebaseDatabase';
 
 import {
 	InputField,

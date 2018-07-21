@@ -114,9 +114,9 @@ class NavBar extends React.Component<any, any> {
 	};
 	public render() {
 		// const { activeKeys, linksLeft, linksRight, user } = this.state;
-		const { user } = this.props;
+		const { authUser } = this.props;
 		const linksLeft = linksLeftInit;
-		const linksRight = user ? linksRightWithuser : linksRightNoUser;
+		const linksRight = authUser ? linksRightWithuser : linksRightNoUser;
 		const activeKeys = initActiveKeys(
 			window.location.pathname,
 			linksLeft,
@@ -132,10 +132,10 @@ class NavBar extends React.Component<any, any> {
 					style={{ lineHeight: '64px' }}
 				>
 					{this.renderLinks(linksLeft)}
-					{user ? (
+					{!!authUser ? (
 						<SubMenu
 							key="userSubMenu"
-							title={userSubMenuTitle(user.displayName as string)}
+							title={userSubMenuTitle(authUser.displayName as string)}
 							style={{ float: 'right' }}
 						>
 							{this.renderLinks(linksRight)}

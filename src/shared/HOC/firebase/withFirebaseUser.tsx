@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { firebaseApp /* , FirebaseContext  */ } from './firebaseContext';
+import { AuthUserContext, LoadedUserContext } from './authUserContext';
 import getComponentDisplayName from './../utils';
-import Loader from '../../shared/ui/defaultLoader';
+// import Loader from '../../shared/ui/defaultLoader';
 // interface PassedProps extends React.Props<any> {
 // 	firebaseUser: firebase.User | Promise<firebase.User>;
 // 	firebaseCurrentUser? : firebase.User | null
@@ -39,15 +40,18 @@ export default (ComposedComponent: React.ComponentType<any>) => {
 		}
 
 		public render() {
-			const { loading } = this.state;
 			return (
-				<React.Fragment>
-					{loading ? (
-						<Loader />
-					) : (
-						<ComposedComponent {...this.props} user={this.state.authUser} />
-					)}
-				</React.Fragment>
+				<LoadedUserContext.Provider value={this.state.loading}>
+					<AuthUserContext.Provider value={this.state.authUser}>
+						{/* <React.Fragment>
+							{loading ? (
+								<Loader />
+							) : ( */}
+						<ComposedComponent {...this.props}  />
+						{/* )}
+						</React.Fragment> */}
+					</AuthUserContext.Provider>
+				</LoadedUserContext.Provider>
 			);
 		}
 	}

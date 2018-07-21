@@ -1,4 +1,4 @@
-import withFirebaseUser from "../../../HOC/firebase/withFirebaseUser";
+import withFirebaseUserContext from "../../HOC/firebase/withFirebaseUserContext";
 import NavBar from "./navbar";
 
-export default withFirebaseUser(NavBar);
+export default withFirebaseUserContext(NavBar);

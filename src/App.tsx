@@ -1,25 +1,16 @@
-import { Button } from 'antd';
+// import { Button } from 'antd';
 import * as React from 'react';
-import withLayout from './HOC/withLayout'
-import './App.css';
+// import withLayout from './HOC/withLayout';
+// import './App.css';
+import Routes from './routes';
+import withFirebaseUser from './shared/HOC/firebase/withFirebaseUser';
 
-import logo from './logo.svg';
+// import logo from './logo.svg';
 
 class App extends React.Component {
 	public render() {
-		return (
-			<div className="App">
-				<header className="App-header">
-					<img src={logo} className="App-logo" alt="logo" />
-					<h1 className="App-title">Welcome to React</h1>
-				</header>{' '}
-				<Button type="primary"> Bouton ici </Button>
-				<p className="App-intro">
-					To get started, edit <code>src/App.tsx</code> and save to reload.
-				</p>
-			</div>
-		);
+		return <Routes />;
 	}
 }
 
-export default withLayout(App);
+export default withFirebaseUser(App);
