@@ -56,76 +56,76 @@ const InnerForm = ({
 	handleSubmit,
 	isSubmitting
 }: { userMatched: any } & FormikProps<FormValues> &
-	withDatabaseInjectedProps) => (
-	<Form className="login-form">
-		<Divider orientation="left">Drivers's Particulars</Divider>
-		<FormItem>
-			<Field
-				label="firstname"
-				required={true}
-				prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
-				name="firstname"
-				placeholder="Firstname"
-				component={InputField}
-			/>
-		</FormItem>
-		<FormItem>
-			<Field
-				label="Lastname"
-				prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
-				name="lastname"
-				placeholder="Lastname"
-				component={InputField}
-			/>
-		</FormItem>
-		<Divider orientation="left">Vehicle's details</Divider>
-		<FormItem>
-			<Field
-				name="carBrand"
-				label="Car brand:"
-				placeholder="Select the brand of your car"
-				component={SelectField}
-			>
-				<option value="bmw">BMW</option>
-				<option value="mercedes">MERCEDES</option>
-				<option value="renault">RENAULT</option>
-				<option value="honda">HONDA</option>
-				<option value="toyota">TOYOTA</option>
-			</Field>
-		</FormItem>
-		<FormItem>
-			<Row type="flex" justify="center" gutter={48}>
-				<Col>
-					<Button
-						type="primary"
-						htmlType="submit"
-						className="login-form-button"
-					>
-						Submit
-					</Button>
-				</Col>
-				<Col>
-					<Button type="danger">Cancel</Button>
-				</Col>
-			</Row>
-		</FormItem>
-	</Form>
-);
+	withDatabaseInjectedProps) => {
+	return (
+		<Form className="login-form">
+			<Divider orientation="left">Drivers's Particulars</Divider>
+			<FormItem>
+				<Field
+					label="firstname"
+					required={true}
+					prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
+					name="firstname"
+					placeholder="Firstname"
+					component={InputField}
+				/>
+			</FormItem>
+			<FormItem>
+				<Field
+					label="Lastname"
+					prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
+					name="lastname"
+					placeholder="Lastname"
+					component={InputField}
+				/>
+			</FormItem>
+			<Divider orientation="left">Vehicle's details</Divider>
+			<FormItem>
+				<Field
+					name="carBrand"
+					label="Car brand:"
+					placeholder="Select the brand of your car"
+					component={SelectField}
+				>
+					<option value="bmw">BMW</option>
+					<option value="mercedes">MERCEDES</option>
+					<option value="renault">RENAULT</option>
+					<option value="honda">HONDA</option>
+					<option value="toyota">TOYOTA</option>
+				</Field>
+			</FormItem>
+			<FormItem>
+				<Row type="flex" justify="center" gutter={48}>
+					<Col>
+						<Button
+							type="primary"
+							htmlType="submit"
+							className="login-form-button"
+						>
+							Submit
+						</Button>
+					</Col>
+					<Col>
+						<Button type="danger">Cancel</Button>
+					</Col>
+				</Row>
+			</FormItem>
+		</Form>
+	);
+};
 
 const MyForm = withFormik<
 	withDatabaseInjectedProps & { userMatched: any },
 	FormValues
 >({
+	enableReinitialize: true,
 	// Transform outer props into form values
 	mapPropsToValues: props => {
-		console.log(props.userMatched);
-		const res = {
+		return {
 			firstname: props.userMatched ? props.userMatched.firstname : 'test',
 			lastname: props.userMatched ? props.userMatched.lastname : '',
 			carBrand: props.userMatched ? props.userMatched.carBrand : ''
 		};
-		console.log(res);
-		return res;
 	},
 	// Add a custom validation function (this can be async too!)
 	validate: (values, props) => {

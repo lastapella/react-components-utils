@@ -32,7 +32,6 @@ const Autre = () => (
 // );
 const SwitchRoutes = ({ isAuthenticated }: { isAuthenticated: boolean }) => (
 	<React.Fragment>
-		{isAuthenticated}
 		<Switch>
 			<PrivateRoute
 				isAuthenticated={isAuthenticated}
@@ -88,10 +87,8 @@ interface WithUserProps extends React.Props<any> {
 	currentUser: firebase.User;
 }
 
-const Routes = ({ authUser }: WithUserProps) => {
+const Routes = ({ authUser, ...rest}: WithUserProps) => {
 	const isAuthenticated = () => {
-		console.log('object');
-		console.log(authUser);
 		return !!authUser;
 	};
 	console.log('IS AUTHENTICATED ::: ', isAuthenticated());

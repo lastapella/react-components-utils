@@ -16,7 +16,6 @@ export default class FormWithUser extends React.Component<
 		};
 	}
 	public componentDidMount() {
-		console.log(this.props);
 		if (this.props.match.params.id) {
 			this.props.databaseAction
 				.readUser(this.props.match.params.id)
@@ -25,6 +24,23 @@ export default class FormWithUser extends React.Component<
 				});
 		} else {
 			this.setState(() => ({ isLoaded: true }));
+		}
+	}
+	public componentDidUpdate(
+		prevProps: withDatabaseInjectedProps & RouteComponentProps<{ id: string }>
+	) {
+
+		if (
+			this.props.match.params.id &&
+			this.props.location !== prevProps.location
+		) {
+			this.props.databaseAction
+				.readUser(this.props.match.params.id)
+				.then(user => {
+					this.setState(() => ({ user, isLoaded: true }));
+				});
+		} else if (this.props.location !== prevProps.location) {
+			this.setState(() => ({ user: null, isLoaded: true }));
 		}
 	}
 	public render() {
