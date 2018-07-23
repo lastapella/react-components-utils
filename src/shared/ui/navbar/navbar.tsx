@@ -26,7 +26,7 @@ interface LinkType {
 
 const linksLeftInit: LinkType[] = [
 	{ to: '/', label: 'Home', key: 'home' },
-	{ to: '/parkinguser', label: 'About', key: 'about' },
+	{ to: '/parkinguser2', label: 'About', key: 'about' },
 	{
 		to: '/topic',
 		label: 'Topic',
@@ -112,6 +112,8 @@ class NavBar extends React.Component<any, any> {
 			activeKeys: [key]
 		}));
 	};
+
+	
 	public render() {
 		// const { activeKeys, linksLeft, linksRight, user } = this.state;
 		const { authUser } = this.props;

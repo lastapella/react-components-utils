@@ -9,6 +9,7 @@ import ProfileEditComponent from '../modules/user_profile_edit';
 import ParkingUserFormComponent from '../modules/parking_user_edit/databaseConnector';
 import PrivateRoute from './privateRoute';
 import withFirebaseUserContext from '../shared/HOC/firebase/withFirebaseUserContext';
+import ListUsersComponent from '../modules/parking_user_list';
 // import { RegisterConnector } from "../modules/register/RegisterConnector";
 // import { LoginConnector } from "../modules/login/LoginConnector";
 
@@ -24,11 +25,11 @@ const Autre = () => (
 // 	</div>
 // );
 
-const Topic = () => (
-	<div>
-		<h3>Topic</h3>
-	</div>
-);
+// const Topic = () => (
+// 	<div>
+// 		<h3>Topic</h3>
+// 	</div>
+// );
 const SwitchRoutes = ({ isAuthenticated }: { isAuthenticated: boolean }) => (
 	<React.Fragment>
 		{isAuthenticated}
@@ -48,14 +49,14 @@ const SwitchRoutes = ({ isAuthenticated }: { isAuthenticated: boolean }) => (
 			<PrivateRoute
 				isAuthenticated={isAuthenticated}
 				// exact={true}
-				path="/parkinguser"
+				path="/parkinguser2"
 				component={ParkingUserFormComponent}
 			/>
 			<PrivateRoute
 				isAuthenticated={isAuthenticated}
 				exact={true}
 				path="/topic"
-				component={Topic}
+				component={ListUsersComponent}
 			/>
 			<PrivateRoute
 				isAuthenticated={isAuthenticated}
