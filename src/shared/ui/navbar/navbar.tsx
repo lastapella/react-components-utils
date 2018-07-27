@@ -26,14 +26,32 @@ interface LinkType {
 
 const linksLeftInit: LinkType[] = [
 	{ to: '/', label: 'Home', key: 'home' },
-	{ to: '/parkinguser2', label: 'About', key: 'about' },
+	// { to: '/parkinguser2', label: 'About', key: 'about' },
 	{
-		to: '/topic',
-		label: 'Topic',
-		key: 'topic',
+		to: '/drivers',
+		label: 'Driver/Vehicle',
+		key: 'driver',
 		children: [
-			{ to: '/topic', label: 'Topic1', key: 'topic:1' },
-			{ to: '/topic', label: 'Topic2', key: 'topic:2' }
+			{ to: '/driver/list', label: 'List drivers', key: 'driver:list' },
+			{ to: '/driver/add', label: 'Add driver', key: 'driver:add' }
+			// { to: '/topic', label: 'Topic2', key: 'topic:2' }
+		]
+	},
+	{
+		to: '/administrators',
+		label: 'Administrators',
+		key: 'admins',
+		children: [
+			{
+				to: '/administrators/list',
+				label: 'List administrators',
+				key: 'admins:list'
+			},
+			{
+				to: '/administrators/add',
+				label: 'Add administrators',
+				key: 'admins:add'
+			}
 		]
 	}
 ];
@@ -76,21 +94,32 @@ const initActiveKeys = (
 	pathname: string,
 	linksLeft: LinkType[],
 	linksRight: LinkType[]
-) =>
-	linksLeft
-		.concat(linksRight)
-		.filter(link => pathname === link.to)
-		.map(link => link.key);
+) => {
+	const filterLinks2 = (links: LinkType[]): LinkType[] => {
+		return links.reduce((acc, link) => {
+			if (link.children) {
+				const filteredChild = filterLinks2(link.children);
+				return filteredChild.length !== 0
+					? [...acc, link, ...filteredChild]
+					: acc;
+			} else {
+				return link.to === pathname ? [...acc, link] : acc;
+			}
+		}, []);
+	};
+	return filterLinks2(linksLeft.concat(linksRight)).map(l => l.key);
+};
+// linksLeft
+// 	.concat(linksRight)
+// 	.filter(link => {
+// 		link.children? return
+// 	}pathname === link.to)
+// 	.map(link => link.key);
 
 class NavBar extends React.Component<any, any> {
 	public renderLink = (linkElement: LinkType, other: any) => (
 		<Menu.Item key={linkElement.key} {...other}>
-			<Link
-				onClick={this.linkClicked.bind(this, linkElement.key)}
-				to={linkElement.to ? linkElement.to : ''}
-			>
-				{linkElement.label}
-			</Link>
+			<Link to={linkElement.to ? linkElement.to : ''}>{linkElement.label}</Link>
 		</Menu.Item>
 	);
 
@@ -107,13 +136,7 @@ class NavBar extends React.Component<any, any> {
 			}
 		});
 	};
-	public linkClicked = (key: string) => {
-		this.setState(() => ({
-			activeKeys: [key]
-		}));
-	};
 
-	
 	public render() {
 		// const { activeKeys, linksLeft, linksRight, user } = this.state;
 		const { authUser } = this.props;

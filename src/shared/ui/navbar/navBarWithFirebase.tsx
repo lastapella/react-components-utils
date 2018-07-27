@@ -1,4 +1,5 @@
-import withFirebaseUserContext from "../../HOC/firebase/withFirebaseUserContext";
-import NavBar from "./navbar";
+import withFirebaseUser from '../../../firebase/withFirebaseUser';
+import NavBar from './navbar';
+// import Loader from '../defaultLoader';
 
-export default withFirebaseUserContext(NavBar);
+export default withFirebaseUser()(NavBar);

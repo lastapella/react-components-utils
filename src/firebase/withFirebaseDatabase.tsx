@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { firebaseApp } from '../../../firebase/firebaseUI';
-import getComponentDisplayName from '../utils';
-import { addRef, updateRef, readRef } from '../../../firebase/databaseUtils';
+import { firebaseApp } from './firebaseUI';
+import getComponentDisplayName from '../shared/HOC/utils';
+import { addRef, updateRef, readRef } from './databaseUtils';
 
 export interface InjectedProps extends React.Props<any> {
 	databaseAction: IActions;

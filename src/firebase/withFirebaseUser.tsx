@@ -2,12 +2,12 @@
 // Not mandatory, this context can be used without this HOC
 import * as React from 'react';
 import { AuthUserContext, LoadedUserContext } from './authUserContext';
-import getComponentDisplayName from './../utils';
-import Loader from '../../ui/defaultLoader';
+import getComponentDisplayName from './utils';
+import  LoaderDefault from '../shared/ui/defaultLoader';
 
-export default (ComposedComponent: React.ComponentType<any>) => {
-	class WithFirebaseUserContext extends React.Component<any, any> {
-		public static displayName = `WithFirebaseUserContext(${getComponentDisplayName(
+const t = (Loader : React.ComponentType = LoaderDefault ) => (ComposedComponent: React.ComponentType<any>) => {
+	class WithFirebaseUser extends React.Component<any, any> {
+		public static displayName = `WithFirebaseUser(${getComponentDisplayName(
 			ComposedComponent
 		)})`;
 
@@ -27,5 +27,7 @@ export default (ComposedComponent: React.ComponentType<any>) => {
 			);
 		}
 	}
-	return WithFirebaseUserContext;
+	return WithFirebaseUser;
 };
+
+export default t;

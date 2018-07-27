@@ -3,7 +3,7 @@ import * as React from 'react';
 // import withLayout from './HOC/withLayout';
 // import './App.css';
 import Routes from './routes';
-import withFirebaseUser from './shared/HOC/firebase/withFirebaseUser';
+import withFirebaseUserContext from './firebase/withFirebaseUserContext';
 
 // import logo from './logo.svg';
 
@@ -13,4 +13,4 @@ class App extends React.Component {
 	}
 }
 
-export default withFirebaseUser(App);
+export default withFirebaseUserContext(App);

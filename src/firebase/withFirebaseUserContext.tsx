@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { firebaseApp /* , FirebaseContext  */ } from './firebaseContext';
+import { firebaseApp /* , FirebaseContext  */ } from './firebaseUI';
 import { AuthUserContext, LoadedUserContext } from './authUserContext';
-import getComponentDisplayName from './../utils';
+import getComponentDisplayName from './utils';
 // import Loader from '../../shared/ui/defaultLoader';
 // interface PassedProps extends React.Props<any> {
 // 	firebaseUser: firebase.User | Promise<firebase.User>;
@@ -19,8 +19,8 @@ import getComponentDisplayName from './../utils';
 // };
 
 export default (ComposedComponent: React.ComponentType<any>) => {
-	class WithFirebaseUser extends React.Component<any, any> {
-		public static displayName = `WithFirebaseUser(${getComponentDisplayName(
+	class WithFirebaseUserContext extends React.Component<any, any> {
+		public static displayName = `WithFirebaseUserContext(${getComponentDisplayName(
 			ComposedComponent
 		)})`;
 
@@ -55,5 +55,5 @@ export default (ComposedComponent: React.ComponentType<any>) => {
 			);
 		}
 	}
-	return WithFirebaseUser;
+	return WithFirebaseUserContext;
 };

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { InjectedProps as withDatabaseInjectedProps } from '../../shared/HOC/firebase';
+import { InjectedProps as withDatabaseInjectedProps } from '../../firebase/withFirebaseDatabase';
 import { RouteComponentProps } from 'react-router';
 import Form from './form';
 

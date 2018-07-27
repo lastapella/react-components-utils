@@ -3,12 +3,12 @@ import { Route, Redirect, RouteProps } from 'react-router-dom';
 
 interface PrivateRouteProps {
   component: React.ComponentType<any>;
-  isAuthenticated : boolean;
+  isAuthorized : boolean;
 }
 
 export default ({
   component: Component,
-  isAuthenticated,
+  isAuthorized,
 	...rest
 }: RouteProps & PrivateRouteProps) => {
 	return (
@@ -16,7 +16,7 @@ export default ({
 			{...rest}
 			// tslint:disable-next-line:jsx-no-lambda
 			render={props =>
-				isAuthenticated ? (
+				isAuthorized ? (
 					<Component {...props} />
 				) : (
 					<Redirect

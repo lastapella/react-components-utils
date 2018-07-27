@@ -1,5 +1,4 @@
-import * as React from 'react';
-import config from '../../../firebase.config';
+import config from '../firebase.config';
 import * as firebase from 'firebase';
 
 export const firebaseApp = firebase.initializeApp(config);
@@ -21,4 +20,3 @@ export const firebaseUIConfig = {
 		firebase.auth.FacebookAuthProvider.PROVIDER_ID
 	]
 };
-export const FirebaseContext = React.createContext(firebase);

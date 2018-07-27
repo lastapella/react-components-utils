@@ -1,4 +1,4 @@
 import ListComponent from './listContainer';
-import withFirebaseDatabase from '../../shared/HOC/firebase/withFirebaseDatabase';
+import withFirebaseDatabase from '../../firebase/withFirebaseDatabase';
 
 export default withFirebaseDatabase(ListComponent);

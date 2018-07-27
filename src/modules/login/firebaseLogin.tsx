@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { InjectedProps } from '../../shared/HOC/firebase/withFirebaseAuth';
+import { InjectedProps } from '../../firebase/withFirebaseAuth';
 // tslint:disable-next-line:no-var-requires
 const StyledFirebaseAuth = require('react-firebaseui/StyledFirebaseAuth')
 	.default;

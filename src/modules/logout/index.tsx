@@ -3,7 +3,7 @@ import * as React from 'react';
 import { Spin } from 'antd';
 import withFirebaseAuth, {
 	InjectedProps
-} from '../../shared/HOC/firebase/withFirebaseAuth';
+} from '../../firebase/withFirebaseAuth';
 
 // import {Redirect } from 'react-router-dom';
 

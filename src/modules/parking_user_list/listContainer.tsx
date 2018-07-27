@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import { InjectedProps as withDatabaseInjectedProps } from '../../shared/HOC/firebase/withFirebaseDatabase';
+import { InjectedProps as withDatabaseInjectedProps } from '../../firebase/withFirebaseDatabase';
 import ListPresenter from './listPresenter';
 
 const columns = [
@@ -9,7 +9,7 @@ const columns = [
 		dataIndex: 'firstname',
 		key: 'firstname',
 		render: (text: string, record: any) => (
-			<Link to={`/parkinguser/${record.key}`}> {text} </Link>
+			<Link to={`/driver/edit/${record.key}`}> {text} </Link>
 		)
 	},
 	{
