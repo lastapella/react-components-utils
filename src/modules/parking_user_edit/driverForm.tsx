@@ -3,24 +3,25 @@
 // - submission to firebase database (rtd)
 
 import * as React from 'react';
-import { withFormik, FormikProps, Form, Field } from 'formik';
+import { withFormik, FormikProps, Form, Field, FieldArray } from 'formik';
 import { Form as AntForm, Icon, Button, Divider, Row, Col } from 'antd';
 import { InjectedProps as withDatabaseInjectedProps } from '../../firebase/withFirebaseDatabase';
 
 import {
-	InputField,
+	InputField
 	// CheckBoxField,
-	SelectField
+	// SelectField
 	// RadioGroupField,
 	// SwitchField,
 	// DatePickerField
 } from '../../shared/ui/form';
+import VehicleForm from './vehicleForm';
 
 const FormItem = AntForm.Item;
 
+// @TODO
 interface FormValues {
-	record?: any;
-	[key: string]: string;
+	[key: string]: any;
 }
 
 // interface Props extends withDatabaseInjectedProps
@@ -57,6 +58,7 @@ const InnerForm = ({
 	isSubmitting
 }: { userMatched: any } & FormikProps<FormValues> &
 	withDatabaseInjectedProps) => {
+	// const vehicles = userMatched ? userMatched.vehicles : [212, 12];
 	return (
 		<Form className="login-form">
 			<Divider orientation="left">Drivers's Particulars</Divider>
@@ -73,14 +75,46 @@ const InnerForm = ({
 			<FormItem>
 				<Field
 					label="Lastname"
-					prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
+					prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
 					name="lastname"
 					placeholder="Lastname"
 					component={InputField}
 				/>
 			</FormItem>
-			<Divider orientation="left">Vehicle's details</Divider>
 			<FormItem>
+				<Field
+					label="Email"
+					prefix={<Icon type="mail" style={{ color: 'rgba(0,0,0,.25)' }} />}
+					name="email"
+					placeholder="email"
+					component={InputField}
+				/>
+			</FormItem>
+			<Divider orientation="left">Vehicle's details</Divider>
+
+			<FieldArray
+				name="vehicles"
+				component={VehicleForm}
+
+				// tslint:disable-next-line:jsx-no-lambda
+				// render = {arrayHelpers => (
+				// 	<React.Fragment>
+				// 						{vehicles.map((vehicle: any, index: number) => (
+				// 							<React.Fragment key={`vehicle-${index}`} >
+				// 							<VehicleForm key={`vehicle-${index}`} vehicleData={vehicle} />
+				// 							<button
+				//                   type="button"
+				//                   onClick={() => arrayHelpers.remove(index)} // remove a friend from the list
+				//                 >
+				//                   -
+				//                 </button>
+				// 								</React.Fragment>
+				// 						))}
+				// 						</React.Fragment>
+				// )}
+			/>
+
+			{/* <FormItem>
 				<Field
 					name="carBrand"
 					label="Car brand:"
@@ -93,7 +127,8 @@ const InnerForm = ({
 					<option value="honda">HONDA</option>
 					<option value="toyota">TOYOTA</option>
 				</Field>
-			</FormItem>
+			</FormItem> */}
+			<Divider />
 			<FormItem>
 				<Row type="flex" justify="center" gutter={48}>
 					<Col>
@@ -114,7 +149,67 @@ const InnerForm = ({
 	);
 };
 
-const MyForm = withFormik<
+const vehiclesMockUp = [
+	{
+		model: 'clio',
+		brand: 'renault',
+		color: 'grey',
+		iunumber: '1234567897',
+		lpnumber: 'ferigjeriog54654'
+	},
+	{
+		model: 'clio',
+		brand: 'renault',
+		color: 'grey',
+		iunumber: '1234567897',
+		lpnumber: 'ferigjeriog54654'
+	},
+	{
+		model: 'clio',
+		brand: 'renault',
+		color: 'grey',
+		iunumber: '1234567897',
+		lpnumber: 'ferigjeriog54654'
+	},
+	{
+		model: 'clio',
+		brand: 'renault',
+		color: 'grey',
+		iunumber: '1234567897',
+		lpnumber: 'ferigjeriog54654'
+	},
+	{
+		model: 'clio',
+		brand: 'renault',
+		color: 'grey',
+		iunumber: '1234567897',
+		lpnumber: 'ferigjeriog54654'
+	},
+	{
+		model: 'bmw',
+		brand: 'serie 1 ',
+		color: 'black',
+		iunumber: '',
+		lpnumber: ''
+	},
+	{
+		model: 'AMG',
+		brand: 'mercedes',
+		color: 'white',
+		iunumber: '1987654321',
+		lpnumber: 'ferigjeri'
+	},
+	{
+		model: 'enzo',
+		brand: 'ferari',
+		color: 'red',
+		iunumber: '1234567897',
+		lpnumber: 'ferigjeriog54654'
+	}
+];
+console.log(vehiclesMockUp);
+
+const DriverForm = withFormik<
 	withDatabaseInjectedProps & { userMatched: any },
 	FormValues
 >({
@@ -124,7 +219,8 @@ const MyForm = withFormik<
 		return {
 			firstname: props.userMatched ? props.userMatched.firstname : 'test',
 			lastname: props.userMatched ? props.userMatched.lastname : '',
-			carBrand: props.userMatched ? props.userMatched.carBrand : ''
+			email: props.userMatched ? props.userMatched.email : '',
+			vehicles: props.userMatched ? props.userMatched.vehicles : []
 		};
 	},
 	// Add a custom validation function (this can be async too!)
@@ -151,8 +247,13 @@ const MyForm = withFormik<
 	) => {
 		console.log(values);
 		console.log(props);
-		props.databaseAction.addUser(values);
-		props.databaseAction.readUsers().then(snapshot => {
+		props.databaseAction.addUser(values).then(userNewKey => {
+			// console.log(value);
+			// values.vehicles.map((vehicle: any) => {
+			// 	props.databaseAction.addVehicle({ driverID: userNewKey, ...vehicle });
+			// });
+		});
+		props.databaseAction.getAllUsers().then(snapshot => {
 			console.log(snapshot);
 			// snapshot.forEach((element: any) => {
 			// 	console.log(element.val());
@@ -162,4 +263,4 @@ const MyForm = withFormik<
 	}
 })(InnerForm);
 
-export default MyForm;
+export default DriverForm;

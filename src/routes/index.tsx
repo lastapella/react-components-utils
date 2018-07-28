@@ -31,29 +31,29 @@ import {isAuthenticated as isAuthenticatedFunc, isAuthenticatedAsAdmin as isAuth
 // 		<h3>Topic</h3>
 // 	</div>
 // );
-const SwitchRoutes = ({ isAuthenticated }: { isAuthenticated: boolean }) => (
+const SwitchRoutes = ({ isAuthenticated , isAuthenticatedAsAdmin}: { isAuthenticated: boolean, isAuthenticatedAsAdmin : boolean }) => (
 	<React.Fragment>
 		<Switch>
 			<PrivateRoute
-				isAuthorized={isAuthenticated}
+				isAuthorized={isAuthenticatedAsAdmin}
 				exact={true}
 				path="/"
 				component={HomeComponent}
 			/>
 				<PrivateRoute
-					isAuthorized={isAuthenticated}
+					isAuthorized={isAuthenticatedAsAdmin}
 					exact={true}
 					path="/driver/list"
 					component={ListUsersComponent}
 				/>
 			<PrivateRoute
-				isAuthorized={isAuthenticated}
+				isAuthorized={isAuthenticatedAsAdmin}
 				// exact={true}
 				path="/driver/add"
 				component={ParkingUserFormComponent}
 			/>
 			<PrivateRoute
-				isAuthorized={isAuthenticated}
+				isAuthorized={isAuthenticatedAsAdmin}
 				// exact={true}
 				path="/driver/edit/:id"
 				component={ParkingUserFormComponent}

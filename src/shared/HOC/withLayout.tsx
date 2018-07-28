@@ -7,7 +7,7 @@ const { Content, Footer } = Layout;
 interface State {
 	activeKeys: string[];
 }
-
+// @TODO RESPONSIVE
 const withLayout = (ComposedComponent: React.ComponentType<any>) => {
 	class WithLayout extends React.Component<any, State> {
 		public static displayName = `WithLayout(${getComponentDisplayName(
@@ -22,13 +22,13 @@ const withLayout = (ComposedComponent: React.ComponentType<any>) => {
 
 					<NavBar />
 					{/* </Header> */}
-					<Content style={{ padding: '0 50px', height: '1000px' }}>
+					<Content style={{ padding: '0 50px'}}>
 						<div style={{ background: '#fff', padding: 24, minHeight: 280 }}>
 							<ComposedComponent {...this.props} />
 						</div>
 					</Content>
 					<Footer style={{ textAlign: 'center' }}>
-						Ant Design ©2016 Created by Ant UED
+						CWB Solutions ©2018 Created by CWB Solutions
 					</Footer>
 				</Layout>
 			);

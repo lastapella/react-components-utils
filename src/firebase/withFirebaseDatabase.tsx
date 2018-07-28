@@ -2,34 +2,53 @@ import * as React from 'react';
 import { firebaseApp } from './firebaseUI';
 import getComponentDisplayName from '../shared/HOC/utils';
 import { addRef, updateRef, readRef } from './databaseUtils';
+// import * as _ from 'lodash';
 
 export interface InjectedProps extends React.Props<any> {
 	databaseAction: IActions;
 }
 interface IActions {
 	addUser: (args: IArgs) => Promise<any>;
+	addVehicle: ({ driverID, ...args }: IArgs) => Promise<any>;
 	editUser: (userKey: string, args: IArgs) => Promise<any>;
-	readUsers: () => Promise<firebase.database.DataSnapshot>;
-	readUser: (userKey: string) => Promise<firebase.database.DataSnapshot>;
+	getAllUsers: () => Promise<any[]>;
+	getUser: (userKey: string) => Promise<any>;
+	getVehicleByUser: (userKey: string) => Promise<any[]>;
 }
 interface IArgs {
 	[key: string]: string;
 }
+// Normalize a firebase snapshot with multiple record to a list of these records
+const normalizeSnapshot = (snapshot: firebase.database.DataSnapshot) => {
+	const result: any[] = [];
+	snapshot.forEach(childSnapshot => {
+		result.push({ key: childSnapshot.key, ...childSnapshot.val() });
+	});
+	return result;
+};
 
 const actions = (database: firebase.database.Database) => {
 	return {
 		addUser: (args: IArgs) => addRef(database, 'users/', args),
+		addVehicle: ({ driverID, ...args }: IArgs) => {
+			return addRef(database, `vehicles/`, args, args.iunumber).then(() => {
+				return addRef(database, `driver_vehicle/${driverID}/vehicles/`, {
+					iunumber: args.iunumber
+				});
+			});
+		},
 		editUser: (userKey: string, args: IArgs) =>
 			updateRef(database, `users/${userKey}`, args),
-		readUsers: () =>
-			readRef(database, 'users/').then(snapshot => {
-				const result: any[] = [];
-				snapshot.forEach(childSnapshot => {
-					result.push({ key: childSnapshot.key, ...childSnapshot.val() });
-				});
-				return result;
+		getVehicle: (vehicleKey: string) =>
+			readRef(database, `vehicles/${vehicleKey}`).then(snapshot => {
+				console.log('VEHICLE ', snapshot.val());
+				return { key: snapshot.key, ...snapshot.val() };
 			}),
-		readUser: (userKey: string) =>
+		getAllUsers: () =>
+			readRef(database, 'users/').then(snapshot => {
+				return normalizeSnapshot(snapshot);
+			}),
+		getUser: (userKey: string) =>
 			readRef(database, `users/${userKey}`).then(snapshot => {
 				return { key: snapshot.key, ...snapshot.val() };
 			})

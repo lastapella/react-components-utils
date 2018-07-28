@@ -1,28 +1,6 @@
 import * as React from 'react';
-import { Link } from 'react-router-dom';
 import { InjectedProps as withDatabaseInjectedProps } from '../../firebase/withFirebaseDatabase';
 import ListPresenter from './listPresenter';
-
-const columns = [
-	{
-		title: 'Firstname',
-		dataIndex: 'firstname',
-		key: 'firstname',
-		render: (text: string, record: any) => (
-			<Link to={`/driver/edit/${record.key}`}> {text} </Link>
-		)
-	},
-	{
-		title: 'Lastname',
-		dataIndex: 'lastname',
-		key: 'lastname'
-	},
-	{
-		title: 'Car Brand',
-		dataIndex: 'carBrand',
-		key: 'carBrand'
-	}
-];
 
 class ListUserContainer extends React.Component<
 	withDatabaseInjectedProps,
@@ -37,7 +15,26 @@ class ListUserContainer extends React.Component<
 	}
 	public componentDidMount() {
 		const { databaseAction: actions } = this.props;
-		actions.readUsers().then(snapshot => {
+		actions.getAllUsers().then(snapshot => {
+			// Promise.all(
+			// 	snapshot.map(user => {
+			// 		return new Promise((resolve, reject) => {
+			// 			return actions
+			// 				.getVehicleByUser(user.key)
+			// 				.then(vehicles => {
+			// 					console.log('VEHICLES IN LIST CONTAINER ', vehicles);
+			// 					resolve(vehicles);
+			// 				})
+			// 				.catch(err => reject(err));
+			// 		});
+			// 	})
+			// ).then(vehicleValues => {
+			// 	vehicleValues.map((value, index) => {
+			// 		snapshot[index].vehicles = value;
+			// 	})
+			// 	// console.log('VALUES', values);
+			// 	console.log('SNAPSHOT FEJHFEK', snapshot);
+			// });
 			console.log(snapshot);
 			this.setState(() => ({ parkingUsers: snapshot, isLoaded: true }));
 		});
@@ -48,11 +45,7 @@ class ListUserContainer extends React.Component<
 			// <React.Fragment>
 			// 	{' '}
 			// 	{isLoaded ? (
-			<ListPresenter
-				dataSource={parkingUsers}
-				columns={columns}
-				loading={!isLoaded}
-			/>
+			<ListPresenter dataSource={parkingUsers} loading={!isLoaded} />
 			// 	) : (
 			// 		<div> Loading ... </div>
 			// 	)}

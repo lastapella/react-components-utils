@@ -1,10 +1,19 @@
 export const addRef = (
 	db: firebase.database.Database,
 	refBase: string,
-	args: { [key: string]: string }
+	args: { [key: string]: string },
+	key: string | null = null
 ) => {
-	const newKey = db.ref(refBase).push().key;
-	return db.ref(refBase + newKey).set(args);
+	let newKey: string;
+	if (key) {
+		newKey = key as string;
+	} else {
+		newKey = db.ref(refBase).push().key as string;
+	}
+	return db
+		.ref(refBase + newKey)
+		.set(args)
+		.then(() => newKey);
 };
 
 export const updateRef = (

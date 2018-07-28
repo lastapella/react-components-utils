@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { InjectedProps as withDatabaseInjectedProps } from '../../firebase/withFirebaseDatabase';
 import { RouteComponentProps } from 'react-router';
-import Form from './form';
+import Form from './driverForm';
 
 export default class FormWithUser extends React.Component<
 	withDatabaseInjectedProps & RouteComponentProps<{ id: string }>,
@@ -18,7 +18,7 @@ export default class FormWithUser extends React.Component<
 	public componentDidMount() {
 		if (this.props.match.params.id) {
 			this.props.databaseAction
-				.readUser(this.props.match.params.id)
+				.getUser(this.props.match.params.id)
 				.then(user => {
 					this.setState(() => ({ user, isLoaded: true }));
 				});
@@ -35,7 +35,7 @@ export default class FormWithUser extends React.Component<
 			this.props.location !== prevProps.location
 		) {
 			this.props.databaseAction
-				.readUser(this.props.match.params.id)
+				.getUser(this.props.match.params.id)
 				.then(user => {
 					this.setState(() => ({ user, isLoaded: true }));
 				});
