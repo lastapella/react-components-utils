@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { firebaseApp /* , FirebaseContext  */ } from './firebaseUI';
+import { firebaseApp /* , FirebaseContext  */ } from './firebase';
 import { AuthUserContext, LoadedUserContext } from './authUserContext';
 import getComponentDisplayName from './utils';
 // import Loader from '../../shared/ui/defaultLoader';

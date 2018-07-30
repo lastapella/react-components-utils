@@ -4,7 +4,7 @@ import {
 	firebaseUIConfig,
 	firebaseApp,
 	IFirebaseUIConfig
-} from './firebaseUI';
+} from './firebase';
 import getComponentDisplayName from '../shared/HOC/utils';
 // tslint:disable-next-line:no-var-requires
 // const StyledFirebaseAuth = require('react-firebaseui/StyledFirebaseAuth')

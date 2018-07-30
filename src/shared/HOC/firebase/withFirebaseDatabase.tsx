@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { firebaseApp } from '../../../firebase/firebaseUI';
+import { firebaseApp } from '../../../firebase/firebase';
 import getComponentDisplayName from '../utils';
 import { addRef, updateRef, readRef } from '../../../firebase/databaseUtils';
 

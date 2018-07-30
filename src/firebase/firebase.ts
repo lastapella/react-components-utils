@@ -3,6 +3,7 @@ import * as firebase from 'firebase';
 
 export const firebaseApp = firebase.initializeApp(config);
 
+
 export interface IFirebaseUIConfig {
 	signInFlow: string;
 	signInSuccessUrl: string;

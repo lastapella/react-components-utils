@@ -6,8 +6,10 @@ export const addRef = (
 ) => {
 	let newKey: string;
 	if (key) {
+		// Key defined by params
 		newKey = key as string;
 	} else {
+		// new Key generation
 		newKey = db.ref(refBase).push().key as string;
 	}
 	return db
@@ -19,12 +21,15 @@ export const addRef = (
 export const updateRef = (
 	db: firebase.database.Database,
 	refBase: string,
-	args: { [key: string]: string },
-	key?: string
+	args: { [key: string]: string }
 ) => {
-	return db.ref(refBase + key).update(args);
+	return db.ref(refBase).update(args);
 };
 
 export const readRef = (db: firebase.database.Database, refBase: string) => {
 	return db.ref(refBase).once('value');
 };
+
+export const removeRef =(db: firebase.database.Database, refBase: string) => {
+	return db.ref(refBase).remove();
+}; 

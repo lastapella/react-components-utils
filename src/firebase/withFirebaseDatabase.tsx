@@ -1,19 +1,21 @@
 import * as React from 'react';
-import { firebaseApp } from './firebaseUI';
+import { firebaseApp } from './firebase';
 import getComponentDisplayName from '../shared/HOC/utils';
-import { addRef, updateRef, readRef } from './databaseUtils';
+import { addRef, updateRef, readRef, removeRef } from './databaseUtils';
 // import * as _ from 'lodash';
+
 
 export interface InjectedProps extends React.Props<any> {
 	databaseAction: IActions;
 }
 interface IActions {
-	addUser: (args: IArgs) => Promise<any>;
-	addVehicle: ({ driverID, ...args }: IArgs) => Promise<any>;
-	editUser: (userKey: string, args: IArgs) => Promise<any>;
-	getAllUsers: () => Promise<any[]>;
-	getUser: (userKey: string) => Promise<any>;
-	getVehicleByUser: (userKey: string) => Promise<any[]>;
+    addUser: (args: IArgs) => Promise<string>;
+    addVehicle: ({ driverID, ...args }: IArgs) => Promise<string>;
+    editUser: (userKey: string, args: IArgs) => Promise<any>;
+    getVehicle: (vehicleKey: string) => Promise<any>;
+    getAllUsers: () => Promise<any[]>;
+    getUser: (userKey: string) => Promise<any>;
+    deleteUser: (userKey: string) => Promise<any>;
 }
 interface IArgs {
 	[key: string]: string;
@@ -51,7 +53,8 @@ const actions = (database: firebase.database.Database) => {
 		getUser: (userKey: string) =>
 			readRef(database, `users/${userKey}`).then(snapshot => {
 				return { key: snapshot.key, ...snapshot.val() };
-			})
+			}),
+		deleteUser: (userKey: string) => removeRef(database, `users/${userKey}`)
 	};
 };
 

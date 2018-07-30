@@ -14,42 +14,32 @@ class ListUserContainer extends React.Component<
 		};
 	}
 	public componentDidMount() {
-		const { databaseAction: actions } = this.props;
-		actions.getAllUsers().then(snapshot => {
-			// Promise.all(
-			// 	snapshot.map(user => {
-			// 		return new Promise((resolve, reject) => {
-			// 			return actions
-			// 				.getVehicleByUser(user.key)
-			// 				.then(vehicles => {
-			// 					console.log('VEHICLES IN LIST CONTAINER ', vehicles);
-			// 					resolve(vehicles);
-			// 				})
-			// 				.catch(err => reject(err));
-			// 		});
-			// 	})
-			// ).then(vehicleValues => {
-			// 	vehicleValues.map((value, index) => {
-			// 		snapshot[index].vehicles = value;
-			// 	})
-			// 	// console.log('VALUES', values);
-			// 	console.log('SNAPSHOT FEJHFEK', snapshot);
-			// });
-			console.log(snapshot);
-			this.setState(() => ({ parkingUsers: snapshot, isLoaded: true }));
-		});
+		this.fetchUser();
 	}
+	public fetchUser = () => {
+		const { databaseAction: actions } = this.props;
+		actions
+			.getAllUsers()
+			.then(snapshot => {
+				this.setState(() => ({ parkingUsers: snapshot, isLoaded: true }));
+			})
+			.catch(err => console.log('TODO HANDLE ERR', err));
+	};
+	public deleteRecord = (userKey: string) => {
+		const { databaseAction: actions } = this.props;
+		actions
+			.deleteUser(userKey)
+			.then(() => this.fetchUser())
+			.catch(err => console.log('TODO HANDLE ERR', err));
+	};
 	public render() {
 		const { parkingUsers, isLoaded } = this.state;
 		return (
-			// <React.Fragment>
-			// 	{' '}
-			// 	{isLoaded ? (
-			<ListPresenter dataSource={parkingUsers} loading={!isLoaded} />
-			// 	) : (
-			// 		<div> Loading ... </div>
-			// 	)}
-			// </React.Fragment>
+			<ListPresenter
+				dataSource={parkingUsers}
+				loading={!isLoaded}
+				onDeleteRecord={this.deleteRecord}
+			/>
 		);
 	}
 }

@@ -1,16 +1,27 @@
 import * as React from 'react';
 import { Route, Redirect, RouteProps } from 'react-router-dom';
+import { message } from 'antd';
 
 interface PrivateRouteProps {
-  component: React.ComponentType<any>;
-  isAuthorized : boolean;
+	component: React.ComponentType<any>;
+	messageText: string;
+	redirectPath?: string;
+	isAuthorized: boolean;
 }
 
 export default ({
-  component: Component,
-  isAuthorized,
+	component: Component,
+	isAuthorized,
+	messageText,
+	redirectPath,
 	...rest
 }: RouteProps & PrivateRouteProps) => {
+	const displayMessage = (onMessageClose: () => JSX.Element) =>
+	{
+		message.error(messageText);
+		return onMessageClose();
+
+	}
 	return (
 		<Route
 			{...rest}
@@ -19,12 +30,14 @@ export default ({
 				isAuthorized ? (
 					<Component {...props} />
 				) : (
-					<Redirect
-						to={{
-							pathname: '/login',
-							state: { from: props.location }
-						}}
-					/>
+					displayMessage(() => (
+						<Redirect
+							to={{
+								pathname: redirectPath ? redirectPath : '/login',
+								state: { from: props.location }
+							}}
+						/>
+					))
 				)
 			}
 		/>

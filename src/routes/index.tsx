@@ -6,11 +6,15 @@ import withLayout from '../shared/HOC/withLayout';
 import LoginComponent from '../modules/login';
 import LogoutComponent from '../modules/logout';
 import ProfileEditComponent from '../modules/user_profile_edit';
-import ParkingUserFormComponent from '../modules/parking_user_edit/databaseConnector';
 import PrivateRoute from './privateRoute';
 import withFirebaseUser from '../firebase/withFirebaseUser';
 import ListUsersComponent from '../modules/parking_user_list';
-import {isAuthenticated as isAuthenticatedFunc, isAuthenticatedAsAdmin as isAuthenticatedAsAdminFunc} from '../firebase/authorizations';
+import ParkingUserFormComponent from '../modules/parking_user_edit';
+import AdminEditFormComponent from '../modules/administrator/edit';
+import {
+	isAuthenticated as isAuthenticatedFunc,
+	isAuthenticatedAsAdmin as isAuthenticatedAsAdminFunc
+} from '../firebase/authorizations';
 // import { RegisterConnector } from "../modules/register/RegisterConnector";
 // import { LoginConnector } from "../modules/login/LoginConnector";
 
@@ -31,32 +35,49 @@ import {isAuthenticated as isAuthenticatedFunc, isAuthenticatedAsAdmin as isAuth
 // 		<h3>Topic</h3>
 // 	</div>
 // );
-const SwitchRoutes = ({ isAuthenticated , isAuthenticatedAsAdmin}: { isAuthenticated: boolean, isAuthenticatedAsAdmin : boolean }) => (
+const SwitchRoutes = ({
+	isAuthenticated,
+	isAuthenticatedAsAdmin
+}: {
+	isAuthenticated: boolean;
+	isAuthenticatedAsAdmin: boolean;
+}) => (
 	<React.Fragment>
 		<Switch>
 			<PrivateRoute
 				isAuthorized={isAuthenticatedAsAdmin}
+				messageText={getAuthorisationMessage('isAuthenticatedAsAdmin')}
 				exact={true}
 				path="/"
 				component={HomeComponent}
 			/>
-				<PrivateRoute
-					isAuthorized={isAuthenticatedAsAdmin}
-					exact={true}
-					path="/driver/list"
-					component={ListUsersComponent}
-				/>
 			<PrivateRoute
 				isAuthorized={isAuthenticatedAsAdmin}
-				// exact={true}
+				messageText={getAuthorisationMessage('isAuthenticatedAsAdmin')}
+				exact={true}
+				path="/driver/list"
+				component={ListUsersComponent}
+			/>
+			<PrivateRoute
+				isAuthorized={isAuthenticatedAsAdmin}
+				messageText={getAuthorisationMessage('isAuthenticatedAsAdmin')}
+				exact={true}
 				path="/driver/add"
 				component={ParkingUserFormComponent}
 			/>
 			<PrivateRoute
 				isAuthorized={isAuthenticatedAsAdmin}
+				messageText={getAuthorisationMessage('isAuthenticatedAsAdmin')}
 				// exact={true}
 				path="/driver/edit/:id"
 				component={ParkingUserFormComponent}
+			/>
+			<PrivateRoute
+				isAuthorized={isAuthenticatedAsAdmin}
+				messageText={getAuthorisationMessage('isAuthenticatedAsAdmin')}
+				exact={true}
+				path="/administrators/add"
+				component={AdminEditFormComponent}
 			/>
 			{/* <PrivateRoute
 				isAuthenticated={isAuthenticated}
@@ -67,6 +88,7 @@ const SwitchRoutes = ({ isAuthenticated , isAuthenticatedAsAdmin}: { isAuthentic
 			<Route exact={true} path="/login" component={LoginComponent} />
 			<PrivateRoute
 				isAuthorized={isAuthenticated}
+				messageText={getAuthorisationMessage('isAuthenticated')}
 				exact={true}
 				path="/profile"
 				component={ProfileEditComponent}
@@ -74,6 +96,7 @@ const SwitchRoutes = ({ isAuthenticated , isAuthenticatedAsAdmin}: { isAuthentic
 			{/*  tslint:disable-next-line:jsx-no-lambda */}
 			<PrivateRoute
 				isAuthorized={isAuthenticated}
+				messageText={getAuthorisationMessage('isAuthenticated')}
 				exact={true}
 				path="/logout"
 				component={LogoutComponent}
@@ -88,16 +111,62 @@ interface WithUserProps extends React.Props<any> {
 	currentUser: firebase.User;
 }
 
-const Routes = ({ authUser, ...rest}: WithUserProps) => {
+interface RoutesState {
+	isAuthenticated: boolean;
+	isAuthenticatedAsAdmin: boolean;
+	isLoaded: boolean;
+}
 
-	console.log('IS AUTHENTICATED ::: ', isAuthenticatedFunc(authUser));
-	console.log('IS AUTHENTICATED AS ADMIN ::: ', isAuthenticatedAsAdminFunc(authUser));
+class Routes extends React.Component<WithUserProps, RoutesState> {
+	public constructor(props: WithUserProps) {
+		super(props);
+		this.state = {
+			isAuthenticated: false,
+			isAuthenticatedAsAdmin: false,
+			isLoaded: false
+		};
+	}
 
-	return (
-		<BrowserRouter>
-			<SwitchRoutesWithLayout isAuthenticated={isAuthenticatedFunc(authUser)} isAuthenticatedAsAdmin={isAuthenticatedAsAdminFunc(authUser)} />
-		</BrowserRouter>
-	);
+	public componentDidMount() {
+		const { authUser } = this.props;
+		Promise.all([
+			isAuthenticatedFunc(authUser),
+			isAuthenticatedAsAdminFunc(authUser)
+		])
+			.then(values => {
+				console.log('ALL ', values);
+				this.setState(() => ({
+					isAuthenticated: values[0],
+					isAuthenticatedAsAdmin: values[1],
+					isLoaded: true
+				}));
+			})
+			.catch(err => {
+				console.log(err);
+			});
+	}
+	render() {
+		const { isAuthenticated, isAuthenticatedAsAdmin, isLoaded } = this.state;
+		return (
+			<BrowserRouter>
+				{isLoaded && (
+					<SwitchRoutesWithLayout
+						isAuthenticated={isAuthenticated}
+						isAuthenticatedAsAdmin={isAuthenticatedAsAdmin}
+					/>
+				)}
+			</BrowserRouter>
+		);
+	}
+}
+
+const authorizationMessages = {
+	isAuthenticated:
+		'You are not allowed to see this page as you are not authenticated',
+	isAuthenticatedAsAdmin:
+		'You are not allowed to see this page as you are not authenticated as Administrator',
+	default: 'You are not allowed to see this page'
 };
-
+const getAuthorisationMessage = (auth: string) =>
+	authorizationMessages[auth] || authorizationMessages.default;
 export default withFirebaseUser()(Routes);

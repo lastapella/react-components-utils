@@ -146,7 +146,7 @@ const DynamicVehicle = ({
 	FieldArrayConfig & { form: FormikProps<FormValues> }) => {
 	return (
 		<React.Fragment>
-			{form.values.vehicles.map((vehicle: any, index: number) => {
+			{form.values.vehicles && form.values.vehicles.map((vehicle: any, index: number) => {
 				return (
 					<InnerForm
 						key={`vehicle-${index}`}
