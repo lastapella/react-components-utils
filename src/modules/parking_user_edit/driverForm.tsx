@@ -1,6 +1,14 @@
 import * as React from 'react';
 import { withFormik, FormikProps, Form, Field, FieldArray } from 'formik';
-import { Form as AntForm, Icon, Button, Divider, Row, Col } from 'antd';
+import {
+	Form as AntForm,
+	Icon,
+	Button,
+	Divider,
+	Row,
+	Col,
+	message
+} from 'antd';
 import { InjectedProps as withDatabaseInjectedProps } from '../../firebase/withFirebaseDatabase';
 
 import {
@@ -12,6 +20,7 @@ import {
 	// DatePickerField
 } from '../../shared/ui/form';
 import VehicleForm from './vehicleForm';
+import { RouteComponentProps } from 'react-router';
 
 const FormItem = AntForm.Item;
 
@@ -19,6 +28,9 @@ const FormItem = AntForm.Item;
 interface FormValues {
 	[key: string]: any;
 }
+
+type Props = withDatabaseInjectedProps &
+	RouteComponentProps<FormValues> & { userMatched: FormValues };
 
 // interface Props extends withDatabaseInjectedProps
 // interface Props {
@@ -40,8 +52,7 @@ const InnerForm = ({
 	setFieldTouched,
 	handleSubmit,
 	isSubmitting
-}: { userMatched: any } & FormikProps<FormValues> &
-	withDatabaseInjectedProps) => {
+}: FormikProps<FormValues> & Props) => {
 	return (
 		<Form className="login-form">
 			<Divider orientation="left">Drivers's Particulars</Divider>
@@ -159,10 +170,7 @@ const InnerForm = ({
 // ];
 // console.log(vehiclesMockUp);
 
-const DriverForm = withFormik<
-	withDatabaseInjectedProps & { userMatched: any },
-	FormValues
->({
+const DriverForm = withFormik<Props, FormValues>({
 	enableReinitialize: true,
 	// validateOnChange: false,
 	// Transform outer props into form values
@@ -191,7 +199,7 @@ const DriverForm = withFormik<
 	handleSubmit: (
 		values,
 		{
-			props: { userMatched, databaseAction },
+			props: { userMatched, databaseAction, history },
 			setSubmitting,
 			setErrors /* setValues, setStatus, and other goodies */
 		}
@@ -200,23 +208,17 @@ const DriverForm = withFormik<
 		if (userMatched) {
 			// EDIT MODE
 			console.log(userMatched);
-			databaseAction.editUser(userMatched.key, values);
+			databaseAction.editUser(userMatched.key, values).then(userKey => {
+				message.success('Driver edited');
+				history.push('/driver/list');
+			});
 		} else {
 			// NEW MODE
 			databaseAction.addUser(values).then(userNewKey => {
-				// console.log(value);
-				// values.vehicles.map((vehicle: any) => {
-				// 	props.databaseAction.addVehicle({ driverID: userNewKey, ...vehicle });
-				// });
+				message.success('New driver added');
+				history.push('/driver/list');
 			});
 		}
-		// props.databaseAction.getAllUsers().then(snapshot => {
-		// 	console.log(snapshot);
-		// 	// snapshot.forEach((element: any) => {
-		// 	// 	console.log(element.val());
-		// 	// });
-		// });
-		// props.databaseAction
 	}
 })(InnerForm);
 

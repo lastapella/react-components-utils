@@ -49,7 +49,7 @@ export default class FormWithUser extends React.Component<
 			<React.Fragment>
 				{' '}
 				{isLoaded ? (
-					<Form userMatched={user} databaseAction={this.props.databaseAction} />
+					<Form userMatched={user} databaseAction={this.props.databaseAction} {...this.props} />
 				) : (
 					<div> Loading ... </div>
 				)}
