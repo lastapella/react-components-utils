@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { withFormik, FormikProps, Form, Field, FieldArray } from 'formik';
 import {
-	Form as AntForm,
+	// Form as AntForm,
 	Icon,
 	Button,
 	Divider,
@@ -22,7 +22,7 @@ import {
 import VehicleForm from './vehicleForm';
 import { RouteComponentProps } from 'react-router';
 
-const FormItem = AntForm.Item;
+// const FormItem = AntForm.Item;
 
 // @TODO
 interface FormValues {
@@ -31,15 +31,6 @@ interface FormValues {
 
 type Props = withDatabaseInjectedProps &
 	RouteComponentProps<FormValues> & { userMatched: FormValues };
-
-// interface Props extends withDatabaseInjectedProps
-// interface Props {
-//   submit: (
-//     values: FormValues
-//   ) => Promise<{
-//     [key: string]: string;
-//   } | null>;
-// }
 
 const InnerForm = ({
 	userMatched,
@@ -51,61 +42,59 @@ const InnerForm = ({
 	setFieldValue,
 	setFieldTouched,
 	handleSubmit,
-	isSubmitting
+	isSubmitting,
+	history,
+	location
 }: FormikProps<FormValues> & Props) => {
+	const onCancel = () => {
+		message.warn('Form Edition Canceled');
+		history.push('/driver/list');
+	};
 	return (
-		<Form className="login-form">
+		<Form className="login-form" noValidate={true}>
 			<Divider orientation="left">Drivers's Particulars</Divider>
-			<FormItem>
-				<Field
-					label="firstname"
-					required={true}
-					prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
-					name="firstname"
-					placeholder="Firstname"
-					component={InputField}
-				/>
-			</FormItem>
-			<FormItem>
-				<Field
-					label="Lastname"
-					prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
-					name="lastname"
-					placeholder="Lastname"
-					component={InputField}
-				/>
-			</FormItem>
-			<FormItem>
-				<Field
-					label="Email"
-					prefix={<Icon type="mail" style={{ color: 'rgba(0,0,0,.25)' }} />}
-					name="email"
-					placeholder="email"
-					component={InputField}
-				/>
-			</FormItem>
+			<Field
+				label="firstname"
+				required={true}
+				prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
+				name="firstname"
+				placeholder="Firstname"
+				component={InputField}
+			/>
+			<Field
+				label="Lastname"
+				prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
+				name="lastname"
+				placeholder="Lastname"
+				component={InputField}
+			/>
+			<Field
+				label="Email"
+				prefix={<Icon type="mail" style={{ color: 'rgba(0,0,0,.25)' }} />}
+				name="email"
+				placeholder="email"
+				component={InputField}
+			/>
 			<Divider orientation="left">Vehicle's details</Divider>
 
 			<FieldArray name="vehicles" component={VehicleForm} />
 			<Divider />
-			<FormItem>
-				<Row type="flex" justify="center" gutter={48}>
-					<Col>
-						<Button
-							type="primary"
-							htmlType="submit"
-							className="login-form-button"
-						>
-							Submit
-						</Button>
-					</Col>
-					<Col>
-						<Button type="danger" ghost={true}>
-							Cancel
-						</Button>
-					</Col>
-				</Row>
-			</FormItem>
+			<Row type="flex" justify="center" gutter={48}>
+				<Col>
+					<Button
+						type="primary"
+						htmlType="submit"
+						className="login-form-button"
+					>
+						Submit
+					</Button>
+				</Col>
+				<Col>
+					<Button onClick={onCancel} type="danger" ghost={true}>
+						Cancel
+					</Button>
+				</Col>
+			</Row>
 		</Form>
 	);
 };

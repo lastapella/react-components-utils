@@ -1,17 +1,25 @@
 import * as React from 'react';
-import { withFormik, FormikProps, Form, Field } from 'formik';
-import { Form as AntForm, Icon, Button, Divider, Row, Col } from 'antd';
+import {
+	withFormik,
+	FormikProps,
+	Form,
+	Field /* , FieldProps */
+} from 'formik';
+import { Form as AntForm, Icon, Button, Divider, Row, Col, Switch } from 'antd';
 import { InjectedProps as withDatabaseInjectedProps } from '../../../firebase/withFirebaseDatabase';
 import { InjectedProps as withAdminFunctionInjectedProps } from '../../../firebase/withFirebaseAdminFunctions';
 
 import {
-	InputField
+	InputField,
+	SwitchField,
+	SelectField
 	// CheckBoxField,
 	// SelectField
 	// RadioGroupField,
 	// SwitchField,
 	// DatePickerField
 } from '../../../shared/ui/form';
+import { RouteComponentProps } from 'react-router';
 
 const FormItem = AntForm.Item;
 
@@ -20,6 +28,9 @@ interface FormValues {
 	[key: string]: any;
 }
 
+type Props = withAdminFunctionInjectedProps &
+	withDatabaseInjectedProps &
+	RouteComponentProps<FormValues> & { adminMatched: FormValues };
 // interface Props extends withDatabaseInjectedProps
 // interface Props {
 //   submit: (
@@ -40,59 +51,80 @@ const InnerForm = ({
 	setFieldTouched,
 	handleSubmit,
 	isSubmitting
-}: { adminMatched: any } & FormikProps<FormValues> &
-	withDatabaseInjectedProps &
-	withAdminFunctionInjectedProps) => {
+}: FormikProps<FormValues> & Props) => {
 	return (
-		<Form className="login-form">
+		<Form className="login-form" noValidate={true}>
 			<Divider orientation="left">Administrators Details</Divider>
-			<FormItem>
-				<Field
-					label="Display Name"
-					required={true}
-					prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
-					name="displayName"
-					placeholder="Display Name"
-					component={InputField}
-				/>
-			</FormItem>
-			<FormItem>
-				<Field
-					label="Email"
-					prefix={<Icon type="mail" style={{ color: 'rgba(0,0,0,.25)' }} />}
-					name="email"
-					placeholder="Email"
-					component={InputField}
-				/>
-			</FormItem>
-			<FormItem>
-				<Field
-					label="Password"
-					type="password"
-					prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
-					name="password"
-					placeholder="Password"
-					component={InputField}
-				/>
-			</FormItem>
-			<FormItem>
-				<Row type="flex" justify="center" gutter={48}>
-					<Col>
-						<Button
-							type="primary"
-							htmlType="submit"
-							className="login-form-button"
-						>
-							Submit
-						</Button>
-					</Col>
-					<Col>
-						<Button type="danger" ghost={true}>
-							Cancel
-						</Button>
-					</Col>
-				</Row>
-			</FormItem>
+			<Field
+				label="Display Name"
+				required={true}
+				noValidate={true}
+				prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
+				name="displayName"
+				placeholder="Display Name"
+				component={InputField}
+			/>
+			<Field
+				label="Email"
+				required={true}
+				noValidate={true}
+				prefix={<Icon type="mail" style={{ color: 'rgba(0,0,0,.25)' }} />}
+				name="email"
+				placeholder="Email"
+				component={InputField}
+			/>
+			<Field
+				label="Password"
+				type="password"
+				prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
+				name="password"
+				placeholder="Password"
+				component={InputField}
+			/>
+			<Field
+				label="Phone Number"
+				prefix={<Icon type="phone" style={{ color: 'rgba(0,0,0,.25)' }} />}
+				name="phoneNumber"
+				placeholder="Phone Number"
+				component={InputField}
+			/>
+			<Field
+				label="Profile picture"
+				prefix={<Icon type="picture" style={{ color: 'rgba(0,0,0,.25)' }} />}
+				name="photoURL"
+				placeholder="Profile Picture"
+				component={InputField}
+			/>
+			<Field
+				label="Role"
+				name="role"
+				mode="multiple"
+				// defaultValue={["NORMAL_ADMIN"]}// <= it seems it doenst work
+				component={SelectField}
+			>
+				<option value="SUPER_ADMIN">Super admin</option>
+				<option value="NORMAL_ADMIN">Normal admin (default)</option>
+				<option value="GUARD">Guard</option>
+				<option value="OTHER">Other</option>
+			</Field>
+			<Field label="Disabled?" name="disabled" component={SwitchField} />
+
+			<Row type="flex" justify="center" gutter={48}>
+				<Col>
+					<Button
+						type="primary"
+						htmlType="submit"
+						className="login-form-button"
+					>
+						Submit
+					</Button>
+				</Col>
+				<Col>
+					<Button type="danger" ghost={true}>
+						Cancel
+					</Button>
+				</Col>
+			</Row>
 		</Form>
 	);
 };
@@ -108,20 +140,17 @@ const AdminForm = withFormik<
 	mapPropsToValues: props => {
 		console.log(props);
 		return {
-			displayName: props.adminMatched
-				? props.adminMatched.displayName
-				: '',
-			email: props.adminMatched
-				? props.adminMatched.email
-				: '',
+			displayName: props.adminMatched ? props.adminMatched.displayName : '',
+			email: props.adminMatched ? props.adminMatched.email : '',
 			emailVerified: props.adminMatched
 				? props.adminMatched.emailVerified
 				: false,
 			phoneNumber: props.adminMatched ? props.adminMatched.phoneNumber : null,
 			photoURL: props.adminMatched ? props.adminMatched.photoURL : null,
-			disabled: props.adminMatched ? props.adminMatched.disabled : false,
+			disabled: props.adminMatched ? props.adminMatched.disabled : true,
 			password: props.adminMatched ? props.adminMatched.password : null,
-			uid: props.adminMatched ? props.adminMatched.uid : ''
+			uid: props.adminMatched ? props.adminMatched.uid : '',
+			role: props.adminMatched ? props.adminMatched.role : []
 		};
 	},
 	// Add a custom validation function (this can be async too!)
@@ -149,7 +178,7 @@ const AdminForm = withFormik<
 		// functions.helloWord();
 		console.log(values);
 
-    functions.addAdmin(values);
+		// functions.addAdmin(values);
 		if (adminMatched) {
 			// EDIT MODE
 			// console.log(adminMatched);

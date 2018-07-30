@@ -1,4 +1,3 @@
-// NOT COMPATIBLE WITH FORMIK CAUSE THE NAME PROPS IS NOT PASSED TO THE INPUT ELEMENT
 import * as React from 'react';
 import { FieldProps } from 'formik';
 import { Form, Switch } from 'antd';
@@ -15,14 +14,14 @@ export const SwitchField: React.SFC<
 	const errorMsg = touched[field.name] && errors[field.name];
   const handleChange = (checked: boolean) => {
     setFieldValue(field.name, checked)
-  }
+	}
 	return (
 		<FormItem
 			{...props}
 			help={errorMsg}
 			validateStatus={errorMsg ? 'error' : undefined}
 		>
-			<Switch {...field} {...props} onChange={handleChange} checked={field.value}/>
+			<Switch  {...props} onChange={handleChange} checked={field.value}/>
 		</FormItem>
 	);
 };

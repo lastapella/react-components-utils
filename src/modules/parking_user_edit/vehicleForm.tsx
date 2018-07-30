@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {
-	Form as AntForm,
+	// Form as AntForm,
 	Card,
 	Col,
 	Row,
@@ -24,7 +24,7 @@ import {
 	// DatePickerField
 } from '../../shared/ui/form';
 
-const FormItem = AntForm.Item;
+// const FormItem = AntForm.Item;
 
 // @TODO
 interface FormValues {
@@ -57,62 +57,52 @@ const InnerForm = ({ index, ...props }: any) => {
 		>
 			<Row gutter={16}>
 				<Col xs={24} sm={24} md={12} lg={8}>
-					<FormItem>
-						<Field
-							label="Brand"
-							prefix={<Icon type="car" style={{ color: 'rgba(0,0,0,.25)' }} />}
-							name={`vehicles.${index}.brand`}
-							placeholder="Brand"
-							component={InputField}
-						/>
-					</FormItem>
+					<Field
+						label="Brand"
+						prefix={<Icon type="car" style={{ color: 'rgba(0,0,0,.25)' }} />}
+						name={`vehicles.${index}.brand`}
+						placeholder="Brand"
+						component={InputField}
+					/>
 				</Col>
 				<Col xs={24} sm={24} md={12} lg={8}>
-					<FormItem>
-						<Field
-							label="Model"
-							prefix={<Icon type="car" style={{ color: 'rgba(0,0,0,.25)' }} />}
-							name={`vehicles.${index}.model`}
-							placeholder="Model"
-							component={InputField}
-						/>
-					</FormItem>
+					<Field
+						label="Model"
+						prefix={<Icon type="car" style={{ color: 'rgba(0,0,0,.25)' }} />}
+						name={`vehicles.${index}.model`}
+						placeholder="Model"
+						component={InputField}
+					/>
 				</Col>
 				<Col xs={24} sm={24} md={12} lg={8}>
-					<FormItem>
-						<Field
-							label="Color"
-							prefix={
-								<Icon type="environment" style={{ color: 'rgba(0,0,0,.25)' }} />
-							}
-							name={`vehicles.${index}.color`}
-							placeholder="Color"
-							component={InputField}
-						/>
-					</FormItem>
+					<Field
+						label="Color"
+						prefix={
+							<Icon type="environment" style={{ color: 'rgba(0,0,0,.25)' }} />
+						}
+						name={`vehicles.${index}.color`}
+						placeholder="Color"
+						component={InputField}
+					/>
 				</Col>
 				<Col xs={24} sm={24} md={12} lg={8}>
-					<FormItem>
-						<Field
-							label="IU Number"
-							prefix={<Icon type="key" style={{ color: 'rgba(0,0,0,.25)' }} />}
-							required={true}
-							name={`vehicles.${index}.iunumber`}
-							placeholder="IU Number"
-							component={InputField}
-						/>
-					</FormItem>
+					<Field
+						label="IU Number"
+						prefix={<Icon type="key" style={{ color: 'rgba(0,0,0,.25)' }} />}
+						required={true}
+						name={`vehicles.${index}.iunumber`}
+						placeholder="IU Number"
+						component={InputField}
+					/>
 				</Col>
 				<Col xs={24} sm={24} md={12} lg={8}>
-					<FormItem>
-						<Field
-							label="Licence Plate"
-							prefix={<Icon type="key" style={{ color: 'rgba(0,0,0,.25)' }} />}
-							name={`vehicles.${index}.lpnumber`}
-							placeholder="Licence Plate"
-							component={InputField}
-						/>
-					</FormItem>
+					<Field
+						label="Licence Plate"
+						prefix={<Icon type="key" style={{ color: 'rgba(0,0,0,.25)' }} />}
+						name={`vehicles.${index}.lpnumber`}
+						placeholder="Licence Plate"
+						component={InputField}
+					/>
 				</Col>
 				{/* <Col span={8}>
 
@@ -146,25 +136,26 @@ const DynamicVehicle = ({
 	FieldArrayConfig & { form: FormikProps<FormValues> }) => {
 	return (
 		<React.Fragment>
-			{form.values.vehicles && form.values.vehicles.map((vehicle: any, index: number) => {
-				return (
-					<InnerForm
-						key={`vehicle-${index}`}
-						values={vehicle}
-						index={index}
-						{..._.pick(props, [
-							'push',
-							'pop',
-							'swap',
-							'move',
-							'insert',
-							'replace',
-							'unshift',
-							'remove'
-						])}
-					/>
-				);
-			})}
+			{form.values.vehicles &&
+				form.values.vehicles.map((vehicle: any, index: number) => {
+					return (
+						<InnerForm
+							key={`vehicle-${index}`}
+							values={vehicle}
+							index={index}
+							{..._.pick(props, [
+								'push',
+								'pop',
+								'swap',
+								'move',
+								'insert',
+								'replace',
+								'unshift',
+								'remove'
+							])}
+						/>
+					);
+				})}
 			<Row type="flex" justify="end">
 				<Col>
 					<Button

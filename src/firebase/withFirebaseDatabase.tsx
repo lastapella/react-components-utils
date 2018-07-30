@@ -23,9 +23,7 @@ interface IArgs {
 const normalizeSnapshot = (snapshot: firebase.database.DataSnapshot) => {
 	const result: any[] = [];
 	snapshot.forEach(childSnapshot => {
-		return (
-			result.push({ key: childSnapshot.key, ...childSnapshot.val() }) !== 0
-		);
+		result.push({ key: childSnapshot.key, ...childSnapshot.val() });
 	});
 	return result;
 };
