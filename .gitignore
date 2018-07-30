@@ -20,7 +20,6 @@
 
 firebaseAdminAccountKey.json
 
-*.config.ts
 
 
 npm-debug.log*
