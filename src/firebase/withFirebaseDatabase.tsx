@@ -4,18 +4,17 @@ import getComponentDisplayName from '../shared/HOC/utils';
 import { addRef, updateRef, readRef, removeRef } from './databaseUtils';
 // import * as _ from 'lodash';
 
-
 export interface InjectedProps extends React.Props<any> {
 	databaseAction: IActions;
 }
 interface IActions {
-    addUser: (args: IArgs) => Promise<string>;
-    addVehicle: ({ driverID, ...args }: IArgs) => Promise<string>;
-    editUser: (userKey: string, args: IArgs) => Promise<any>;
-    getVehicle: (vehicleKey: string) => Promise<any>;
-    getAllUsers: () => Promise<any[]>;
-    getUser: (userKey: string) => Promise<any>;
-    deleteUser: (userKey: string) => Promise<any>;
+	addUser: (args: IArgs) => Promise<string>;
+	addVehicle: ({ driverID, ...args }: IArgs) => Promise<string>;
+	editUser: (userKey: string, args: IArgs) => Promise<any>;
+	getVehicle: (vehicleKey: string) => Promise<any>;
+	getAllUsers: () => Promise<any[]>;
+	getUser: (userKey: string) => Promise<any>;
+	deleteUser: (userKey: string) => Promise<any>;
 }
 interface IArgs {
 	[key: string]: string;
@@ -24,7 +23,9 @@ interface IArgs {
 const normalizeSnapshot = (snapshot: firebase.database.DataSnapshot) => {
 	const result: any[] = [];
 	snapshot.forEach(childSnapshot => {
-		result.push({ key: childSnapshot.key, ...childSnapshot.val() });
+		return (
+			result.push({ key: childSnapshot.key, ...childSnapshot.val() }) !== 0
+		);
 	});
 	return result;
 };

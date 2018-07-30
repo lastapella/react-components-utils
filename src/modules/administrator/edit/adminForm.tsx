@@ -2,6 +2,7 @@ import * as React from 'react';
 import { withFormik, FormikProps, Form, Field } from 'formik';
 import { Form as AntForm, Icon, Button, Divider, Row, Col } from 'antd';
 import { InjectedProps as withDatabaseInjectedProps } from '../../../firebase/withFirebaseDatabase';
+import { InjectedProps as withAdminFunctionInjectedProps } from '../../../firebase/withFirebaseAdminFunctions';
 
 import {
 	InputField
@@ -40,7 +41,8 @@ const InnerForm = ({
 	handleSubmit,
 	isSubmitting
 }: { adminMatched: any } & FormikProps<FormValues> &
-	withDatabaseInjectedProps ) => {
+	withDatabaseInjectedProps &
+	withAdminFunctionInjectedProps) => {
 	return (
 		<Form className="login-form">
 			<Divider orientation="left">Administrators Details</Divider>
@@ -96,7 +98,8 @@ const InnerForm = ({
 };
 
 const AdminForm = withFormik<
-	withDatabaseInjectedProps & { adminMatched: any },
+	withDatabaseInjectedProps &
+		withAdminFunctionInjectedProps & { adminMatched: any },
 	FormValues
 >({
 	enableReinitialize: true,
@@ -107,10 +110,10 @@ const AdminForm = withFormik<
 		return {
 			displayName: props.adminMatched
 				? props.adminMatched.displayName
-				: 'fozjfiezjfleznl',
+				: '',
 			email: props.adminMatched
 				? props.adminMatched.email
-				: 'fezjfpezko@ezkfj.code',
+				: '',
 			emailVerified: props.adminMatched
 				? props.adminMatched.emailVerified
 				: false,
@@ -118,15 +121,15 @@ const AdminForm = withFormik<
 			photoURL: props.adminMatched ? props.adminMatched.photoURL : null,
 			disabled: props.adminMatched ? props.adminMatched.disabled : false,
 			password: props.adminMatched ? props.adminMatched.password : null,
-			uid: props.adminMatched ? props.adminMatched.uid : '123456468768'
+			uid: props.adminMatched ? props.adminMatched.uid : ''
 		};
 	},
 	// Add a custom validation function (this can be async too!)
 	validate: (values, props) => {
 		const errors: any = {};
-		if (!values.email) {
-			errors.email = 'Required';
-		}
+		// if (!values.email) {
+		// 	errors.email = 'Required';
+		// }
 		// else if (
 		// 	!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)
 		// ) {
@@ -138,12 +141,15 @@ const AdminForm = withFormik<
 	handleSubmit: (
 		values,
 		{
-			props: { adminMatched, databaseAction },
+			props: { adminMatched, databaseAction, functions },
 			setSubmitting,
 			setErrors /* setValues, setStatus, and other goodies */
 		}
 	) => {
+		// functions.helloWord();
+		console.log(values);
 
+    functions.addAdmin(values);
 		if (adminMatched) {
 			// EDIT MODE
 			// console.log(adminMatched);
