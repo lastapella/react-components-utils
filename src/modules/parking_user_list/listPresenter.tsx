@@ -66,7 +66,7 @@ export default ({
 						okText="Yes"
 						cancelText="No"
 					>
-						<Link to={`/driver/delete/${record.key}`}> Delete </Link>
+						<Link to="#"> Delete </Link>
 					</Popconfirm>
 				</React.Fragment>
 			)
