@@ -5,7 +5,16 @@ import {
 	Form,
 	Field /* , FieldProps */
 } from 'formik';
-import { Form as AntForm, Icon, Button, Divider, Row, Col, Switch } from 'antd';
+import {
+	Form as AntForm,
+	Icon,
+	Button,
+	Divider,
+	Row,
+	Col,
+	Switch,
+	message
+} from 'antd';
 import { InjectedProps as withDatabaseInjectedProps } from '../../../firebase/withFirebaseDatabase';
 import { InjectedProps as withAdminFunctionInjectedProps } from '../../../firebase/withFirebaseAdminFunctions';
 
@@ -178,16 +187,93 @@ const AdminForm = withFormik<
 		// functions.helloWord();
 		console.log(values);
 
-		// functions.addAdmin(values);
 		if (adminMatched) {
 			// EDIT MODE
 			// console.log(adminMatched);
 			// databaseAction.editUser(adminMatched.key, values);
+			functions.updateAdmin(values);
 		} else {
 			// NEW MODE
 			// databaseAction.addUser(values);
+			functions.addAdmin(values);
+
 		}
 	}
 })(InnerForm);
 
-export default AdminForm;
+export default class FormWithRecord extends React.Component<
+	withDatabaseInjectedProps &
+		withAdminFunctionInjectedProps &
+		RouteComponentProps<{ id: string }>,
+	any
+> {
+	public constructor(props: any) {
+		super(props);
+		console.log(props);
+		this.state = {
+			admin: undefined,
+			isLoaded: false
+		};
+	}
+	public componentDidMount() {
+		if (this.props.match.params.id) {
+			this.props.functions
+				.getAdmin({ uid: this.props.match.params.id })
+				.then(admin => {
+					this.setState(() => ({ admin: admin.data, isLoaded: true }));
+				})
+				.catch(err => {
+					if (process.env.NODE_ENV !== 'production') {
+						console.log(err);
+					}
+					message.error('An unknown error occured');
+					this.setState(() => ({ isLoaded: true }));
+				});
+		} else {
+			this.setState(() => ({ isLoaded: true }));
+		}
+	}
+	public componentDidUpdate(
+		prevProps: withDatabaseInjectedProps &
+			withAdminFunctionInjectedProps &
+			RouteComponentProps<{ id: string }>
+	) {
+		if (
+			this.props.match.params.id &&
+			this.props.location !== prevProps.location
+		) {
+			this.props.functions
+				.getAdmin({ uid: this.props.match.params.id })
+				.then(admin => {
+					this.setState(() => ({ admin: admin.data, isLoaded: true }));
+				})
+				.catch(err => {
+					if (process.env.NODE_ENV !== 'production') {
+						console.log(err);
+					}
+					message.error('An unknown error occured');
+					this.setState(() => ({ isLoaded: true }));
+				});
+		} else if (this.props.location !== prevProps.location) {
+			this.setState(() => ({ admin: null, isLoaded: true }));
+		}
+	}
+	public render() {
+		const { isLoaded, admin } = this.state;
+		return (
+			<React.Fragment>
+				{' '}
+				{isLoaded ? (
+					<AdminForm
+						adminMatched={admin}
+						databaseAction={this.props.databaseAction}
+						functions={this.props.functions}
+						{...this.props}
+					/>
+				) : (
+					<div> Loading ... </div>
+				)}
+			</React.Fragment>
+		);
+	}
+}

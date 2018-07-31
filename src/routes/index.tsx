@@ -11,6 +11,7 @@ import withFirebaseUser from '../firebase/withFirebaseUser';
 import ListUsersComponent from '../modules/parking_user_list';
 import ParkingUserFormComponent from '../modules/parking_user_edit';
 import AdminEditFormComponent from '../modules/administrator/edit';
+import AdminEditListComponent from '../modules/administrator/list';
 import {
 	isAuthenticated as isAuthenticatedFunc,
 	isAuthenticatedAsAdmin as isAuthenticatedAsAdminFunc
@@ -79,12 +80,20 @@ const SwitchRoutes = ({
 				path="/administrators/add"
 				component={AdminEditFormComponent}
 			/>
-			{/* <PrivateRoute
-				isAuthenticated={isAuthenticated}
+			<PrivateRoute
+				isAuthorized={isAuthenticatedAsAdmin}
+				messageText={getAuthorisationMessage('isAuthenticatedAsAdmin')}
+				// exact={true}
+				path="/administrators/edit/:id"
+				component={AdminEditFormComponent}
+			/>
+			<PrivateRoute
+				isAuthorized={isAuthenticatedAsAdmin}
+				messageText={getAuthorisationMessage('isAuthenticatedAsAdmin')}
 				exact={true}
-				path="/autre"
-				component={Autre}
-			/> */}
+				path="/administrators/list"
+				component={AdminEditListComponent}
+			/>
 			<Route exact={true} path="/login" component={LoginComponent} />
 			<PrivateRoute
 				isAuthorized={isAuthenticated}

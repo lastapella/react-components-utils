@@ -213,7 +213,7 @@ const DriverForm = withFormik<Props, FormValues>({
 
 
 
-export default class FormWithUser extends React.Component<
+export default class FormWithRecord extends React.Component<
 	withDatabaseInjectedProps & RouteComponentProps<{ id: string }>,
 	any
 > {
