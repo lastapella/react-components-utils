@@ -27,6 +27,7 @@ class ListUserContainer extends React.Component<
 	};
 	public deleteRecord = (userKey: string) => {
 		const { databaseAction: actions } = this.props;
+    this.setState(() => ({isLoaded: false}));
 		actions
 			.deleteUser(userKey)
 			.then(() => this.fetchUser())

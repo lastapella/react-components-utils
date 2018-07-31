@@ -148,13 +148,17 @@ class NavBar extends React.Component<any, any> {
 			linksRight
 		);
 		return (
-			<Affix>
+			<Affix style={{ zIndex: 10 }}>
 				<img src={logo} width="64" height="64" style={{ float: 'left' }} />
 				<Menu
 					theme="light"
 					mode="horizontal"
 					defaultSelectedKeys={activeKeys}
-					style={{ lineHeight: '64px' }}
+					style={{
+						lineHeight: '64px',
+						boxShadow: '0 0 16px 0 rgba(0, 0, 0, .08)',
+						border: 'none'
+					}}
 				>
 					{this.renderLinks(linksLeft)}
 					{!!authUser ? (

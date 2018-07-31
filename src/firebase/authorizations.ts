@@ -13,7 +13,7 @@ export const isAuthenticatedAsAdmin = (
 	return authUser
 		? readRef(firebaseApp.database(), 'administrators/' + authUser.uid)
 				.then(admin => {
-					return role ? admin.child('role').val() === role : !!admin;
+					return role ? admin.child('role').val().includes(role) : !!admin;
 				})
 				.catch(reason => {
 					console.log(reason);

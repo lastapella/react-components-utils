@@ -15,14 +15,7 @@ import {
 	ArrayHelpers
 } from 'formik';
 import * as _ from 'lodash';
-import {
-	InputField
-	// CheckBoxField,
-	// SelectField
-	// RadioGroupField,
-	// SwitchField,
-	// DatePickerField
-} from '../../shared/ui/form';
+import { InputField } from './vehicleInputField';
 
 // const FormItem = AntForm.Item;
 
@@ -32,9 +25,7 @@ interface FormValues {
 }
 
 const DELETE_TEXT = 'Are you sure you want to delete this vehicle?';
-
-// @TODO RESPONSIVE
-const InnerForm = ({ index, ...props }: any) => {
+const InnerForm = ({ index, errors, ...props }: any) => {
 	return (
 		<Card
 			title={`Vehicle ${index + 1}`}
@@ -143,6 +134,7 @@ const DynamicVehicle = ({
 							key={`vehicle-${index}`}
 							values={vehicle}
 							index={index}
+							errors={form.errors.vehicles ? form.errors.vehicles[index] : null}
 							{..._.pick(props, [
 								'push',
 								'pop',

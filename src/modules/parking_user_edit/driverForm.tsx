@@ -9,8 +9,9 @@ import {
 	Col,
 	message
 } from 'antd';
+import { RouteComponentProps } from 'react-router';
 import { InjectedProps as withDatabaseInjectedProps } from '../../firebase/withFirebaseDatabase';
-
+import driverValidationSchema from './validationSchema';
 import {
 	InputField
 	// CheckBoxField,
@@ -20,7 +21,6 @@ import {
 	// DatePickerField
 } from '../../shared/ui/form';
 import VehicleForm from './vehicleForm';
-import { RouteComponentProps } from 'react-router';
 
 // const FormItem = AntForm.Item;
 
@@ -63,6 +63,7 @@ const InnerForm = ({
 			/>
 			<Field
 				label="Lastname"
+				required={true}
 				prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
 				name="lastname"
 				placeholder="Lastname"
@@ -70,6 +71,7 @@ const InnerForm = ({
 			/>
 			<Field
 				label="Email"
+				required={true}
 				prefix={<Icon type="mail" style={{ color: 'rgba(0,0,0,.25)' }} />}
 				name="email"
 				placeholder="email"
@@ -85,6 +87,7 @@ const InnerForm = ({
 						type="primary"
 						htmlType="submit"
 						className="login-form-button"
+						loading={isSubmitting}
 					>
 						Submit
 					</Button>
@@ -171,19 +174,20 @@ const DriverForm = withFormik<Props, FormValues>({
 			vehicles: props.userMatched ? props.userMatched.vehicles : []
 		};
 	},
+	validationSchema: driverValidationSchema,
 	// Add a custom validation function (this can be async too!)
-	validate: (values, props) => {
-		const errors: any = {};
-		// if (!values.firstname) {
-		// 	errors.email = 'Required';
-		// }
-		// else if (
-		// 	!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)
-		// ) {
-		// 	errors.email = 'Invalid email address';
-		// }
-		return errors;
-	},
+	// validate: (values, props) => {
+	// 	const errors: any = {};
+	// 	// if (!values.firstname) {
+	// 	// 	errors.email = 'Required';
+	// 	// }
+	// 	// else if (
+	// 	// 	!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)
+	// 	// ) {
+	// 	// 	errors.email = 'Invalid email address';
+	// 	// }
+	// 	return errors;
+	// },
 	// Submission handler
 	handleSubmit: (
 		values,
@@ -211,8 +215,6 @@ const DriverForm = withFormik<Props, FormValues>({
 	}
 })(InnerForm);
 
-
-
 export default class FormWithRecord extends React.Component<
 	withDatabaseInjectedProps & RouteComponentProps<{ id: string }>,
 	any
@@ -239,7 +241,6 @@ export default class FormWithRecord extends React.Component<
 	public componentDidUpdate(
 		prevProps: withDatabaseInjectedProps & RouteComponentProps<{ id: string }>
 	) {
-
 		if (
 			this.props.match.params.id &&
 			this.props.location !== prevProps.location
@@ -259,7 +260,11 @@ export default class FormWithRecord extends React.Component<
 			<React.Fragment>
 				{' '}
 				{isLoaded ? (
-					<DriverForm userMatched={user} databaseAction={this.props.databaseAction} {...this.props} />
+					<DriverForm
+						userMatched={user}
+						databaseAction={this.props.databaseAction}
+						{...this.props}
+					/>
 				) : (
 					<div> Loading ... </div>
 				)}
@@ -267,4 +272,3 @@ export default class FormWithRecord extends React.Component<
 		);
 	}
 }
-

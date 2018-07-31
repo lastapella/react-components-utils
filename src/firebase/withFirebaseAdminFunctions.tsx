@@ -41,10 +41,9 @@ const functions = (firebaseFunction: firebase.functions.Functions) => {
 	};
 };
 
-// const httpsCallable = (firebaseFunction: firebase.functions.Functions , functionName: string) => {
-
-// }
-
+export const functionsResponseWithError = (res : any)  => {
+	return res.errorInfo ? res.errorInfo.message || 'an error occured' : false;
+};
 export default <P extends InjectedProps>(
 	ComposedComponent: React.ComponentType<P>
 ) => {

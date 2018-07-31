@@ -29,7 +29,6 @@ class ListUserContainer extends React.Component<
 	}
 	public fetchAdmins = () => {
 		const { functions } = this.props;
-		console.log(process.env);
 		functions
 			.getAllAdmins()
 			.then(adminsResponse => {
@@ -54,7 +53,8 @@ class ListUserContainer extends React.Component<
 			});
 	};
 	public deleteRecord = (adminKey: string) => {
-		const { functions } = this.props;
+    const { functions } = this.props;
+    this.setState(() => ({isLoaded: false}));
 		functions
 			.deleteAdmin({uid: adminKey})
 			.then(() => this.fetchAdmins())

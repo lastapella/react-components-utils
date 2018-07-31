@@ -16,8 +16,11 @@ import {
 	message
 } from 'antd';
 import { InjectedProps as withDatabaseInjectedProps } from '../../../firebase/withFirebaseDatabase';
-import { InjectedProps as withAdminFunctionInjectedProps } from '../../../firebase/withFirebaseAdminFunctions';
-
+import {
+	InjectedProps as withAdminFunctionInjectedProps,
+	functionsResponseWithError
+} from '../../../firebase/withFirebaseAdminFunctions';
+import adminValidationSchema from './validationSchema';
 import {
 	InputField,
 	SwitchField,
@@ -67,7 +70,6 @@ const InnerForm = ({
 			<Field
 				label="Display Name"
 				required={true}
-				noValidate={true}
 				prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
 				name="displayName"
 				placeholder="Display Name"
@@ -76,7 +78,6 @@ const InnerForm = ({
 			<Field
 				label="Email"
 				required={true}
-				noValidate={true}
 				prefix={<Icon type="mail" style={{ color: 'rgba(0,0,0,.25)' }} />}
 				name="email"
 				placeholder="Email"
@@ -85,6 +86,7 @@ const InnerForm = ({
 			<Field
 				label="Password"
 				type="password"
+				required={true}
 				prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
 				name="password"
 				placeholder="Password"
@@ -124,6 +126,7 @@ const InnerForm = ({
 						type="primary"
 						htmlType="submit"
 						className="login-form-button"
+						loading={isSubmitting}
 					>
 						Submit
 					</Button>
@@ -138,11 +141,7 @@ const InnerForm = ({
 	);
 };
 
-const AdminForm = withFormik<
-	withDatabaseInjectedProps &
-		withAdminFunctionInjectedProps & { adminMatched: any },
-	FormValues
->({
+const AdminForm = withFormik<Props, FormValues>({
 	enableReinitialize: true,
 	// validateOnChange: false,
 	// Transform outer props into form values
@@ -156,30 +155,31 @@ const AdminForm = withFormik<
 				: false,
 			phoneNumber: props.adminMatched ? props.adminMatched.phoneNumber : null,
 			photoURL: props.adminMatched ? props.adminMatched.photoURL : null,
-			disabled: props.adminMatched ? props.adminMatched.disabled : true,
-			password: props.adminMatched ? props.adminMatched.password : null,
+			disabled: props.adminMatched ? props.adminMatched.disabled : false,
+			password: props.adminMatched ? props.adminMatched.password : '',
 			uid: props.adminMatched ? props.adminMatched.uid : '',
 			role: props.adminMatched ? props.adminMatched.role : []
 		};
 	},
+	validationSchema: adminValidationSchema,
 	// Add a custom validation function (this can be async too!)
-	validate: (values, props) => {
-		const errors: any = {};
-		// if (!values.email) {
-		// 	errors.email = 'Required';
-		// }
-		// else if (
-		// 	!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)
-		// ) {
-		// 	errors.email = 'Invalid email address';
-		// }
-		return errors;
-	},
+	// validate: (values, props) => {
+	// 	const errors: any = {};
+	// 	// if (!values.email) {
+	// 	// 	errors.email = 'Required';
+	// 	// }
+	// 	// else if (
+	// 	// 	!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)
+	// 	// ) {
+	// 	// 	errors.email = 'Invalid email address';
+	// 	// }
+	// 	return errors;
+	// },
 	// Submission handler
 	handleSubmit: (
 		values,
 		{
-			props: { adminMatched, databaseAction, functions },
+			props: { adminMatched, databaseAction, functions, history },
 			setSubmitting,
 			setErrors /* setValues, setStatus, and other goodies */
 		}
@@ -191,12 +191,48 @@ const AdminForm = withFormik<
 			// EDIT MODE
 			// console.log(adminMatched);
 			// databaseAction.editUser(adminMatched.key, values);
-			functions.updateAdmin(values);
+			functions
+				.updateAdmin(values)
+				.then(res => {
+					const errorMessage = functionsResponseWithError(res.data);
+					if (errorMessage) {
+						message.error(errorMessage);
+						setSubmitting(false);
+					} else {
+						message.success('Administrator edited');
+						history.push('/administrators/list');
+					}
+				})
+				.catch(err => {
+					if (process.env.NODE_ENV !== 'production') {
+						console.log(err);
+					}
+					message.error('An unknown error occured');
+					setSubmitting(false);
+				});
 		} else {
 			// NEW MODE
 			// databaseAction.addUser(values);
-			functions.addAdmin(values);
-
+			functions
+				.addAdmin(values)
+				.then(res => {
+					console.log(res);
+					const errorMessage = functionsResponseWithError(res.data);
+					if (errorMessage) {
+						message.error(errorMessage);
+						setSubmitting(false);
+					} else {
+						message.success('New administrator added');
+						history.push('/administrators/list');
+					}
+				})
+				.catch(err => {
+					if (process.env.NODE_ENV !== 'production') {
+						console.log(err);
+					}
+					message.error('An unknown error occured');
+					setSubmitting(false);
+				});
 		}
 	}
 })(InnerForm);
