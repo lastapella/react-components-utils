@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { firebaseApp } from './firebase';
+import { firebaseApp  } from '../lib/firebase/firebase';
 import getComponentDisplayName from '../shared/HOC/utils';
 // import { addRef, updateRef, readRef, removeRef } from './databaseUtils';
 // import * as _ from 'lodash';

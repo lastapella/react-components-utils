@@ -4,7 +4,8 @@ import * as React from 'react';
 // import './App.css';
 import Routes from './routes';
 import withFirebaseUserContext from './firebase/withFirebaseUserContext';
-
+import { compose } from 'recompose';
+import withStore from './store/withStore';
 // import logo from './logo.svg';
 
 class App extends React.Component {
@@ -13,4 +14,7 @@ class App extends React.Component {
 	}
 }
 
-export default withFirebaseUserContext(App);
+export default compose(
+	withStore,
+	withFirebaseUserContext
+)(App);

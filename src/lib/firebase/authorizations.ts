@@ -1,4 +1,4 @@
-import { firebaseApp  } from '../lib/firebase/firebase';
+import { firebaseApp } from './firebase';
 import { readRef } from './databaseUtils';
 
 export const isAuthenticated = async (authUser: firebase.User) => {
