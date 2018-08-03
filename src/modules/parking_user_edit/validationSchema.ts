@@ -15,9 +15,9 @@ const driverEmailValidation = yup
 	.required(REQUIRED_FIELD);
 
 const vehicleValidationSchema = yup.object().shape({
-	brand: yup.string().nullable(true),
-	model: yup.string().nullable(true),
-	color: yup.string().nullable(true),
+	brand: yup.string().max(255).nullable(true),
+	model: yup.string().max(255).nullable(true),
+	color: yup.string().max(255).nullable(true),
 	iunumber: yup
 		.string()
 		.matches(/^\d{10}$/, INVALID_IU)

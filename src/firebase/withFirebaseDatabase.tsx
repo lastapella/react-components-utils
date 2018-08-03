@@ -30,27 +30,23 @@ const normalizeSnapshot = (snapshot: firebase.database.DataSnapshot) => {
 
 const actions = (database: firebase.database.Database) => {
 	return {
-		addUser: (args: IArgs) => addRef(database, 'users/', args),
+		addUser: (args: IArgs) => addRef(database, 'drivers/', args),
 		addVehicle: ({ driverID, ...args }: IArgs) => {
-			return addRef(database, `vehicles/`, args, args.iunumber).then(() => {
-				return addRef(database, `driver_vehicle/${driverID}/vehicles/`, {
-					iunumber: args.iunumber
-				});
-			});
+			return addRef(database, `vehicles/`, args, args.iunumber)
 		},
 		editUser: (userKey: string, args: IArgs) =>
-			updateRef(database, `users/${userKey}`, args),
+			updateRef(database, `drivers/${userKey}`, args),
 		getVehicle: (vehicleKey: string) =>
 			readRef(database, `vehicles/${vehicleKey}`).then(snapshot => {
 				console.log('VEHICLE ', snapshot.val());
 				return { key: snapshot.key, ...snapshot.val() };
 			}),
 		getAllUsers: () =>
-			readRef(database, 'users/').then(snapshot => {
+			readRef(database, 'drivers/').then(snapshot => {
 				return normalizeSnapshot(snapshot);
 			}),
 		getUser: (userKey: string) =>
-			readRef(database, `users/${userKey}`).then(snapshot => {
+			readRef(database, `drivers/${userKey}`).then(snapshot => {
 				return { key: snapshot.key, ...snapshot.val() };
 			}),
 		deleteUser: (userKey: string) => removeRef(database, `users/${userKey}`)
