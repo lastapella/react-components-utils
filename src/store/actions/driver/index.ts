@@ -4,7 +4,7 @@ import {
 	REMOVE_DRIVER_FROM_LIST
 } from '../../constants/actionTypes';
 import { action } from 'typesafe-actions';
-import { Dispatch, ActionCreator, Action } from 'redux';
+import { ActionCreator, Action } from 'redux';
 import {
 	addRef,
 	updateRef,
@@ -15,11 +15,12 @@ import { firebaseApp } from '../../../lib/firebase/firebase';
 import { IDriverState, IDriver } from '../../models/driverState';
 
 import * as requestTypes from '../../constants/requestTypes';
-import { setRequestInProcess } from '../../actions/request';
+import { setRequestInProcess } from '../request';
 import { RootState } from '../../configureStore';
 
 const database = firebaseApp.database();
 
+// @TODO DO THIS WITH normalizr https://www.npmjs.com/package/normalizr
 const normalizeDriversListSnapshot = (
 	snapshot: firebase.database.DataSnapshot
 ) => {
@@ -30,7 +31,6 @@ const normalizeDriversListSnapshot = (
 			{ ...result },
 			{ [childSnapshot.key as string]: { ...childSnapshot.val() } }
 		);
-		// result.push({ key: childSnapshot.key, ...childSnapshot.val() });
 	});
 	return result;
 };
@@ -60,7 +60,7 @@ export const fetchDriver: ActionCreator<
 	const requestType = requestTypes.DRIVERS_FETCH;
 	dispatch(setRequestInProcess(true, requestType));
 	return readRef(database, 'drivers/' + driverKey).then(snapshot => {
-		const syncedDriver = { key: snapshot.key, ...snapshot.val() };
+		const fetchedDriver = { key: snapshot.key, ...snapshot.val() };
 		dispatch(
 			mergeDrivers({
 				...getState().drivers,
@@ -68,7 +68,7 @@ export const fetchDriver: ActionCreator<
 			})
 		);
 		dispatch(setRequestInProcess(false, requestType));
-		return syncedDriver;
+		return fetchedDriver;
 	});
 };
 
@@ -88,7 +88,7 @@ export const editDriver: ActionCreator<
 
 export const deleteDriver: ActionCreator<
 	ThunkAction<Promise<any>, RootState, any, Action>
-> = (driverKey: string, driver: IDriver) => (dispatch, getState) => {
+> = (driverKey: string) => (dispatch, getState) => {
 	const requestType = requestTypes.DRIVERS_DELETE;
 	dispatch(setRequestInProcess(true, requestType));
 	return removeRef(database, 'drivers/' + driverKey)
@@ -107,23 +107,13 @@ export const deleteDriver: ActionCreator<
 
 export const fetchAllDriver: ActionCreator<
 	ThunkAction<Promise<any>, RootState, any, Action>
-> = (driverKey: string) => (dispatch, getState) => {
+> = () => (dispatch, getState) => {
 	const requestType = requestTypes.DRIVERS_FETCHALL;
 	dispatch(setRequestInProcess(true, requestType));
 	return readRef(database, 'drivers/').then(snapshot => {
 		const normalizedSnapshot = normalizeDriversListSnapshot(snapshot);
-		console.log(normalizedSnapshot);
 		dispatch(mergeDrivers(normalizedSnapshot));
 		dispatch(setRequestInProcess(false, requestType));
 		return normalizedSnapshot;
 	});
 };
-
-// export const editDriver = (driverKey: string, driver: any) => (
-// 	dispatch,
-// 	getState
-// ) => {};
-// export const fetchDrivers = () => (dispatch, getState) => {};
-// export const fetchDriver = (driverKey: string) => (dispatch, getState) => {};
-
-// export const deleteDriver = (driverKey: string) => (dispatch, getState) => {};

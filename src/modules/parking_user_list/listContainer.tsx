@@ -17,11 +17,10 @@ class ListUserContainer extends React.Component<ListContainerProps, any> {
 	public fetchAllDrivers = () => {
 		this.props.fetchAllDriver().then(() => {
 			this.setState(() => ({ isLoaded: true }));
-			console.log(this.props.drivers);
 		});
 	};
 	public deleteRecord = (userKey: string) => {
-		this.props.deleteDriver(userKey)
+		this.props.deleteDriver(userKey);
 	};
 
 	public normalizeDataSource = (driversState: IDriverState) => {

@@ -1,75 +1,30 @@
-import * as React from 'react';
-import withFirebaseAdminFunctions, {
-	InjectedProps as withAdminFunctionsInjectedProps
-} from '../../../firebase/withFirebaseAdminFunctions';
-import { message } from 'antd';
-import ListPresenter from './presenter';
-import * as _ from 'lodash';
+import { connect /* DispatchProps */ } from 'react-redux';
+import { Action } from 'redux';
+import { ThunkDispatch } from 'redux-thunk';
+import { RootState } from '../../../store';
+import { fetchAllAdministrator, deleteAdministrator } from '../../../store/actions';
+import ListComponent from './listContainer';
 
-const ErrorEnum = {
-	AUTH_USER_NOT_FOUND:
-		'The administrator with the following ID is register in the database but not as a firebase user ',
-	UNKNOWN: 'An unknown error occured',
-	DEFAULT: 'There is an unknow error with the administrator with the ID : '
+// export default withFirebaseDatabase(ListComponent);
+
+type PropsFromDispatch = ReturnType<typeof mapDispatchToProps>;
+type PropsFromState = ReturnType<typeof mapStateToProps>;
+
+export type ListContainerProps = PropsFromDispatch & PropsFromState
+
+const mapStateToProps = (state: RootState) => {
+	return { administrators: state.administrators };
+};
+const mapDispatchToProps = (
+	dispatch: ThunkDispatch<RootState, void, Action>
+) => {
+	return {
+		deleteAdministrator: (administratorKey: string) => dispatch(deleteAdministrator(administratorKey)),
+		fetchAllAdministrator: () => dispatch(fetchAllAdministrator())
+	};
 };
 
-class ListUserContainer extends React.Component<
-	withAdminFunctionsInjectedProps,
-	any
-> {
-	public constructor(props: withAdminFunctionsInjectedProps) {
-		super(props);
-		this.state = {
-			administrators: [],
-			isLoaded: false
-		};
-	}
-	public componentDidMount() {
-		this.fetchAdmins();
-	}
-	public fetchAdmins = () => {
-		const { functions } = this.props;
-		functions
-			.getAllAdmins()
-			.then(adminsResponse => {
-				const [admins, adminsInError] = _.partition(
-					adminsResponse.data,
-					admin => !admin.error
-				);
-				adminsInError.forEach(adminError =>
-					message.warning(
-						(ErrorEnum[adminError.error] || ErrorEnum.DEFAULT) +
-							(adminError.userId || 'unknown'),
-						5
-					)
-				);
-				this.setState(() => ({ administrators: admins, isLoaded: true }));
-			})
-			.catch(err => {
-				if (process.env.NODE_ENV !== 'production') {
-					console.log(err);
-				}
-				message.error(ErrorEnum.UNKNOWN);
-			});
-	};
-	public deleteRecord = (adminKey: string) => {
-    const { functions } = this.props;
-    this.setState(() => ({isLoaded: false}));
-		functions
-			.deleteAdmin({uid: adminKey})
-			.then(() => this.fetchAdmins())
-			.catch(err => console.log('TODO HANDLE ERR', err));
-	};
-	public render() {
-		const { administrators, isLoaded } = this.state;
-		return (
-			<ListPresenter
-				dataSource={administrators}
-				loading={!isLoaded}
-				onDeleteRecord={this.deleteRecord}
-			/>
-		);
-	}
-}
-
-export default withFirebaseAdminFunctions(ListUserContainer);
+export default connect(
+	mapStateToProps,
+	mapDispatchToProps
+)(ListComponent);

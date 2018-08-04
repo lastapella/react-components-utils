@@ -3,13 +3,14 @@ import { createStore, applyMiddleware, compose } from 'redux';
 import thunk from 'redux-thunk';
 // Dev only
 import logger from 'redux-logger';
-import { IDriverState, IRequestState } from './models';
+import { IDriverState, IRequestState, IAdministratorState } from './models';
 import rootReducer from './reducers';
 
 // const createStoreWithMiddleware = applyMiddleware(thunk, mixpanel)(createStore);
 export interface RootState {
 	drivers: IDriverState;
 	request: IRequestState;
+	administrators: IAdministratorState;
 }
 
 export const configureStore = (initialState?: RootState) => {

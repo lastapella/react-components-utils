@@ -1,1 +1,1 @@
-export { default } from './connector';
+export { default } from './container';

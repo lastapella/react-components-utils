@@ -1,24 +1,24 @@
 import { ActionType } from 'typesafe-actions';
-import * as driverActions from '../../actions/driver';
+import * as administratorActions from '../../actions/administrators';
 import { Reducer } from 'redux';
 import {
-	MERGE_DRIVERS,
-	REMOVE_DRIVER_FROM_LIST
+	MERGE_ADMINISTRATORS,
+	REMOVE_ADMINISTRATOR_FROM_LIST
 } from '../../constants/actionTypes';
 import { IDriverState } from '../../models';
 
 const initialState: IDriverState = {};
 
-type DriverAction = ActionType<typeof driverActions>;
+type DriverAction = ActionType<typeof administratorActions>;
 
 const reducer: Reducer<IDriverState, DriverAction> = (
 	state = initialState,
 	action
 ) => {
 	switch (action.type) {
-		case MERGE_DRIVERS:
+		case MERGE_ADMINISTRATORS:
 			return mergeDrivers(state, action.payload);
-		case REMOVE_DRIVER_FROM_LIST:
+		case REMOVE_ADMINISTRATOR_FROM_LIST:
 			return removeDriverFromList(state, action.payload);
 	}
 	return state;
