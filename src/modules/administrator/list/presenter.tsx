@@ -15,7 +15,6 @@ export default ({
 	onDeleteRecord?: any;
 }) => {
 
-  console.log(dataSource);
 	const columns = [
 		{
 			title: 'Display Name',

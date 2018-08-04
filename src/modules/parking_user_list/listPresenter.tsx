@@ -32,7 +32,6 @@ export default ({
 	loading: boolean;
 	onDeleteRecord?: any;
 }) => {
-	console.log(dataSource);
 	const columns = [
 		{
 			title: 'Firstname',
@@ -55,7 +54,7 @@ export default ({
 			key: 'actions',
 			render: (text: string, record: any) => (
 				<React.Fragment>
-					<Link to={`/driver/edit/${record.key}`}> Edit </Link>
+					<Link to={`/drivers/edit/${record.key}`}> Edit </Link>
 					<Divider type="vertical" />
 					<Popconfirm
 						key="action-delete"

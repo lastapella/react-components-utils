@@ -1,5 +1,5 @@
 // import mixpanel from './mixpanel';
-import { createStore, applyMiddleware, compose } from 'redux';
+import { createStore, applyMiddleware, compose, StoreEnhancer } from 'redux';
 import thunk from 'redux-thunk';
 // Dev only
 import logger from 'redux-logger';
@@ -13,12 +13,19 @@ export interface RootState {
 	administrators: IAdministratorState;
 }
 
+let enhancers: StoreEnhancer<
+	{
+		dispatch: {};
+	},
+	{}
+>;
+if (process.env.NODE_ENV !== 'production') {
+	enhancers = applyMiddleware(thunk, logger);
+} else {
+	enhancers = applyMiddleware(thunk);
+}
 export const configureStore = (initialState?: RootState) => {
-	const store = createStore(
-		rootReducer,
-		initialState!,
-		applyMiddleware(thunk, logger)
-	);
+	const store = createStore(rootReducer, initialState!, enhancers);
 	// const store = createStoreWithMiddleware(
 	//   rootReducer,
 	//   initialState,

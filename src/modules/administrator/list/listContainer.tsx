@@ -48,7 +48,6 @@ class ListUserContainer extends React.Component<ListContainerProps, any> {
 	};
 	public deleteRecord = (adminKey: string) => {
 		this.props.deleteAdministrator(adminKey).then(operationResult => {
-			console.log(operationResult);
 			if (operationResult.success) {
 				message.success(operationResult.message);
 			} else {

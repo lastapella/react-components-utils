@@ -29,7 +29,6 @@ const mergeDrivers: (
 	payload: { list: IDriverState }
 ) => IDriverState = (state, payload) => {
 	const { list } = payload;
-	console.log({ ...state });
 	return getConcatList(state, list);
 };
 const removeDriverFromList: (

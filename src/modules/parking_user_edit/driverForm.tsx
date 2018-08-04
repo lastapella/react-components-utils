@@ -46,7 +46,7 @@ const InnerForm = ({
 }: FormikProps<FormValues> & PresenterProps) => {
 	const onCancel = () => {
 		message.warn('Form Edition Canceled');
-		history.push('/driver/list');
+		history.push('/drivers/list');
 	};
 	return (
 		<Form className="login-form" noValidate={true}>
@@ -165,7 +165,6 @@ const DriverForm = withFormik<PresenterProps, FormValues>({
 	// validateOnChange: false,
 	// Transform outer props into form values
 	mapPropsToValues: props => {
-		console.log(props.driver);
 		return {
 			firstname: props.driver ? props.driver.firstname : '',
 			lastname: props.driver ? props.driver.lastname : '',
@@ -196,20 +195,17 @@ const DriverForm = withFormik<PresenterProps, FormValues>({
 			setErrors /* setValues, setStatus, and other goodies */
 		}
 	) => {
-		console.log(values);
 		if (driver && driverId) {
 			// EDIT MODE
-			console.log(driver);
-			console.log(driverId);
 			editDriver(driverId, values).then(userKey => {
 				message.success('Driver edited');
-				history.push('/driver/list');
+				history.push('/drivers/list');
 			});
 		} else {
 			// NEW MODE
 			addDriver(values).then(userNewKey => {
 				message.success('New driver added');
-				history.push('/driver/list');
+				history.push('/drivers/list');
 			});
 		}
 	}

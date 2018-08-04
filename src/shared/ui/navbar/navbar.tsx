@@ -32,8 +32,8 @@ const linksLeftInit: LinkType[] = [
 		label: 'Driver/Vehicle',
 		key: 'driver',
 		children: [
-			{ to: '/driver/list', label: 'List drivers', key: 'driver:list' },
-			{ to: '/driver/add', label: 'Add driver', key: 'driver:add' }
+			{ to: '/drivers/list', label: 'List drivers', key: 'driver:list' },
+			{ to: '/drivers/add', label: 'Add driver', key: 'driver:add' }
 			// { to: '/topic', label: 'Topic2', key: 'topic:2' }
 		]
 	},

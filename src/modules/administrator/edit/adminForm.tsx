@@ -146,7 +146,6 @@ const AdminForm = withFormik<PresenterProps, FormValues>({
 	// validateOnChange: false,
 	// Transform outer props into form values
 	mapPropsToValues: props => {
-		console.log(props);
 		return {
 			displayName: props.administrator ? props.administrator.displayName : '',
 			email: props.administrator ? props.administrator.email : '',
@@ -190,13 +189,9 @@ const AdminForm = withFormik<PresenterProps, FormValues>({
 			setErrors /* setValues, setStatus, and other goodies */
 		}
 	) => {
-		// functions.helloWord();
-		console.log(values);
 
 		if (administrator && administratorId) {
 			// EDIT MODE
-			// console.log(administrator);
-			// databaseAction.editUser(administrator.key, values);
 			editAdministrator(administratorId, values)
 				.then(res => {
 					const errorMessage = functionsResponseWithError(res.data);
