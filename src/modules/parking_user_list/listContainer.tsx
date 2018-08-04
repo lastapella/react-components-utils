@@ -1,43 +1,38 @@
 import * as React from 'react';
 import { InjectedProps as withDatabaseInjectedProps } from '../../firebase/withFirebaseDatabase';
 import ListPresenter from './listPresenter';
+import { ListContainerProps } from './container';
+import { IDriverState } from '../../store/models';
 
-class ListUserContainer extends React.Component<
-	withDatabaseInjectedProps,
-	any
-> {
-	public constructor(props: withDatabaseInjectedProps) {
+class ListUserContainer extends React.Component<ListContainerProps, any> {
+	public constructor(props: ListContainerProps) {
 		super(props);
 		this.state = {
-			parkingUsers: [],
 			isLoaded: false
 		};
 	}
 	public componentDidMount() {
-		this.fetchUser();
+		this.fetchAllDrivers();
 	}
-	public fetchUser = () => {
-		const { databaseAction: actions } = this.props;
-		actions
-			.getAllUsers()
-			.then(snapshot => {
-				this.setState(() => ({ parkingUsers: snapshot, isLoaded: true }));
-			})
-			.catch(err => console.log('TODO HANDLE ERR', err));
+	public fetchAllDrivers = () => {
+		this.props.fetchAllDriver().then(() => {
+			this.setState(() => ({ isLoaded: true }));
+			console.log(this.props.drivers);
+		});
 	};
 	public deleteRecord = (userKey: string) => {
-		const { databaseAction: actions } = this.props;
-    this.setState(() => ({isLoaded: false}));
-		actions
-			.deleteUser(userKey)
-			.then(() => this.fetchUser())
-			.catch(err => console.log('TODO HANDLE ERR', err));
+		this.props.deleteDriver(userKey)
+	};
+
+	public normalizeDataSource = (driversState: IDriverState) => {
+		const keys = Object.keys(driversState);
+		return keys.map(key => ({ key, ...driversState[key] }));
 	};
 	public render() {
-		const { parkingUsers, isLoaded } = this.state;
+		const { isLoaded } = this.state;
 		return (
 			<ListPresenter
-				dataSource={parkingUsers}
+				dataSource={this.normalizeDataSource(this.props.drivers)}
 				loading={!isLoaded}
 				onDeleteRecord={this.deleteRecord}
 			/>

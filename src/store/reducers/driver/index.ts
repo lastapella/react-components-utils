@@ -1,4 +1,4 @@
-import { ActionType} from 'typesafe-actions';
+import { ActionType } from 'typesafe-actions';
 import * as driverActions from '../../actions/driver';
 import { Reducer, AnyAction } from 'redux';
 import {
@@ -26,17 +26,18 @@ const reducer: Reducer<IDriverState, DriverAction> = (
 
 const mergeDrivers: (
 	state: IDriverState,
-	payload: { list: IDriverState } 
+	payload: { list: IDriverState }
 ) => IDriverState = (state, payload) => {
 	const { list } = payload;
-	return { ...state, drivers: getConcatList(state, list) };
+	console.log({ ...state });
+	return getConcatList(state, list);
 };
 const removeDriverFromList: (
 	state: IDriverState,
 	payload: { key: string }
 ) => IDriverState = (state, payload) => {
 	const { key } = payload;
-	return { ...state, drivers: removeWithKey(state, key) };
+	return removeWithKey(state, key);
 };
 
 const removeWithKey = (list: IDriverState, key: string) => {

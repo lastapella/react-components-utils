@@ -1,2 +1,2 @@
-import ListUsersComponent from './databaseConnector';
+import ListUsersComponent from './container';
 export default ListUsersComponent;

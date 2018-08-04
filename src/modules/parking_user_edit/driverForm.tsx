@@ -21,7 +21,7 @@ import {
 	// DatePickerField
 } from '../../shared/ui/form';
 import VehicleForm from './vehicleForm';
-import { PresenterProps  } from './container';
+import { PresenterProps } from './container';
 
 // const FormItem = AntForm.Item;
 
@@ -30,10 +30,8 @@ interface FormValues {
 	[key: string]: any;
 }
 
-type Props = RouteComponentProps<FormValues> & { userMatched: FormValues };
-
 const InnerForm = ({
-	userMatched,
+	driver,
 	values,
 	errors,
 	touched,
@@ -45,7 +43,7 @@ const InnerForm = ({
 	isSubmitting,
 	history,
 	location
-}: FormikProps<FormValues> & Props) => {
+}: FormikProps<FormValues> & PresenterProps) => {
 	const onCancel = () => {
 		message.warn('Form Edition Canceled');
 		history.push('/driver/list');
@@ -162,16 +160,17 @@ const InnerForm = ({
 // ];
 // console.log(vehiclesMockUp);
 
-const DriverForm = withFormik<Props, FormValues>({
+const DriverForm = withFormik<PresenterProps, FormValues>({
 	enableReinitialize: true,
 	// validateOnChange: false,
 	// Transform outer props into form values
 	mapPropsToValues: props => {
+		console.log(props.driver);
 		return {
-			firstname: props.userMatched ? props.userMatched.firstname : '',
-			lastname: props.userMatched ? props.userMatched.lastname : '',
-			email: props.userMatched ? props.userMatched.email : '',
-			vehicles: props.userMatched ? props.userMatched.vehicles : []
+			firstname: props.driver ? props.driver.firstname : '',
+			lastname: props.driver ? props.driver.lastname : '',
+			email: props.driver ? props.driver.email : '',
+			vehicles: props.driver ? props.driver.vehicles : []
 		};
 	},
 	validationSchema: driverValidationSchema,
@@ -192,26 +191,27 @@ const DriverForm = withFormik<Props, FormValues>({
 	handleSubmit: (
 		values,
 		{
-			props: { userMatched, history },
+			props: { driverId, driver, history, editDriver, addDriver },
 			setSubmitting,
 			setErrors /* setValues, setStatus, and other goodies */
 		}
 	) => {
 		console.log(values);
-		// if (userMatched) {
-		// 	// EDIT MODE
-		// 	console.log(userMatched);
-		// 	databaseAction.editUser(userMatched.key, values).then(userKey => {
-		// 		message.success('Driver edited');
-		// 		history.push('/driver/list');
-		// 	});
-		// } else {
-		// 	// NEW MODE
-		// 	databaseAction.addUser(values).then(userNewKey => {
-		// 		message.success('New driver added');
-		// 		history.push('/driver/list');
-		// 	});
-		// }
+		if (driver && driverId) {
+			// EDIT MODE
+			console.log(driver);
+			console.log(driverId);
+			editDriver(driverId, values).then(userKey => {
+				message.success('Driver edited');
+				history.push('/driver/list');
+			});
+		} else {
+			// NEW MODE
+			addDriver(values).then(userNewKey => {
+				message.success('New driver added');
+				history.push('/driver/list');
+			});
+		}
 	}
 })(InnerForm);
 

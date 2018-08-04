@@ -1,5 +1,9 @@
 export const VEHICLES = 'VEHICLES';
 export const DRIVERS = 'DRIVERS';
 export const DRIVERS_ADD = 'DRIVERS_ADD';
+export const DRIVERS_FETCH = 'DRIVERS_FETCH';
+export const DRIVERS_FETCHALL = 'DRIVERS_FETCHALL';
+export const DRIVERS_EDIT = 'DRIVERS_EDIT';
+export const DRIVERS_DELETE = 'DRIVER_DELETE';
 export const ADMINISTRATORS = 'ADMINISTRATORS';
 export const AUTH = 'AUTH';

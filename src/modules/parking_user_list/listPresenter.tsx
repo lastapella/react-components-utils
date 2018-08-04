@@ -32,6 +32,7 @@ export default ({
 	loading: boolean;
 	onDeleteRecord?: any;
 }) => {
+	console.log(dataSource);
 	const columns = [
 		{
 			title: 'Firstname',
