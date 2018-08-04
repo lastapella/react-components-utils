@@ -1,14 +1,11 @@
-import * as actionTypes from '../../constants/actionTypes';
-import { StaticRouter } from 'react-router';
-import { ActionType, getType } from 'typesafe-actions';
+import { ActionType} from 'typesafe-actions';
 import * as driverActions from '../../actions/driver';
 import { Reducer, AnyAction } from 'redux';
 import {
 	MERGE_DRIVERS,
 	REMOVE_DRIVER_FROM_LIST
 } from '../../constants/actionTypes';
-import { PayloadCreator } from 'typesafe-actions/dist/types';
-import { IDriverState } from '../../models/driverState';
+import { IDriverState } from '../../models';
 
 const initialState: IDriverState = {};
 

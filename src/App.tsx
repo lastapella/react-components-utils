@@ -5,7 +5,7 @@ import * as React from 'react';
 import Routes from './routes';
 import withFirebaseUserContext from './firebase/withFirebaseUserContext';
 import { compose } from 'recompose';
-import withStore from './store/withStore';
+import { withStore } from './store';
 // import logo from './logo.svg';
 
 class App extends React.Component {

@@ -1,12 +1,9 @@
 import * as actionTypes from '../../constants/actionTypes';
 import * as requestActions from '../../actions/request';
-import { ActionType, getType, isOfType } from 'typesafe-actions';
+import { ActionType } from 'typesafe-actions';
 import { Reducer } from 'redux';
-import { PayloadCreator } from 'typesafe-actions/dist/types';
+import { IRequestState } from '../../models';
 
-interface IRequestState {
-	[key: string]: boolean;
-}
 const initialState: IRequestState = {};
 
 type RequestAction = ActionType<typeof requestActions>;
@@ -22,7 +19,10 @@ const reducer: Reducer<IRequestState, RequestAction> = (
 	return state;
 };
 
-const setRequestInProcess = (state: IRequestState, { payload }: RequestAction) => {
+const setRequestInProcess = (
+	state: IRequestState,
+	{ payload }: RequestAction
+) => {
 	const { inProcess, requestType } = payload;
 	const requestObject = {};
 	requestObject[requestType] = inProcess;

@@ -12,10 +12,11 @@ import {
 	removeRef
 } from '../../../lib/firebase/databaseUtils';
 import { firebaseApp } from '../../../lib/firebase/firebase';
-import { IDriverState } from '../../models/driverState';
+import { IDriverState, IDriver } from '../../models/driverState';
 
 import * as requestTypes from '../../constants/requestTypes';
 import { setRequestInProcess } from '../../actions/request';
+import { RootState } from '../../configureStore';
 
 const database = firebaseApp.database();
 
@@ -26,15 +27,23 @@ export const removeDriverFromList = (key: string) =>
 	action(REMOVE_DRIVER_FROM_LIST, { key });
 
 export const addDriver: ActionCreator<
-	ThunkAction<Promise<any>, IDriverState, any, Action>
-> = (driver: any) => (dispatch, getState) => {
+	ThunkAction<Promise<any>, RootState, any, Action>
+> = (driver: IDriver) => (dispatch, getState) => {
 	console.log(getState());
 	const requestType = requestTypes.DRIVERS_ADD;
 	dispatch(setRequestInProcess(true, requestType));
-	return addRef(database, 'drivers/', driver).then(keyAdded => {
-		dispatch(mergeDrivers({ ...getState(), [keyAdded]: { ...driver } }));
-		dispatch(setRequestInProcess(false, requestType));
-	});
+	return addRef(database, 'users/', driver)
+		.then(keyAdded => {
+			console.log('EY ADDDEDDK?DKJ', keyAdded);
+			readRef(database, 'drivers/').then(snapshot =>
+				console.log('SNAPESHOOOT', snapshot.val())
+			);
+			console.log('GETSTATE');
+			console.log(getState());
+			dispatch(mergeDrivers({ ...getState(), [keyAdded]: { ...driver } }));
+			dispatch(setRequestInProcess(false, requestType));
+		})
+		.catch(err => console.log('EROOOOOOOOOOOOOOOOOOR', err));
 };
 // export const editDriver = (driverKey: string, driver: any) => (
 // 	dispatch,

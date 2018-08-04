@@ -2,7 +2,7 @@ import * as React from 'react';
 import * as firebase from 'firebase';
 import getComponentDisplayName from '../shared/HOC/utils';
 import { Provider } from 'react-redux';
-import configureStore from './configureStore';
+import {configureStore} from './configureStore';
 // tslint:disable-next-line:no-var-requires
 // const StyledFirebaseAuth = require('react-firebaseui/StyledFirebaseAuth')
 // 	.default;

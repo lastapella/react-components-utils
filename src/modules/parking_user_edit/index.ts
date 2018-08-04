@@ -1,1 +1,1 @@
-export { default } from './databaseConnector';
+export { default } from './container';

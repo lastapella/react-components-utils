@@ -21,6 +21,7 @@ import {
 	// DatePickerField
 } from '../../shared/ui/form';
 import VehicleForm from './vehicleForm';
+import { PresenterProps  } from './container';
 
 // const FormItem = AntForm.Item;
 
@@ -29,8 +30,7 @@ interface FormValues {
 	[key: string]: any;
 }
 
-type Props = withDatabaseInjectedProps &
-	RouteComponentProps<FormValues> & { userMatched: FormValues };
+type Props = RouteComponentProps<FormValues> & { userMatched: FormValues };
 
 const InnerForm = ({
 	userMatched,
@@ -192,83 +192,27 @@ const DriverForm = withFormik<Props, FormValues>({
 	handleSubmit: (
 		values,
 		{
-			props: { userMatched, databaseAction, history },
+			props: { userMatched, history },
 			setSubmitting,
 			setErrors /* setValues, setStatus, and other goodies */
 		}
 	) => {
 		console.log(values);
-		if (userMatched) {
-			// EDIT MODE
-			console.log(userMatched);
-			databaseAction.editUser(userMatched.key, values).then(userKey => {
-				message.success('Driver edited');
-				history.push('/driver/list');
-			});
-		} else {
-			// NEW MODE
-			databaseAction.addUser(values).then(userNewKey => {
-				message.success('New driver added');
-				history.push('/driver/list');
-			});
-		}
+		// if (userMatched) {
+		// 	// EDIT MODE
+		// 	console.log(userMatched);
+		// 	databaseAction.editUser(userMatched.key, values).then(userKey => {
+		// 		message.success('Driver edited');
+		// 		history.push('/driver/list');
+		// 	});
+		// } else {
+		// 	// NEW MODE
+		// 	databaseAction.addUser(values).then(userNewKey => {
+		// 		message.success('New driver added');
+		// 		history.push('/driver/list');
+		// 	});
+		// }
 	}
 })(InnerForm);
 
-export default class FormWithRecord extends React.Component<
-	withDatabaseInjectedProps & RouteComponentProps<{ id: string }>,
-	any
-> {
-	public constructor(props: any) {
-		super(props);
-		console.log(props);
-		this.state = {
-			user: undefined,
-			isLoaded: false
-		};
-	}
-	public componentDidMount() {
-		if (this.props.match.params.id) {
-			this.props.databaseAction
-				.getUser(this.props.match.params.id)
-				.then(user => {
-					this.setState(() => ({ user, isLoaded: true }));
-				});
-		} else {
-			this.setState(() => ({ isLoaded: true }));
-		}
-	}
-	public componentDidUpdate(
-		prevProps: withDatabaseInjectedProps & RouteComponentProps<{ id: string }>
-	) {
-		if (
-			this.props.match.params.id &&
-			this.props.location !== prevProps.location
-		) {
-			this.props.databaseAction
-				.getUser(this.props.match.params.id)
-				.then(user => {
-					this.setState(() => ({ user, isLoaded: true }));
-				});
-		} else if (this.props.location !== prevProps.location) {
-			this.setState(() => ({ user: null, isLoaded: true }));
-		}
-	}
-	public render() {
-		const { isLoaded, user } = this.state;
-		return (
-			<React.Fragment>
-				{' '}
-				{isLoaded ? (
-					<DriverForm
-						userMatched={user}
-						databaseAction={this.props.databaseAction}
-						{...this.props}
-					/>
-				) : (
-					<div> Loading ... </div>
-				)}
-			</React.Fragment>
-		);
-	}
-}
+export default DriverForm;

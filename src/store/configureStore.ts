@@ -3,22 +3,20 @@ import { createStore, applyMiddleware, compose } from 'redux';
 import thunk from 'redux-thunk';
 // Dev only
 import logger from 'redux-logger';
-import { StateType } from 'typesafe-actions';
-
+import { IDriverState, IRequestState } from './models';
 import rootReducer from './reducers';
 
-
-
 // const createStoreWithMiddleware = applyMiddleware(thunk, mixpanel)(createStore);
+export interface RootState {
+	drivers: IDriverState;
+	request: IRequestState;
+}
 
-type RootState = StateType<typeof rootReducer>;
-
-
-export default function configureStore(initialState?: RootState) {
+export const configureStore = (initialState?: RootState) => {
 	const store = createStore(
 		rootReducer,
 		initialState!,
-		applyMiddleware(thunk, logger),
+		applyMiddleware(thunk, logger)
 	);
 	// const store = createStoreWithMiddleware(
 	//   rootReducer,
@@ -34,4 +32,4 @@ export default function configureStore(initialState?: RootState) {
 	//   });
 	// }
 	return store;
-}
+};
