@@ -49,7 +49,7 @@ const actions = (database: firebase.database.Database) => {
 			readRef(database, `drivers/${userKey}`).then(snapshot => {
 				return { key: snapshot.key, ...snapshot.val() };
 			}),
-		deleteUser: (userKey: string) => removeRef(database, `users/${userKey}`)
+		deleteUser: (userKey: string) => removeRef(database, `drivers/${userKey}`)
 	};
 };
 
