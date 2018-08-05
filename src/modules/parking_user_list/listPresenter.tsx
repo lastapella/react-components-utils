@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { Table, Divider, Popconfirm } from 'antd';
 import { Link } from 'react-router-dom';
-
+import ExpandedRowRender from './expandedRowRenderContainer';
+import { IDriver } from '../../store/models';
 const DELETE_TEXT = 'Are you sure you want to delete this user?';
 
 const expandedRowRender = (record: any) => {
@@ -54,7 +55,7 @@ export default ({
 			key: 'actions',
 			render: (text: string, record: any) => (
 				<React.Fragment>
-					<Link to={`/driver/edit/${record.key}`}> Edit </Link>
+					<Link to={`/drivers/edit/${record.key}`}> Edit </Link>
 					<Divider type="vertical" />
 					<Popconfirm
 						key="action-delete"
@@ -77,7 +78,10 @@ export default ({
 				dataSource={dataSource}
 				columns={columns}
 				loading={loading}
-				expandedRowRender={expandedRowRender}
+				// tslint:disable-next-line:jsx-no-lambda
+				expandedRowRender={(record: IDriver) => (
+					<ExpandedRowRender vehicles={record.vehicles} />
+				)}
 				expandRowByClick={true}
 			/>
 		</React.Fragment>

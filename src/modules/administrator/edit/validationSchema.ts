@@ -18,7 +18,6 @@ const adminPasswordValidation = yup
 	.string()
 	.min(6, PASSWORD_NOT_LONG_ENOUGH)
 	.max(255)
-	.required(REQUIRED_FIELD);
 
 const adminEmailValidation = yup
 	.string()

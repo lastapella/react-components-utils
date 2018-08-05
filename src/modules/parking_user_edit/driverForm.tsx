@@ -21,19 +21,19 @@ import {
 	// DatePickerField
 } from '../../shared/ui/form';
 import VehicleForm from './vehicleForm';
+import { PresenterProps } from './container';
+import { IDriver, IVehicle } from '../../store/models';
+import { IU_NUMBER_MUST_BE_UNIQUE } from '../../constants/validationMessages';
 
 // const FormItem = AntForm.Item;
 
-// @TODO
+// // @TODO
 interface FormValues {
 	[key: string]: any;
 }
 
-type Props = withDatabaseInjectedProps &
-	RouteComponentProps<FormValues> & { userMatched: FormValues };
-
 const InnerForm = ({
-	userMatched,
+	driver,
 	values,
 	errors,
 	touched,
@@ -45,10 +45,10 @@ const InnerForm = ({
 	isSubmitting,
 	history,
 	location
-}: FormikProps<FormValues> & Props) => {
+}: FormikProps<FormValues> & PresenterProps) => {
 	const onCancel = () => {
 		message.warn('Form Edition Canceled');
-		history.push('/driver/list');
+		history.push('/drivers/list');
 	};
 	return (
 		<Form className="login-form" noValidate={true}>
@@ -162,113 +162,89 @@ const InnerForm = ({
 // ];
 // console.log(vehiclesMockUp);
 
-const DriverForm = withFormik<Props, FormValues>({
+const DriverForm = withFormik<PresenterProps, FormValues>({
 	enableReinitialize: true,
 	// validateOnChange: false,
 	// Transform outer props into form values
 	mapPropsToValues: props => {
 		return {
-			firstname: props.userMatched ? props.userMatched.firstname : '',
-			lastname: props.userMatched ? props.userMatched.lastname : '',
-			email: props.userMatched ? props.userMatched.email : '',
-			vehicles: props.userMatched ? props.userMatched.vehicles : []
+			firstname: props.driver ? props.driver.firstname : '',
+			lastname: props.driver ? props.driver.lastname : '',
+			email: props.driver ? props.driver.email : '',
+			vehicles: props.vehicles ? props.vehicles : []
 		};
 	},
 	validationSchema: driverValidationSchema,
 	// Add a custom validation function (this can be async too!)
-	// validate: (values, props) => {
-	// 	const errors: any = {};
-	// 	// if (!values.firstname) {
-	// 	// 	errors.email = 'Required';
-	// 	// }
-	// 	// else if (
-	// 	// 	!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)
-	// 	// ) {
-	// 	// 	errors.email = 'Invalid email address';
-	// 	// }
-	// 	return errors;
-	// },
+	validate: (values, props) => {
+		const errors: any = {};
+		const iunumberList: string[] = values.vehicles.map(
+			(vehicle: any) => vehicle.iunumber
+		);
+		const iunumberInError = iunumberList.map(
+			(value, index, self) => (self.indexOf(value) !== index ? index : null)
+		);
+		iunumberInError.forEach(vehicleIndex => {
+			if (vehicleIndex !== null) {
+				errors.vehicles = {
+					[vehicleIndex]: { iunumber: IU_NUMBER_MUST_BE_UNIQUE }
+				};
+			}
+		});
+		return errors;
+	},
 	// Submission handler
 	handleSubmit: (
 		values,
 		{
-			props: { userMatched, databaseAction, history },
+			props: {
+				driverId,
+				driver,
+				history,
+				editDriver,
+				addDriver,
+				addOrUpdateVehiclesList
+			},
 			setSubmitting,
 			setErrors /* setValues, setStatus, and other goodies */
 		}
 	) => {
-		console.log(values);
-		if (userMatched) {
+		const driverValues = {
+			...values,
+			vehicles: values.vehicles.map((vehicle: any) => vehicle.iunumber)
+		};
+		const vehiclesValues = values.vehicles;
+		if (driver && driverId) {
 			// EDIT MODE
-			console.log(userMatched);
-			databaseAction.editUser(userMatched.key, values).then(userKey => {
-				message.success('Driver edited');
-				history.push('/driver/list');
+			const vehicleKeysRemoved = driver.vehicles
+				? driver.vehicles.filter(
+						vehiclekey =>
+							driverValues.vehicles
+								? !driverValues.vehicles.includes(vehiclekey)
+								: true
+				  )
+				: [];
+
+			editDriver(driverId, driverValues).then(driverKey => {
+				addOrUpdateVehiclesList(
+					vehiclesValues,
+					driverKey,
+					vehicleKeysRemoved
+				).then(() => {
+					message.success('Driver edited');
+					history.push('/drivers/list');
+				});
 			});
 		} else {
 			// NEW MODE
-			databaseAction.addUser(values).then(userNewKey => {
-				message.success('New driver added');
-				history.push('/driver/list');
+			addDriver(driverValues).then(driverNewKey => {
+				addOrUpdateVehiclesList(vehiclesValues, driverNewKey).then(() => {
+					message.success('New driver added');
+					history.push('/drivers/list');
+				});
 			});
 		}
 	}
 })(InnerForm);
 
-export default class FormWithRecord extends React.Component<
-	withDatabaseInjectedProps & RouteComponentProps<{ id: string }>,
-	any
-> {
-	public constructor(props: any) {
-		super(props);
-		console.log(props);
-		this.state = {
-			user: undefined,
-			isLoaded: false
-		};
-	}
-	public componentDidMount() {
-		if (this.props.match.params.id) {
-			this.props.databaseAction
-				.getUser(this.props.match.params.id)
-				.then(user => {
-					this.setState(() => ({ user, isLoaded: true }));
-				});
-		} else {
-			this.setState(() => ({ isLoaded: true }));
-		}
-	}
-	public componentDidUpdate(
-		prevProps: withDatabaseInjectedProps & RouteComponentProps<{ id: string }>
-	) {
-		if (
-			this.props.match.params.id &&
-			this.props.location !== prevProps.location
-		) {
-			this.props.databaseAction
-				.getUser(this.props.match.params.id)
-				.then(user => {
-					this.setState(() => ({ user, isLoaded: true }));
-				});
-		} else if (this.props.location !== prevProps.location) {
-			this.setState(() => ({ user: null, isLoaded: true }));
-		}
-	}
-	public render() {
-		const { isLoaded, user } = this.state;
-		return (
-			<React.Fragment>
-				{' '}
-				{isLoaded ? (
-					<DriverForm
-						userMatched={user}
-						databaseAction={this.props.databaseAction}
-						{...this.props}
-					/>
-				) : (
-					<div> Loading ... </div>
-				)}
-			</React.Fragment>
-		);
-	}
-}
+export default DriverForm;
