@@ -15,7 +15,7 @@ import AdminEditListComponent from '../modules/administrator/list';
 import {
 	isAuthenticated as isAuthenticatedFunc,
 	isAuthenticatedAsAdmin as isAuthenticatedAsAdminFunc
-} from '../firebase/authorizations';
+} from '../lib/firebase/authorizations';
 // import { RegisterConnector } from "../modules/register/RegisterConnector";
 // import { LoginConnector } from "../modules/login/LoginConnector";
 

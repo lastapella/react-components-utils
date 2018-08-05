@@ -15,12 +15,6 @@ import {
 	Switch,
 	message
 } from 'antd';
-import { RouteComponentProps } from 'react-router';
-import { InjectedProps as withDatabaseInjectedProps } from '../../../firebase/withFirebaseDatabase';
-import {
-	InjectedProps as withAdminFunctionInjectedProps,
-	functionsResponseWithError
-} from '../../../firebase/withFirebaseAdminFunctions';
 import adminValidationSchema from './validationSchema';
 import {
 	InputField,
@@ -40,14 +34,9 @@ interface FormValues {
 	[key: string]: any;
 }
 
-// interface Props extends withDatabaseInjectedProps
-// interface Props {
-//   submit: (
-//     values: FormValues
-//   ) => Promise<{
-//     [key: string]: string;
-//   } | null>;
-// }
+const functionsResponseWithError = (res : any)  => {
+	return res.errorInfo ? res.errorInfo.message || 'an error occured' : false;
+};
 
 const InnerForm = ({
 	values,
