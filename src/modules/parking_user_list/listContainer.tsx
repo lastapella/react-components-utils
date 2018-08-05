@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { InjectedProps as withDatabaseInjectedProps } from '../../firebase/withFirebaseDatabase';
 import ListPresenter from './listPresenter';
 import { ListContainerProps } from './container';
 import { IDriverState } from '../../store/models';

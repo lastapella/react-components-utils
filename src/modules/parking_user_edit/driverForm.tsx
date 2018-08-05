@@ -9,8 +9,6 @@ import {
 	Col,
 	message
 } from 'antd';
-import { RouteComponentProps } from 'react-router';
-import { InjectedProps as withDatabaseInjectedProps } from '../../firebase/withFirebaseDatabase';
 import driverValidationSchema from './validationSchema';
 import {
 	InputField
@@ -22,7 +20,6 @@ import {
 } from '../../shared/ui/form';
 import VehicleForm from './vehicleForm';
 import { PresenterProps } from './container';
-import { IDriver, IVehicle } from '../../store/models';
 import { IU_NUMBER_MUST_BE_UNIQUE } from '../../constants/validationMessages';
 
 // const FormItem = AntForm.Item;
