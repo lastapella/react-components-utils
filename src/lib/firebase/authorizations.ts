@@ -13,10 +13,17 @@ export const isAuthenticatedAsAdmin = (
 	return authUser
 		? readRef(firebaseApp.database(), 'administrators/' + authUser.uid)
 				.then(admin => {
-					return role ? admin.child('role').val().includes(role) : !!admin;
+					return role
+						? admin
+								.child('role')
+								.val()
+								.includes(role)
+						: !!admin;
 				})
 				.catch(reason => {
-					console.log(reason);
+					if (process.env.NODE_ENV !== 'production') {
+						console.log(reason);
+					}
 					return false;
 				})
 		: false;

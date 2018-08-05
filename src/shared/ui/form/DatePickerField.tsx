@@ -7,7 +7,6 @@ const FormItem = Form.Item;
 const { MonthPicker, RangePicker, WeekPicker } = DatePicker;
 
 const switchRender = (type: string, props: any) => {
-	console.log(props);
 	switch (type) {
 		case 'normal':
 			return <DatePicker {...props} />;

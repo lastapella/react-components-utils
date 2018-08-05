@@ -17,7 +17,7 @@ import {
 import * as _ from 'lodash';
 import { InputField } from './vehicleInputField';
 
-// const FormItem = AntForm.Item;
+const { Meta } = Card;
 
 // @TODO
 interface FormValues {
@@ -25,7 +25,7 @@ interface FormValues {
 }
 
 const DELETE_TEXT = 'Are you sure you want to delete this vehicle?';
-const InnerForm = ({ index, errors, ...props }: any) => {
+const InnerForm = ({ index, errors, values, ...props }: any) => {
 	return (
 		<Card
 			title={`Vehicle ${index + 1}`}
@@ -46,6 +46,7 @@ const InnerForm = ({ index, errors, ...props }: any) => {
 				</Popconfirm>
 			]}
 		>
+			{ values && values.drivers ? <Meta description={`This vehicle has ${values.drivers.length -1} other driver(s)`} /> : null}
 			<Row gutter={16}>
 				<Col xs={24} sm={24} md={12} lg={8}>
 					<Field

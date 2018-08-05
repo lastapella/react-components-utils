@@ -15,7 +15,7 @@ import AdminEditListComponent from '../modules/administrator/list';
 import {
 	isAuthenticated as isAuthenticatedFunc,
 	isAuthenticatedAsAdmin as isAuthenticatedAsAdminFunc
-} from '../firebase/authorizations';
+} from '../lib/firebase/authorizations';
 // import { RegisterConnector } from "../modules/register/RegisterConnector";
 // import { LoginConnector } from "../modules/login/LoginConnector";
 
@@ -56,21 +56,21 @@ const SwitchRoutes = ({
 				isAuthorized={isAuthenticatedAsAdmin}
 				messageText={getAuthorisationMessage('isAuthenticatedAsAdmin')}
 				exact={true}
-				path="/driver/list"
+				path="/drivers/list"
 				component={ListUsersComponent}
 			/>
 			<PrivateRoute
 				isAuthorized={isAuthenticatedAsAdmin}
 				messageText={getAuthorisationMessage('isAuthenticatedAsAdmin')}
 				exact={true}
-				path="/driver/add"
+				path="/drivers/add"
 				component={ParkingUserFormComponent}
 			/>
 			<PrivateRoute
 				isAuthorized={isAuthenticatedAsAdmin}
 				messageText={getAuthorisationMessage('isAuthenticatedAsAdmin')}
 				// exact={true}
-				path="/driver/edit/:id"
+				path="/drivers/edit/:id"
 				component={ParkingUserFormComponent}
 			/>
 			<PrivateRoute
@@ -143,7 +143,6 @@ class Routes extends React.Component<WithUserProps, RoutesState> {
 			isAuthenticatedAsAdminFunc(authUser)
 		])
 			.then(values => {
-				console.log('ALL ', values);
 				this.setState(() => ({
 					isAuthenticated: values[0],
 					isAuthenticatedAsAdmin: values[1],
@@ -151,7 +150,9 @@ class Routes extends React.Component<WithUserProps, RoutesState> {
 				}));
 			})
 			.catch(err => {
-				console.log(err);
+				if (process.env.NODE_ENV !== 'production') {
+					console.log(err);
+				}
 			});
 	}
 	render() {

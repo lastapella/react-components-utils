@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { firebaseApp /* , FirebaseContext  */ } from './firebase';
+import { firebaseApp  } from '../lib/firebase/firebase';
 import { AuthUserContext, LoadedUserContext } from './authUserContext';
 import getComponentDisplayName from './utils';
 // import Loader from '../../shared/ui/defaultLoader';
@@ -23,7 +23,7 @@ export default (ComposedComponent: React.ComponentType<any>) => {
 		public static displayName = `WithFirebaseUserContext(${getComponentDisplayName(
 			ComposedComponent
 		)})`;
-
+		private unsubscribe: firebase.Unsubscribe;
 		public constructor(props: any) {
 			super(props);
 			this.state = {
@@ -32,11 +32,16 @@ export default (ComposedComponent: React.ComponentType<any>) => {
 			};
 		}
 		public componentDidMount() {
-			firebaseApp.auth().onAuthStateChanged(authUser => {
+			this.unsubscribe = firebaseApp.auth().onAuthStateChanged(authUser => {
 				authUser
 					? this.setState(() => ({ authUser, loading: false }))
 					: this.setState(() => ({ authUser: null, loading: false }));
 			});
+		}
+
+		public componentWillUnmount() {
+			// unsubscribe the onAuthChnaged observer
+			this.unsubscribe();
 		}
 
 		public render() {
@@ -47,7 +52,7 @@ export default (ComposedComponent: React.ComponentType<any>) => {
 							{loading ? (
 								<Loader />
 							) : ( */}
-						<ComposedComponent {...this.props}  />
+						<ComposedComponent {...this.props} />
 						{/* )}
 						</React.Fragment> */}
 					</AuthUserContext.Provider>

@@ -15,11 +15,6 @@ import {
 	Switch,
 	message
 } from 'antd';
-import { InjectedProps as withDatabaseInjectedProps } from '../../../firebase/withFirebaseDatabase';
-import {
-	InjectedProps as withAdminFunctionInjectedProps,
-	functionsResponseWithError
-} from '../../../firebase/withFirebaseAdminFunctions';
 import adminValidationSchema from './validationSchema';
 import {
 	InputField,
@@ -31,8 +26,7 @@ import {
 	// SwitchField,
 	// DatePickerField
 } from '../../../shared/ui/form';
-import { RouteComponentProps } from 'react-router';
-
+import { PresenterProps } from './container';
 const FormItem = AntForm.Item;
 
 // @TODO
@@ -40,20 +34,11 @@ interface FormValues {
 	[key: string]: any;
 }
 
-type Props = withAdminFunctionInjectedProps &
-	withDatabaseInjectedProps &
-	RouteComponentProps<FormValues> & { adminMatched: FormValues };
-// interface Props extends withDatabaseInjectedProps
-// interface Props {
-//   submit: (
-//     values: FormValues
-//   ) => Promise<{
-//     [key: string]: string;
-//   } | null>;
-// }
+const functionsResponseWithError = (res : any)  => {
+	return res.errorInfo ? res.errorInfo.message || 'an error occured' : false;
+};
 
 const InnerForm = ({
-	adminMatched,
 	values,
 	errors,
 	touched,
@@ -62,8 +47,13 @@ const InnerForm = ({
 	setFieldValue,
 	setFieldTouched,
 	handleSubmit,
-	isSubmitting
-}: FormikProps<FormValues> & Props) => {
+	isSubmitting,
+	history
+}: FormikProps<FormValues> & PresenterProps) => {
+	const onCancel = () => {
+		message.warn('Form Edition Canceled');
+		history.push('/administrators/list');
+	};
 	return (
 		<Form className="login-form" noValidate={true}>
 			<Divider orientation="left">Administrators Details</Divider>
@@ -86,7 +76,6 @@ const InnerForm = ({
 			<Field
 				label="Password"
 				type="password"
-				required={true}
 				prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
 				name="password"
 				placeholder="Password"
@@ -132,7 +121,7 @@ const InnerForm = ({
 					</Button>
 				</Col>
 				<Col>
-					<Button type="danger" ghost={true}>
+					<Button onClick={onCancel} type="danger" ghost={true}>
 						Cancel
 					</Button>
 				</Col>
@@ -141,24 +130,23 @@ const InnerForm = ({
 	);
 };
 
-const AdminForm = withFormik<Props, FormValues>({
+const AdminForm = withFormik<PresenterProps, FormValues>({
 	enableReinitialize: true,
 	// validateOnChange: false,
 	// Transform outer props into form values
 	mapPropsToValues: props => {
-		console.log(props);
 		return {
-			displayName: props.adminMatched ? props.adminMatched.displayName : '',
-			email: props.adminMatched ? props.adminMatched.email : '',
-			emailVerified: props.adminMatched
-				? props.adminMatched.emailVerified
+			displayName: props.administrator ? props.administrator.displayName : '',
+			email: props.administrator ? props.administrator.email : '',
+			emailVerified: props.administrator
+				? props.administrator.emailVerified
 				: false,
-			phoneNumber: props.adminMatched ? props.adminMatched.phoneNumber : null,
-			photoURL: props.adminMatched ? props.adminMatched.photoURL : null,
-			disabled: props.adminMatched ? props.adminMatched.disabled : false,
-			password: props.adminMatched ? props.adminMatched.password : '',
-			uid: props.adminMatched ? props.adminMatched.uid : '',
-			role: props.adminMatched ? props.adminMatched.role : []
+			phoneNumber: props.administrator ? props.administrator.phoneNumber : null,
+			photoURL: props.administrator ? props.administrator.photoURL : null,
+			disabled: props.administrator ? props.administrator.disabled : false,
+			password: props.administrator ? props.administrator.password : '',
+			uid: props.administrator ? props.administrator.uid : '',
+			role: props.administrator ? props.administrator.role : []
 		};
 	},
 	validationSchema: adminValidationSchema,
@@ -179,20 +167,21 @@ const AdminForm = withFormik<Props, FormValues>({
 	handleSubmit: (
 		values,
 		{
-			props: { adminMatched, databaseAction, functions, history },
+			props: {
+				administratorId,
+				administrator,
+				editAdministrator,
+				addAdministrator,
+				history
+			},
 			setSubmitting,
 			setErrors /* setValues, setStatus, and other goodies */
 		}
 	) => {
-		// functions.helloWord();
-		console.log(values);
 
-		if (adminMatched) {
+		if (administrator && administratorId) {
 			// EDIT MODE
-			// console.log(adminMatched);
-			// databaseAction.editUser(adminMatched.key, values);
-			functions
-				.updateAdmin(values)
+			editAdministrator(administratorId, values)
 				.then(res => {
 					const errorMessage = functionsResponseWithError(res.data);
 					if (errorMessage) {
@@ -212,11 +201,8 @@ const AdminForm = withFormik<Props, FormValues>({
 				});
 		} else {
 			// NEW MODE
-			// databaseAction.addUser(values);
-			functions
-				.addAdmin(values)
+			addAdministrator(values)
 				.then(res => {
-					console.log(res);
 					const errorMessage = functionsResponseWithError(res.data);
 					if (errorMessage) {
 						message.error(errorMessage);
@@ -237,79 +223,4 @@ const AdminForm = withFormik<Props, FormValues>({
 	}
 })(InnerForm);
 
-export default class FormWithRecord extends React.Component<
-	withDatabaseInjectedProps &
-		withAdminFunctionInjectedProps &
-		RouteComponentProps<{ id: string }>,
-	any
-> {
-	public constructor(props: any) {
-		super(props);
-		console.log(props);
-		this.state = {
-			admin: undefined,
-			isLoaded: false
-		};
-	}
-	public componentDidMount() {
-		if (this.props.match.params.id) {
-			this.props.functions
-				.getAdmin({ uid: this.props.match.params.id })
-				.then(admin => {
-					this.setState(() => ({ admin: admin.data, isLoaded: true }));
-				})
-				.catch(err => {
-					if (process.env.NODE_ENV !== 'production') {
-						console.log(err);
-					}
-					message.error('An unknown error occured');
-					this.setState(() => ({ isLoaded: true }));
-				});
-		} else {
-			this.setState(() => ({ isLoaded: true }));
-		}
-	}
-	public componentDidUpdate(
-		prevProps: withDatabaseInjectedProps &
-			withAdminFunctionInjectedProps &
-			RouteComponentProps<{ id: string }>
-	) {
-		if (
-			this.props.match.params.id &&
-			this.props.location !== prevProps.location
-		) {
-			this.props.functions
-				.getAdmin({ uid: this.props.match.params.id })
-				.then(admin => {
-					this.setState(() => ({ admin: admin.data, isLoaded: true }));
-				})
-				.catch(err => {
-					if (process.env.NODE_ENV !== 'production') {
-						console.log(err);
-					}
-					message.error('An unknown error occured');
-					this.setState(() => ({ isLoaded: true }));
-				});
-		} else if (this.props.location !== prevProps.location) {
-			this.setState(() => ({ admin: null, isLoaded: true }));
-		}
-	}
-	public render() {
-		const { isLoaded, admin } = this.state;
-		return (
-			<React.Fragment>
-				{' '}
-				{isLoaded ? (
-					<AdminForm
-						adminMatched={admin}
-						databaseAction={this.props.databaseAction}
-						functions={this.props.functions}
-						{...this.props}
-					/>
-				) : (
-					<div> Loading ... </div>
-				)}
-			</React.Fragment>
-		);
-	}
-}
+export default AdminForm;

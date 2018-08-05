@@ -1,7 +1,7 @@
 export const addRef = (
 	db: firebase.database.Database,
 	refBase: string,
-	args: { [key: string]: string },
+	args: { [key: string]: any },
 	key: string | null = null
 ) => {
 	let newKey: string;
@@ -21,7 +21,7 @@ export const addRef = (
 export const updateRef = (
 	db: firebase.database.Database,
 	refBase: string,
-	args: { [key: string]: string }
+	args: { [key: string]: any }
 ) => {
 	return db.ref(refBase).update(args);
 };
