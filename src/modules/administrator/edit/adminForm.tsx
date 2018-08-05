@@ -212,11 +212,8 @@ const AdminForm = withFormik<PresenterProps, FormValues>({
 				});
 		} else {
 			// NEW MODE
-			// databaseAction.addUser(values);
-
 			addAdministrator(values)
 				.then(res => {
-					console.log(res);
 					const errorMessage = functionsResponseWithError(res.data);
 					if (errorMessage) {
 						message.error(errorMessage);

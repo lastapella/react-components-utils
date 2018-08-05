@@ -5,46 +5,46 @@ import {
 	MERGE_ADMINISTRATORS,
 	REMOVE_ADMINISTRATOR_FROM_LIST
 } from '../../constants/actionTypes';
-import { IDriverState } from '../../models';
+import { IAdministratorState } from '../../models';
 
-const initialState: IDriverState = {};
+const initialState: IAdministratorState = {};
 
-type DriverAction = ActionType<typeof administratorActions>;
+type AdministratorAction = ActionType<typeof administratorActions>;
 
-const reducer: Reducer<IDriverState, DriverAction> = (
+const reducer: Reducer<IAdministratorState, AdministratorAction> = (
 	state = initialState,
 	action
 ) => {
 	switch (action.type) {
 		case MERGE_ADMINISTRATORS:
-			return mergeDrivers(state, action.payload);
+			return mergeAdministrators(state, action.payload);
 		case REMOVE_ADMINISTRATOR_FROM_LIST:
-			return removeDriverFromList(state, action.payload);
+			return removeAdministratorFromList(state, action.payload);
 	}
 	return state;
 };
 
-const mergeDrivers: (
-	state: IDriverState,
-	payload: { list: IDriverState }
-) => IDriverState = (state, payload) => {
+const mergeAdministrators: (
+	state: IAdministratorState,
+	payload: { list: IAdministratorState }
+) => IAdministratorState = (state, payload) => {
 	const { list } = payload;
 	return getConcatList(state, list);
 };
-const removeDriverFromList: (
-	state: IDriverState,
+const removeAdministratorFromList: (
+	state: IAdministratorState,
 	payload: { key: string }
-) => IDriverState = (state, payload) => {
+) => IAdministratorState = (state, payload) => {
 	const { key } = payload;
 	return removeWithKey(state, key);
 };
 
-const removeWithKey = (list: IDriverState, key: string) => {
+const removeWithKey = (list: IAdministratorState, key: string) => {
 	const { [key]: _, ...nextState } = list;
 	return nextState;
 	// return [...list.slice(0, index), ...list.slice(index + 1)];
 };
-const getConcatList = (currentList: IDriverState, concatList: IDriverState) => {
+const getConcatList = (currentList: IAdministratorState, concatList: IAdministratorState) => {
 	return { ...currentList, ...concatList };
 };
 

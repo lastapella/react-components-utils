@@ -1,4 +1,5 @@
 import { ThunkAction } from 'redux-thunk';
+import * as _ from 'lodash';
 import {
 	MERGE_DRIVERS,
 	REMOVE_DRIVER_FROM_LIST
@@ -17,6 +18,7 @@ import { IDriverState, IDriver } from '../../models/driverState';
 import * as requestTypes from '../../constants/requestTypes';
 import { setRequestInProcess } from '../request';
 import { RootState } from '../../configureStore';
+import { fetchVehicleList, updateVehicleDriversList } from '../vehicle';
 
 const database = firebaseApp.database();
 
@@ -51,6 +53,7 @@ export const addDriver: ActionCreator<
 			mergeDrivers({ ...getState().drivers, [keyAdded]: { ...driver } })
 		);
 		dispatch(setRequestInProcess(false, requestType));
+		return keyAdded;
 	});
 };
 
@@ -67,6 +70,7 @@ export const fetchDriver: ActionCreator<
 				[snapshot.key as string]: snapshot.val()
 			})
 		);
+		dispatch(fetchVehicleList(fetchedDriver.vehicles));
 		dispatch(setRequestInProcess(false, requestType));
 		return fetchedDriver;
 	});
@@ -77,12 +81,12 @@ export const editDriver: ActionCreator<
 > = (driverKey: string, driver: IDriver) => (dispatch, getState) => {
 	const requestType = requestTypes.DRIVERS_EDIT;
 	dispatch(setRequestInProcess(true, requestType));
-	return updateRef(database, 'drivers/' + driverKey, driver).then(keyEdited => {
+	return updateRef(database, 'drivers/' + driverKey, driver).then(() => {
 		dispatch(
-			mergeDrivers({ ...getState().drivers, [keyEdited]: { ...driver } })
+			mergeDrivers({ ...getState().drivers, [driverKey]: { ...driver } })
 		);
 		dispatch(setRequestInProcess(false, requestType));
-		return keyEdited;
+		return driverKey;
 	});
 };
 
@@ -91,11 +95,18 @@ export const deleteDriver: ActionCreator<
 > = (driverKey: string) => (dispatch, getState) => {
 	const requestType = requestTypes.DRIVERS_DELETE;
 	dispatch(setRequestInProcess(true, requestType));
+	const keysVehicleListRemoved = getState().drivers[driverKey].vehicles;
 	return removeRef(database, 'drivers/' + driverKey)
 		.then(() => {
-			dispatch(removeDriverFromList(driverKey));
-			dispatch(setRequestInProcess(false, requestType));
-			return true;
+			return Promise.all(
+				keysVehicleListRemoved.map(key =>
+					dispatch(updateVehicleDriversList(key, driverKey))
+				)
+			).then(() => {
+				dispatch(removeDriverFromList(driverKey));
+				dispatch(setRequestInProcess(false, requestType));
+				return true;
+			});
 		})
 		.catch(err => {
 			if (process.env.NODE_ENV !== 'production') {

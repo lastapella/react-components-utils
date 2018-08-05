@@ -4,9 +4,14 @@ import { connect } from 'react-redux';
 import { Action } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 
-// import withFirebaseDatabase from '../../firebase/withFirebaseDatabase';
-import { addDriver, fetchDriver, editDriver } from '../../store/actions';
-import {  IDriver } from '../../store/models/driverState';
+import {
+	addDriver,
+	fetchDriver,
+	editDriver,
+	addOrUpdateVehiclesList,
+	fetchVehicleList
+} from '../../store/actions';
+import { IDriver, IVehicle } from '../../store/models';
 import { RootState } from '../../store';
 import DriverForm from './driverForm';
 
@@ -39,10 +44,12 @@ class FormContainer extends React.Component<ContainerProps, any> {
 			this.props
 				.fetchDriver(idDriverFromRoute)
 				.then(driverRetreived => {
-					this.setState(() => ({
-						driverId: idDriverFromRoute,
-						isLoaded: true
-					}));
+					this.props.fetchVehicleList(driverRetreived.vehicles).then(() => {
+						this.setState(() => ({
+							driverId: idDriverFromRoute,
+							isLoaded: true
+						}));
+					});
 				})
 				.catch(err => {
 					if (process.env.NODE_ENV !== 'production') {
@@ -90,7 +97,15 @@ class FormContainer extends React.Component<ContainerProps, any> {
 }
 
 const mapStateToProps = (state: RootState, props: any) => {
-	return { driver: state.drivers[props.match.params.id] };
+	const driver = state.drivers[props.match.params.id];
+	const driverVehicles =
+		driver && driver.vehicles
+			? driver.vehicles.map(vehicleKey => state.vehicles[vehicleKey])
+			: null;
+	return {
+		driver,
+		vehicles: driverVehicles
+	};
 };
 const mapDispatchToProps = (
 	dispatch: ThunkDispatch<RootState, void, Action>
@@ -99,7 +114,21 @@ const mapDispatchToProps = (
 		addDriver: (driverValues: IDriver) => dispatch(addDriver(driverValues)),
 		editDriver: (driverKey: string, driverValues: IDriver) =>
 			dispatch(editDriver(driverKey, driverValues)),
-		fetchDriver: (driverKey: string) => dispatch(fetchDriver(driverKey))
+		fetchDriver: (driverKey: string) => dispatch(fetchDriver(driverKey)),
+		addOrUpdateVehiclesList: (
+			vehiclesListAdded: IVehicle[],
+			driverKey: string,
+			keysVehicleListRemoved?: string[]
+		) =>
+			dispatch(
+				addOrUpdateVehiclesList(
+					vehiclesListAdded,
+					driverKey,
+					keysVehicleListRemoved
+				)
+			),
+		fetchVehicleList: (vehicleKeyList: [string]) =>
+			dispatch(fetchVehicleList(vehicleKeyList))
 	};
 };
 

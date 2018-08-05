@@ -22,10 +22,12 @@ import {
 } from '../../shared/ui/form';
 import VehicleForm from './vehicleForm';
 import { PresenterProps } from './container';
+import { IDriver, IVehicle } from '../../store/models';
+import { IU_NUMBER_MUST_BE_UNIQUE } from '../../constants/validationMessages';
 
 // const FormItem = AntForm.Item;
 
-// @TODO
+// // @TODO
 interface FormValues {
 	[key: string]: any;
 }
@@ -169,43 +171,77 @@ const DriverForm = withFormik<PresenterProps, FormValues>({
 			firstname: props.driver ? props.driver.firstname : '',
 			lastname: props.driver ? props.driver.lastname : '',
 			email: props.driver ? props.driver.email : '',
-			vehicles: props.driver ? props.driver.vehicles : []
+			vehicles: props.vehicles ? props.vehicles : []
 		};
 	},
 	validationSchema: driverValidationSchema,
 	// Add a custom validation function (this can be async too!)
-	// validate: (values, props) => {
-	// 	const errors: any = {};
-	// 	// if (!values.firstname) {
-	// 	// 	errors.email = 'Required';
-	// 	// }
-	// 	// else if (
-	// 	// 	!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)
-	// 	// ) {
-	// 	// 	errors.email = 'Invalid email address';
-	// 	// }
-	// 	return errors;
-	// },
+	validate: (values, props) => {
+		const errors: any = {};
+		const iunumberList: string[] = values.vehicles.map(
+			(vehicle: any) => vehicle.iunumber
+		);
+		const iunumberInError = iunumberList.map(
+			(value, index, self) => (self.indexOf(value) !== index ? index : null)
+		);
+		iunumberInError.forEach(vehicleIndex => {
+			if (vehicleIndex !== null) {
+				errors.vehicles = {
+					[vehicleIndex]: { iunumber: IU_NUMBER_MUST_BE_UNIQUE }
+				};
+			}
+		});
+		return errors;
+	},
 	// Submission handler
 	handleSubmit: (
 		values,
 		{
-			props: { driverId, driver, history, editDriver, addDriver },
+			props: {
+				driverId,
+				driver,
+				history,
+				editDriver,
+				addDriver,
+				addOrUpdateVehiclesList
+			},
 			setSubmitting,
 			setErrors /* setValues, setStatus, and other goodies */
 		}
 	) => {
+		const driverValues = {
+			...values,
+			vehicles: values.vehicles.map((vehicle: any) => vehicle.iunumber)
+		};
+		const vehiclesValues = values.vehicles;
 		if (driver && driverId) {
 			// EDIT MODE
-			editDriver(driverId, values).then(userKey => {
-				message.success('Driver edited');
-				history.push('/drivers/list');
+			const vehicleKeysRemoved = driver.vehicles
+				? driver.vehicles.filter(
+						vehiclekey =>
+							driverValues.vehicles
+								? !driverValues.vehicles.includes(vehiclekey)
+								: true
+				  )
+				: [];
+
+			editDriver(driverId, driverValues).then(driverKey => {
+				addOrUpdateVehiclesList(
+					vehiclesValues,
+					driverKey,
+					vehicleKeysRemoved
+				).then(() => {
+					message.success('Driver edited');
+					history.push('/drivers/list');
+				});
 			});
 		} else {
 			// NEW MODE
-			addDriver(values).then(userNewKey => {
-				message.success('New driver added');
-				history.push('/drivers/list');
+			addDriver(driverValues).then(driverNewKey => {
+				addOrUpdateVehiclesList(vehiclesValues, driverNewKey).then(() => {
+					message.success('New driver added');
+					history.push('/drivers/list');
+				});
 			});
 		}
 	}

@@ -16,7 +16,9 @@ class ListUserContainer extends React.Component<ListContainerProps, any> {
 	}
 	public fetchAllDrivers = () => {
 		this.props.fetchAllDriver().then(() => {
-			this.setState(() => ({ isLoaded: true }));
+			this.props.syncVehicles().then(() => {
+				this.setState(() => ({ isLoaded: true }));
+			});
 		});
 	};
 	public deleteRecord = (userKey: string) => {

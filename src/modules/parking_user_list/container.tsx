@@ -1,8 +1,9 @@
 import { connect /* DispatchProps */ } from 'react-redux';
 import { Action } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
+import { IDriver } from '../../store/models/driverState';
 import { RootState } from '../../store';
-import { fetchAllDriver, deleteDriver } from '../../store/actions';
+import { fetchAllDriver, deleteDriver, syncVehicles } from '../../store/actions';
 import ListComponent from './listContainer';
 
 // export default withFirebaseDatabase(ListComponent);
@@ -20,7 +21,8 @@ const mapDispatchToProps = (
 ) => {
 	return {
 		deleteDriver: (driverKey: string) => dispatch(deleteDriver(driverKey)),
-		fetchAllDriver: () => dispatch(fetchAllDriver())
+    fetchAllDriver: () => dispatch(fetchAllDriver()),
+    syncVehicles: ()=> dispatch(syncVehicles())
 	};
 };
 

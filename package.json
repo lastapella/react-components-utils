@@ -9,6 +9,7 @@
     "formik": "^1.0.1",
     "lodash": "^4.17.10",
     "moment": "^2.22.2",
+    "normalizr": "^3.2.4",
     "react": "^16.4.1",
     "react-dom": "^16.4.1",
     "react-firebaseui": "^3.0.4",
