@@ -136,9 +136,8 @@ class Routes extends React.Component<WithUserProps, RoutesState> {
 		};
 	}
 
-	public componentDidMount() {
-		const { authUser } = this.props;
-		Promise.all([
+	public setAuthentications(authUser: firebase.User) {
+		return Promise.all([
 			isAuthenticatedFunc(authUser),
 			isAuthenticatedAsAdminFunc(authUser)
 		])
@@ -155,6 +154,17 @@ class Routes extends React.Component<WithUserProps, RoutesState> {
 				}
 			});
 	}
+	public componentDidMount() {
+		const { authUser } = this.props;
+		this.setAuthentications(authUser);
+	}
+
+	// public componentWillUpdate(nextProps: WithUserProps) {
+	// 	console.log(nextProps.authUser !== this.props.authUser);
+	// 	if (nextProps.authUser !== this.props.authUser) {
+	// 		this.setAuthentications(nextProps.authUser);
+	// 	}
+	// }
 	render() {
 		const { isAuthenticated, isAuthenticatedAsAdmin, isLoaded } = this.state;
 		return (

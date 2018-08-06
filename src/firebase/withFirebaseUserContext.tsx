@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { firebaseApp  } from '../lib/firebase/firebase';
+import { firebaseApp } from '../lib/firebase/firebase';
 import { AuthUserContext, LoadedUserContext } from './authUserContext';
 import getComponentDisplayName from './utils';
 // import Loader from '../../shared/ui/defaultLoader';
@@ -33,6 +33,7 @@ export default (ComposedComponent: React.ComponentType<any>) => {
 		}
 		public componentDidMount() {
 			this.unsubscribe = firebaseApp.auth().onAuthStateChanged(authUser => {
+				console.log('ON AUTH CHANGED' ,authUser);
 				authUser
 					? this.setState(() => ({ authUser, loading: false }))
 					: this.setState(() => ({ authUser: null, loading: false }));

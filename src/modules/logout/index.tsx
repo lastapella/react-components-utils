@@ -4,14 +4,15 @@ import { Spin } from 'antd';
 import withFirebaseAuth, {
 	InjectedProps
 } from '../../firebase/withFirebaseAuth';
+import { RouteComponentProps } from 'react-router';
 
 // import {Redirect } from 'react-router-dom';
 
 class LogoutComponent extends React.Component<
-	React.Props<any> & InjectedProps,
+	 InjectedProps & RouteComponentProps<any>,
 	any
 > {
-	public constructor(props: React.Props<any> & InjectedProps) {
+	public constructor(props: InjectedProps & RouteComponentProps<any>) {
 		super(props);
 		this.state = {
 			signedOut: false
@@ -20,6 +21,7 @@ class LogoutComponent extends React.Component<
 	public async componentDidMount() {
 		await this.props.firebaseAuth.signOut();
 		setTimeout(() => {
+			// this.props.history.replace('/');
 			window.location.replace('/');
 		}, 1000);
 	}
