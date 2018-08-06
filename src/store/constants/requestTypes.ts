@@ -17,4 +17,10 @@ export const VEHICLES_SYNC = 'VEHICLES_SYNC';
 export const VEHICLES_EDIT = 'VEHICLES_EDIT';
 export const VEHICLES_DELETE = 'VEHICLES_DELETE';
 
+export const GATES_ADD = 'GATES_ADD';
+export const GATES_FETCH = 'GATES_FETCH';
+export const GATES_FETCHALL = 'GATES_FETCHALL';
+export const GATES_EDIT = 'GATES_EDIT';
+export const GATES_DELETE = 'GATES_DELETE';
+
 export const AUTH = 'AUTH';
