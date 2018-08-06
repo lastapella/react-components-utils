@@ -95,7 +95,7 @@ export const deleteDriver: ActionCreator<
 > = (driverKey: string) => (dispatch, getState) => {
 	const requestType = requestTypes.DRIVERS_DELETE;
 	dispatch(setRequestInProcess(true, requestType));
-	const keysVehicleListRemoved = getState().drivers[driverKey].vehicles;
+	const keysVehicleListRemoved = getState().drivers[driverKey].vehicles || [];
 	return removeRef(database, 'drivers/' + driverKey)
 		.then(() => {
 			return Promise.all(
