@@ -1,19 +1,31 @@
-import { Button } from 'antd';
+import { Button, Tabs } from 'antd';
 import * as React from 'react';
 import './home.css';
 
+import GatesFromList from '../gate';
 import logo from './logo.svg';
+const { TabPane } = Tabs;
 
-const homeComponent :React.SFC = () => (
+const homeComponent: React.SFC = () => (
+	<>
 	<div className="App">
-		<header className="App-header">
-			<img src={logo} className="App-logo" alt="logo" />
-			<h1 className="App-title">Welcome to React</h1>
-		</header>{' '}
-		<Button type="primary"> Bouton ici </Button>
-		<p className="App-intro">
-			To get started, edit <code>src/App.tsx</code> and save to reload.
-		</p>
-	</div>
+				<header className="App-header">
+					<img src={logo} className="App-logo" alt="logo" />
+					<h1 className="App-title">Welcome to River Valley High School parking gate management app</h1>
+				</header>
+				<p className="App-intro">
+					# Presentation
+					# Readme
+				</p>
+			</div>
+	<Tabs defaultActiveKey="1" type="card">
+		<TabPane tab="Controllers/Gates" key="1">
+			<GatesFromList />
+		</TabPane>
+		<TabPane tab="Show Events" key="2">
+			IN PROGRESS
+		</TabPane>
+	</Tabs>
+	</>
 );
 export default homeComponent;

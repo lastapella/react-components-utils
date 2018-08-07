@@ -102,9 +102,13 @@ const mapStateToProps = (state: RootState, props: any) => {
 		driver && driver.vehicles
 			? driver.vehicles.map(vehicleKey => state.vehicles[vehicleKey])
 			: null;
+			const gatesKey = Object.keys(state.gates);
+			const gatesDefaultValue = {}
+			gatesKey.forEach((key) => gatesDefaultValue[key] = false)
 	return {
 		driver,
-		vehicles: driverVehicles
+		vehicles: driverVehicles,
+		gatesDefaultValue
 	};
 };
 const mapDispatchToProps = (

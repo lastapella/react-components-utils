@@ -55,7 +55,7 @@ const InnerForm = ({
 		history.push('/administrators/list');
 	};
 	return (
-		<Form className="login-form" noValidate={true}>
+		<Form className="admin-form" noValidate={true}>
 			<Divider orientation="left">Administrators Details</Divider>
 			<Field
 				label="Display Name"

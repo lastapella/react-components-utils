@@ -122,9 +122,9 @@ export const fetchVehicleList: ActionCreator<
 	const requestType = requestTypes.VEHICLES_FETCHLIST;
 	dispatch(setRequestInProcess(true, requestType));
 	return Promise.all(
-		vehicleKeyList.map(vehicleKey => {
+		vehicleKeyList ? vehicleKeyList.map(vehicleKey => {
 			return dispatch(fetchVehicle(vehicleKey));
-		})
+		}) : [Promise.resolve()]
 	).then(values => {
 		dispatch(setRequestInProcess(false, requestType));
 		return values;

@@ -18,7 +18,8 @@ import {
 	// SwitchField,
 	// DatePickerField
 } from '../../shared/ui/form';
-import VehicleForm from './vehicleForm';
+import VehicleField from './vehicleField';
+import GatesField from './gatesField';
 import { PresenterProps } from './container';
 import { IU_NUMBER_MUST_BE_UNIQUE } from '../../constants/validationMessages';
 
@@ -48,7 +49,7 @@ const InnerForm = ({
 		history.push('/drivers/list');
 	};
 	return (
-		<Form className="login-form" noValidate={true}>
+		<Form className="driver-form" noValidate={true}>
 			<Divider orientation="left">Drivers's Particulars</Divider>
 			<Field
 				label="firstname"
@@ -74,9 +75,12 @@ const InnerForm = ({
 				placeholder="email"
 				component={InputField}
 			/>
+			<Divider orientation="left">Gate's entry allowance</Divider>
+			<Field name="gates" component={GatesField} />
+
 			<Divider orientation="left">Vehicle's details</Divider>
 
-			<FieldArray name="vehicles" component={VehicleForm} />
+			<FieldArray name="vehicles" component={VehicleField} />
 			<Divider />
 			<Row type="flex" justify="center" gutter={48}>
 				<Col>
@@ -168,7 +172,8 @@ const DriverForm = withFormik<PresenterProps, FormValues>({
 			firstname: props.driver ? props.driver.firstname : '',
 			lastname: props.driver ? props.driver.lastname : '',
 			email: props.driver ? props.driver.email : '',
-			vehicles: props.vehicles ? props.vehicles : []
+			vehicles: props.vehicles ? props.vehicles : [],
+			gates: props.driver ? props.driver.gates : props.gatesDefaultValue
 		};
 	},
 	validationSchema: driverValidationSchema,
