@@ -23,7 +23,7 @@ const withLayout = (ComposedComponent: React.ComponentType<any>) => {
 					<NavBar />
 					{/* </Header> */}
 					<Content className="content">
-						<div style={{ background: '#fff' }}>
+						<div style={{ background: '#fff', padding:5 }}>
 							<ComposedComponent {...this.props} />
 						</div>
 					</Content>

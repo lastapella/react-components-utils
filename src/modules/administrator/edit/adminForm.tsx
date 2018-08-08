@@ -34,7 +34,7 @@ interface FormValues {
 	[key: string]: any;
 }
 
-const functionsResponseWithError = (res : any)  => {
+const functionsResponseWithError = (res: any) => {
 	return res.errorInfo ? res.errorInfo.message || 'an error occured' : false;
 };
 
@@ -108,8 +108,7 @@ const InnerForm = ({
 				<option value="OTHER">Other</option>
 			</Field>
 			<Field label="Disabled?" name="disabled" component={SwitchField} />
-
-			<Row type="flex" justify="center" gutter={48}>
+			<Row type="flex" justify="center">
 				<Col>
 					<Button
 						type="primary"
@@ -120,7 +119,7 @@ const InnerForm = ({
 						Submit
 					</Button>
 				</Col>
-				<Col>
+				<Col offset={1}>
 					<Button onClick={onCancel} type="danger" ghost={true}>
 						Cancel
 					</Button>
@@ -178,7 +177,6 @@ const AdminForm = withFormik<PresenterProps, FormValues>({
 			setErrors /* setValues, setStatus, and other goodies */
 		}
 	) => {
-
 		if (administrator && administratorId) {
 			// EDIT MODE
 			editAdministrator(administratorId, values)

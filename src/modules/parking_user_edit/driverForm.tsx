@@ -82,7 +82,7 @@ const InnerForm = ({
 
 			<FieldArray name="vehicles" component={VehicleField} />
 			<Divider />
-			<Row type="flex" justify="center" gutter={48}>
+			<Row type="flex" justify="center">
 				<Col>
 					<Button
 						type="primary"
@@ -93,7 +93,7 @@ const InnerForm = ({
 						Submit
 					</Button>
 				</Col>
-				<Col>
+				<Col offset={1}>
 					<Button onClick={onCancel} type="danger" ghost={true}>
 						Cancel
 					</Button>
