@@ -1,9 +1,9 @@
 import { Layout } from 'antd';
 import * as React from 'react';
-import getComponentDisplayName from './utils';
-import NavBar from '../ui/navbar/navBarWithFirebase';
+import getComponentDisplayName from '../utils';
+import NavBar from '../../ui/navbar/navBarWithFirebase';
 const { Content, Footer } = Layout;
-
+import './withLayout.css';
 interface State {
 	activeKeys: string[];
 }
@@ -22,8 +22,8 @@ const withLayout = (ComposedComponent: React.ComponentType<any>) => {
 
 					<NavBar />
 					{/* </Header> */}
-					<Content style={{ padding: '0 50px'}}>
-						<div style={{ background: '#fff', padding: 24, minHeight: 280 }}>
+					<Content className="content">
+						<div style={{ background: '#fff' }}>
 							<ComposedComponent {...this.props} />
 						</div>
 					</Content>

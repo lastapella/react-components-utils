@@ -30,7 +30,6 @@ export type PresenterProps = PropsFromDispatch & {
 
 class FormContainer extends React.Component<ContainerProps, any> {
 	public constructor(props: ContainerProps) {
-		console.log(props);
 		super(props);
 		this.state = {
 			isLoaded: false,

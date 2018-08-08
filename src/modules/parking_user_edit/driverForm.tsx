@@ -168,12 +168,19 @@ const DriverForm = withFormik<PresenterProps, FormValues>({
 	// validateOnChange: false,
 	// Transform outer props into form values
 	mapPropsToValues: props => {
+		const gatesValues = {};
+		Object.keys(props.gatesDefaultValue).map(gateKey => {
+			gatesValues[gateKey] =
+				props.driver && props.driver.gates[gateKey]
+					? props.driver.gates[gateKey]
+					: props.gatesDefaultValue[gateKey];
+		});
 		return {
 			firstname: props.driver ? props.driver.firstname : '',
 			lastname: props.driver ? props.driver.lastname : '',
 			email: props.driver ? props.driver.email : '',
 			vehicles: props.vehicles ? props.vehicles : [],
-			gates: props.driver ? props.driver.gates : props.gatesDefaultValue
+			gates: gatesValues
 		};
 	},
 	validationSchema: driverValidationSchema,

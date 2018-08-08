@@ -1,0 +1,9 @@
+.content {
+  padding: 0 50px 20px 50px;
+  min-height: 280px;
+}
+@media (max-width: 768px) {
+  .content {
+    padding: 0 0 20px 0;
+  }
+}

@@ -86,15 +86,13 @@ export const editVehicle: ActionCreator<
 > = (vehicleKey: string, vehicle: IVehicle) => (dispatch, getState) => {
 	const requestType = requestTypes.VEHICLES_EDIT;
 	dispatch(setRequestInProcess(true, requestType));
-	return updateRef(database, 'vehicles/' + vehicleKey, vehicle).then(
-		() => {
-			dispatch(
-				mergeVehicles({ ...getState().vehicles, [vehicleKey]: { ...vehicle } })
-			);
-			dispatch(setRequestInProcess(false, requestType));
-			return vehicleKey;
-		}
-	);
+	return updateRef(database, 'vehicles/' + vehicleKey, vehicle).then(() => {
+		dispatch(
+			mergeVehicles({ ...getState().vehicles, [vehicleKey]: { ...vehicle } })
+		);
+		dispatch(setRequestInProcess(false, requestType));
+		return vehicleKey;
+	});
 };
 
 export const deleteVehicle: ActionCreator<
@@ -122,9 +120,11 @@ export const fetchVehicleList: ActionCreator<
 	const requestType = requestTypes.VEHICLES_FETCHLIST;
 	dispatch(setRequestInProcess(true, requestType));
 	return Promise.all(
-		vehicleKeyList ? vehicleKeyList.map(vehicleKey => {
-			return dispatch(fetchVehicle(vehicleKey));
-		}) : [Promise.resolve()]
+		vehicleKeyList
+			? vehicleKeyList.map(vehicleKey => {
+					return dispatch(fetchVehicle(vehicleKey));
+			  })
+			: [Promise.resolve()]
 	).then(values => {
 		dispatch(setRequestInProcess(false, requestType));
 		return values;
@@ -140,7 +140,10 @@ export const addOrUpdateVehicle: ActionCreator<
 	return dispatch(fetchVehicle(vehicleKey))
 		.then(vehicle => {
 			// EDIT
-			vehicleValue.drivers = [...vehicle[vehicleKey].drivers, driverKey];
+			// If driver doesn't exist in the drivers list we add it
+			vehicleValue.drivers = vehicle[vehicleKey].drivers.includes(driverKey)
+				? [...vehicle[vehicleKey].drivers]
+				: [...vehicle[vehicleKey].drivers, driverKey];
 			return dispatch(editVehicle(vehicleKey, vehicleValue));
 		})
 		.catch(err => {

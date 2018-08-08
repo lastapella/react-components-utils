@@ -1,4 +1,4 @@
-import { Button, Tabs } from 'antd';
+import { Button, Tabs, Card, Row } from 'antd';
 import * as React from 'react';
 import './home.css';
 
@@ -8,24 +8,27 @@ const { TabPane } = Tabs;
 
 const homeComponent: React.SFC = () => (
 	<>
-	<div className="App">
-				<header className="App-header">
+		<Row>
+			<div className="App">
 					<img src={logo} className="App-logo" alt="logo" />
-					<h1 className="App-title">Welcome to River Valley High School parking gate management app</h1>
-				</header>
-				<p className="App-intro">
-					# Presentation
-					# Readme
-				</p>
+					<h1 className="App-title">
+						Welcome to River Valley High School parking gate management app
+					</h1>
+					<p className="App-intro"># Presentation # Readme</p>
 			</div>
-	<Tabs defaultActiveKey="1" type="card">
-		<TabPane tab="Controllers/Gates" key="1">
-			<GatesFromList />
-		</TabPane>
-		<TabPane tab="Show Events" key="2">
-			IN PROGRESS
-		</TabPane>
-	</Tabs>
+		</Row>
+		<Row>
+			<Card>
+				<Tabs defaultActiveKey="1" type="card">
+					<TabPane tab="Controllers/Gates" key="1">
+						<GatesFromList />
+					</TabPane>
+					<TabPane tab="Show Events" key="2">
+						IN PROGRESS
+					</TabPane>
+				</Tabs>
+			</Card>
+		</Row>
 	</>
 );
 export default homeComponent;

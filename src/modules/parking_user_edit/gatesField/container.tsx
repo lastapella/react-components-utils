@@ -18,8 +18,7 @@ type ContainerProps = PropsFromDispatch & PropsFromState & FieldProps<any>;
 
 class FormContainer extends React.Component<ContainerProps, any> {
 	public constructor(props: ContainerProps) {
-		console.log(props);
-		super(props);
+	super(props);
 		this.state = {
 			isLoaded: false
 		};
@@ -39,7 +38,6 @@ class FormContainer extends React.Component<ContainerProps, any> {
 		const { form, field, gatesData } = this.props;
 		const onChangeSwitch = (key: string) => (checked: boolean) =>
 			form.setFieldValue('gates', { ...form.values.gates, [key]: checked });
-		console.log(gatesData);
 		return (
 			<GatesField
 				gates={gatesData}

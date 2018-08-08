@@ -60,6 +60,7 @@ export default ({
 				dataSource={dataSource}
 				columns={columns}
 				loading={loading}
+				scroll={{ x: 800 }}
 				// expandedRowRender={expandedRowRender}
 				expandRowByClick={true}
 			/>

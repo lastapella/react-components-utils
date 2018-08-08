@@ -78,6 +78,7 @@ export default ({
 				dataSource={dataSource}
 				columns={columns}
 				loading={loading}
+				scroll={{ x: 800 }}
 				// tslint:disable-next-line:jsx-no-lambda
 				expandedRowRender={(record: IDriver) => (
 					<ExpandedRowRender vehicles={record.vehicles} />

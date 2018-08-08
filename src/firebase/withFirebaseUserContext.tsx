@@ -33,7 +33,6 @@ export default (ComposedComponent: React.ComponentType<any>) => {
 		}
 		public componentDidMount() {
 			this.unsubscribe = firebaseApp.auth().onAuthStateChanged(authUser => {
-				console.log('ON AUTH CHANGED' ,authUser);
 				authUser
 					? this.setState(() => ({ authUser, loading: false }))
 					: this.setState(() => ({ authUser: null, loading: false }));

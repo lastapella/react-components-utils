@@ -27,7 +27,6 @@ export default ({
 			title: 'Allow',
 			key: 'actions',
 			render: (text: string, record: any) => {
-				console.log(record);
 				return (
 					<Switch
 						checkedChildren="YES"
@@ -39,7 +38,6 @@ export default ({
 			}
 		}
 	];
-	console.log(gates);
 	const dataSource = Object.keys(gates).map(key => ({
 		...gates[key],
 		key

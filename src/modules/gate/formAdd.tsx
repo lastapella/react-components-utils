@@ -119,7 +119,6 @@ const GateForm = withFormik<PresenterProps, FormValues>({
 			setErrors /* setValues, setStatus, and other goodies */
 		}
 	) => {
-		console.log(values);
 		addGate(values).then(() => {
 			message.success('Gate Added');
       setSubmitting(false);
