@@ -191,12 +191,14 @@ const DriverForm = withFormik<PresenterProps, FormValues>({
 			(vehicle: any) => vehicle.iunumber
 		);
 		const iunumberInError = iunumberList.map(
-			(value, index, self) => (self.indexOf(value) !== index ? index : null)
+			(value, index, self) =>
+				self.filter((_, i) => i !== index).includes(value) ? index : null
 		);
-		iunumberInError.forEach(vehicleIndex => {
-			if (vehicleIndex !== null) {
-				errors.vehicles = {
-					[vehicleIndex]: { iunumber: IU_NUMBER_MUST_BE_UNIQUE }
+		errors.vehicles = [];
+		iunumberInError.forEach((vehicleKey, index) => {
+			if (vehicleKey !== null) {
+				errors.vehicles[index] = {
+					iunumber: IU_NUMBER_MUST_BE_UNIQUE
 				};
 			}
 		});
