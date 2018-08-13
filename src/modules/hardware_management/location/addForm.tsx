@@ -7,8 +7,8 @@ import {
 } from 'formik';
 import { Form as AntForm, Icon, Button, Row, Col, message, Modal } from 'antd';
 // import adminValidationSchema from './validationSchema';
-import { InputField } from '../../shared/ui/form';
-import { PresenterProps } from './formAddContainer';
+import { InputField } from '../../../shared/ui/form';
+import { PresenterProps } from './addFormContainer';
 // @TODO
 interface FormValues {
 	[key: string]: any;
@@ -25,43 +25,59 @@ const InnerForm = ({
 	handleSubmit,
 	isSubmitting,
 	modalVisible,
+	resetForm,
 	handleCloseModal
 }: FormikProps<FormValues> & PresenterProps) => {
 	return (
 		<Modal
 			visible={modalVisible}
-			title="Create a new gate"
+			title="Create a new location"
 			okText="Create"
-			onCancel={handleCloseModal}
-      onOk={handleSubmit}
-      confirmLoading={isSubmitting}
+			// tslint:disable-next-line:jsx-no-lambda
+			onCancel={() => {
+				handleCloseModal();
+				resetForm();
+			}}
+			onOk={handleSubmit}
+			confirmLoading={isSubmitting}
 		>
 			<Form
-				className="driver-form ant-form ant-form-horizontal"
+				className="location-add-form ant-form ant-form-horizontal"
 				noValidate={true}
 			>
 				<Field
 					label="name"
 					required={true}
-					prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
+					prefix={<Icon type="info-circle-o" style={{ color: 'rgba(0,0,0,.25)' }} />}
 					name="name"
 					placeholder="Name"
 					component={InputField}
 				/>
 				<Field
-					label="Location"
+					label="Capacity of connected Hardware devices"
 					required={true}
-					prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
-					name="location"
-					placeholder="Location"
+					prefix={
+						<Icon type="tablet" style={{ color: 'rgba(0,0,0,.25)' }} />
+					}
+					name="connectHWCapacity"
+					placeholder="Capacity of connected Hardware devices"
 					component={InputField}
 				/>
 				<Field
 					label="IP Address"
 					required={true}
-					prefix={<Icon type="mail" style={{ color: 'rgba(0,0,0,.25)' }} />}
+					prefix={<Icon type="global" style={{ color: 'rgba(0,0,0,.25)' }} />}
 					name="ipaddress"
 					placeholder="IP Address"
+					component={InputField}
+				/>
+				<Field
+					label="Address"
+					isTextArea={true}
+					row={4}
+					required={true}
+					name="address"
+					placeholder="Address"
 					component={InputField}
 				/>
 				<Field
@@ -69,7 +85,6 @@ const InnerForm = ({
 					isTextArea={true}
 					row={4}
 					required={true}
-					prefix={<Icon type="mail" style={{ color: 'rgba(0,0,0,.25)' }} />}
 					name="description"
 					placeholder="Description"
 					component={InputField}
@@ -79,14 +94,15 @@ const InnerForm = ({
 	);
 };
 
-const GateForm = withFormik<PresenterProps, FormValues>({
+const LocationForm = withFormik<PresenterProps, FormValues>({
 	enableReinitialize: true,
 	// validateOnChange: false,
 	// Transform outer props into form values
 	mapPropsToValues: props => {
 		return {
 			name: '',
-			location: '',
+			address: '',
+			connectHWCapacity: 0,
 			ipaddress: '',
 			description: ''
 		};
@@ -114,17 +130,19 @@ const GateForm = withFormik<PresenterProps, FormValues>({
 	handleSubmit: (
 		values,
 		{
-			props: { addGate, handleCloseModal },
+			props: { addLocation, handleCloseModal },
+			resetForm,
 			setSubmitting,
 			setErrors /* setValues, setStatus, and other goodies */
 		}
 	) => {
-		addGate(values).then(() => {
-			message.success('Gate Added');
-      setSubmitting(false);
-      handleCloseModal();
+		addLocation(values).then(() => {
+			message.success('Location Added');
+			setSubmitting(false);
+			handleCloseModal();
+			resetForm();
 		});
 	}
 })(InnerForm);
 
-export default GateForm;
+export default LocationForm;

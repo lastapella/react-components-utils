@@ -12,6 +12,7 @@ import ListUsersComponent from '../modules/parking_user_list';
 import ParkingUserFormComponent from '../modules/parking_user_edit';
 import AdminEditFormComponent from '../modules/administrator/edit';
 import AdminEditListComponent from '../modules/administrator/list';
+import HardwareTabView from '../modules/hardware_management';
 import {
 	isAuthenticated as isAuthenticatedFunc,
 	isAuthenticatedAsAdmin as isAuthenticatedAsAdminFunc
@@ -52,6 +53,7 @@ const SwitchRoutes = ({
 				path="/"
 				component={HomeComponent}
 			/>
+			<Route exact={true} path="/login" component={LoginComponent} />
 			<PrivateRoute
 				isAuthorized={isAuthenticatedAsAdmin}
 				messageText={getAuthorisationMessage('isAuthenticatedAsAdmin')}
@@ -94,7 +96,14 @@ const SwitchRoutes = ({
 				path="/administrators/list"
 				component={AdminEditListComponent}
 			/>
-			<Route exact={true} path="/login" component={LoginComponent} />
+						<PrivateRoute
+				isAuthorized={isAuthenticatedAsAdmin}
+				messageText={getAuthorisationMessage('isAuthenticatedAsAdmin')}
+				exact={true}
+				path="/hardware"
+				component={HardwareTabView}
+			/>
+
 			<PrivateRoute
 				isAuthorized={isAuthenticated}
 				messageText={getAuthorisationMessage('isAuthenticated')}

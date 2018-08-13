@@ -4,10 +4,10 @@ import { connect } from 'react-redux';
 import { Action } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 
-import {  editGate } from '../../store/actions';
-import { RootState } from '../../store';
+import {  editGate } from '../../../store/actions';
+import { RootState } from '../../../store';
 import EditForm from './formEdit';
-import { IGate } from '../../store/models';
+import { IGate } from '../../../store/models';
 
 type PropsFromDispatch = ReturnType<typeof mapDispatchToProps>;
 type PropsFromState = ReturnType<typeof mapStateToProps>;

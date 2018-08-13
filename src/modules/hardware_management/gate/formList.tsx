@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { Collapse, Button, Row, Col, Popconfirm } from 'antd';
 
-import { PresenterProps } from './container';
-import { IGate } from '../../store/models';
+import { PresenterProps } from './formListcontainer';
+import { IGate } from '../../../store/models';
 import FormEdit from './formEditContainer';
 
 const Panel = Collapse.Panel;

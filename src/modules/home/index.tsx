@@ -2,7 +2,7 @@ import { Button, Tabs, Card, Row } from 'antd';
 import * as React from 'react';
 import './home.css';
 
-import GatesFromList from '../gate';
+import GatesFromList from '../hardware_management/gate';
 import logo from './River_Valley_High_School_crest.svg';
 const { TabPane } = Tabs;
 

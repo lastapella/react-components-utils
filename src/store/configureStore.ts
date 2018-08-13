@@ -8,7 +8,8 @@ import {
 	IRequestState,
 	IAdministratorState,
 	IVehicleState,
-	IGateState
+	IGateState,
+	ILocationState
 } from './models';
 import rootReducer from './reducers';
 
@@ -18,6 +19,7 @@ export interface RootState {
 	administrators: IAdministratorState;
 	vehicles: IVehicleState;
 	gates: IGateState;
+	locations: ILocationState;
 }
 
 let enhancers: any;

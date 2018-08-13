@@ -53,7 +53,8 @@ const linksLeftInit: LinkType[] = [
 				key: 'admins:add'
 			}
 		]
-	}
+	},
+	{ to: 'hardware', label: 'Hardware management', key: 'hardware' }
 ];
 const linksRightNoUser = [
 	{

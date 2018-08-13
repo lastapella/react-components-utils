@@ -7,8 +7,8 @@ import {
 } from 'formik';
 import { Form as AntForm, Icon, Button, Row, Col, message } from 'antd';
 // import adminValidationSchema from './validationSchema';
-import { InputField } from '../../shared/ui/form';
-import { PresenterProps } from './formEditContainer';
+import { InputField } from '../../../shared/ui/form';
+import { PresenterProps } from './editFormContainer';
 // @TODO
 interface FormValues {
 	[key: string]: any;
@@ -23,61 +23,73 @@ const InnerForm = ({
 	setFieldValue,
 	setFieldTouched,
 	handleSubmit,
-	isSubmitting
+	isSubmitting,
+	dirty
 }: FormikProps<FormValues> & PresenterProps) => {
 	return (
 		<Form
-			className="driver-form ant-form ant-form-horizontal"
+			className="location-edit-form ant-form ant-form-horizontal"
 			noValidate={true}
 		>
 			<Row type="flex" justify="space-between" align="middle">
 				<Col xs={24} sm={24} md={18} lg={18}>
 					<Row type="flex" justify="space-between" align="middle" gutter={8}>
-						<Col xs={24} sm={24} md={12} lg={6}>
+						<Col xs={24} sm={24} md={12} lg={8}>
 							<Field
 								label="name"
 								required={true}
 								prefix={
-									<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />
+									<Icon type="info-circle-o" style={{ color: 'rgba(0,0,0,.25)' }} />
 								}
 								name="name"
 								placeholder="Name"
 								component={InputField}
 							/>
 						</Col>
-						<Col xs={24} sm={24} md={12} lg={6}>
+						<Col xs={24} sm={24} md={12} lg={8}>
 							<Field
-								label="Location"
+								label="Capacity of connected Hardware devices"
 								required={true}
 								prefix={
-									<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />
+									<Icon type="tablet" style={{ color: 'rgba(0,0,0,.25)' }} />
 								}
-								name="location"
-								placeholder="Location"
+								name="connectHWCapacity"
+								placeholder="Capacity of connected Hardware devices"
 								component={InputField}
 							/>
 						</Col>
-						<Col xs={24} sm={24} md={12} lg={6}>
+						<Col xs={24} sm={24} md={12} lg={8}>
 							<Field
-								label="IP Address"
+								label="IP Address/URL"
 								required={true}
 								prefix={
-									<Icon type="mail" style={{ color: 'rgba(0,0,0,.25)' }} />
+									<Icon type="global" style={{ color: 'rgba(0,0,0,.25)' }} />
 								}
 								name="ipaddress"
-								placeholder="IP Address"
+								placeholder="IP Address/URL"
 								component={InputField}
 							/>
 						</Col>
-						<Col xs={24} sm={24} md={12} lg={6}>
+						<Col xs={24} sm={24} md={12} lg={12}>
+							<Field
+								label="Address"
+								isTextArea={true}
+								row={4}
+								required={true}
+								name="address"
+								placeholder="Address"
+								component={InputField}
+							/>
+						</Col>
+						<Col xs={24} sm={24} md={12} lg={12}>
 							<Field
 								label="Description"
 								isTextArea={true}
 								row={4}
 								required={true}
-								prefix={
-									<Icon type="mail" style={{ color: 'rgba(0,0,0,.25)' }} />
-								}
+								// prefix={
+								// 	<Icon type="info-circle-o" style={{ color: 'rgba(0,0,0,.25)' }} />
+								// }
 								name="description"
 								placeholder="Description"
 								component={InputField}
@@ -86,30 +98,33 @@ const InnerForm = ({
 					</Row>
 				</Col>
 				<Col>
-					<Button
-						type="primary"
-						htmlType="submit"
-						className="login-form-button"
-						loading={isSubmitting}
-					>
-						Submit
-					</Button>
+					{dirty && (
+						<Button
+							type="primary"
+							htmlType="submit"
+							className="login-form-button"
+							loading={isSubmitting}
+						>
+							Save Changes
+						</Button>
+					)}
 				</Col>
 			</Row>
 		</Form>
 	);
 };
 
-const GateForm = withFormik<PresenterProps, FormValues>({
+const LocationForm = withFormik<PresenterProps, FormValues>({
 	enableReinitialize: true,
 	// validateOnChange: false,
 	// Transform outer props into form values
 	mapPropsToValues: props => {
 		return {
-			name: props.gate ? props.gate.name : '',
-			location: props.gate ? props.gate.location : '',
-			ipaddress: props.gate ? props.gate.ipaddress : '',
-			description: props.gate ? props.gate.description : ''
+			name: props.location ? props.location.name : '',
+			address: props.location ? props.location.address : '',
+			connectHWCapacity: props.location ? props.location.connectHWCapacity : 0,
+			ipaddress: props.location ? props.location.ipaddress : '',
+			description: props.location ? props.location.description : ''
 		};
 	},
 	// validationSchema: driverValidationSchema,
@@ -135,16 +150,16 @@ const GateForm = withFormik<PresenterProps, FormValues>({
 	handleSubmit: (
 		values,
 		{
-			props: { gateKey, editGate },
+			props: { locationKey, editLocation },
 			setSubmitting,
 			setErrors /* setValues, setStatus, and other goodies */
 		}
 	) => {
-		editGate(gateKey, values).then(() => {
-			message.success('Gate Edited');
+		editLocation(locationKey, values).then(() => {
+			message.success('Location Edited');
 			setSubmitting(false);
 		});
 	}
 })(InnerForm);
 
-export default GateForm;
+export default LocationForm;
