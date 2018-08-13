@@ -34,8 +34,8 @@ interface FormValues {
 	[key: string]: any;
 }
 
-const functionsResponseWithError = (res: any) => {
-	return res.errorInfo ? res.errorInfo.message || 'an error occured' : false;
+const formatError = (error: any) => {
+	return error.message ? error.message : 'an error occured';
 };
 
 const InnerForm = ({
@@ -181,40 +181,29 @@ const AdminForm = withFormik<PresenterProps, FormValues>({
 			// EDIT MODE
 			editAdministrator(administratorId, values)
 				.then(res => {
-					const errorMessage = functionsResponseWithError(res.data);
-					if (errorMessage) {
-						message.error(errorMessage);
-						setSubmitting(false);
-					} else {
 						message.success('Administrator edited');
 						history.push('/administrators/list');
-					}
 				})
 				.catch(err => {
 					if (process.env.NODE_ENV !== 'production') {
 						console.log(err);
 					}
-					message.error('An unknown error occured');
+					message.error(formatError(err));
 					setSubmitting(false);
 				});
 		} else {
 			// NEW MODE
 			addAdministrator(values)
 				.then(res => {
-					const errorMessage = functionsResponseWithError(res.data);
-					if (errorMessage) {
-						message.error(errorMessage);
-						setSubmitting(false);
-					} else {
+
 						message.success('New administrator added');
 						history.push('/administrators/list');
-					}
 				})
 				.catch(err => {
 					if (process.env.NODE_ENV !== 'production') {
 						console.log(err);
 					}
-					message.error('An unknown error occured');
+					message.error(formatError(err));
 					setSubmitting(false);
 				});
 		}

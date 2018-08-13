@@ -184,7 +184,6 @@ const DriverForm = withFormik<PresenterProps, FormValues>({
 		};
 	},
 	validationSchema: driverValidationSchema,
-	// Add a custom validation function (this can be async too!)
 	validate: (values, props) => {
 		const errors: any = {};
 		const iunumberList: string[] = values.vehicles.map(
@@ -194,14 +193,17 @@ const DriverForm = withFormik<PresenterProps, FormValues>({
 			(value, index, self) =>
 				self.filter((_, i) => i !== index).includes(value) ? index : null
 		);
-		errors.vehicles = [];
+		const vehicles: any[] = [];
 		iunumberInError.forEach((vehicleKey, index) => {
 			if (vehicleKey !== null) {
-				errors.vehicles[index] = {
+				vehicles[index] = {
 					iunumber: IU_NUMBER_MUST_BE_UNIQUE
 				};
 			}
 		});
+		if(vehicles.length > 0) {
+			errors.vehicles = vehicles;
+		}
 		return errors;
 	},
 	// Submission handler
@@ -220,6 +222,7 @@ const DriverForm = withFormik<PresenterProps, FormValues>({
 			setErrors /* setValues, setStatus, and other goodies */
 		}
 	) => {
+		console.log('SUBMIT');
 		const driverValues = {
 			...values,
 			vehicles: values.vehicles.map((vehicle: any) => vehicle.iunumber)

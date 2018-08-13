@@ -1,11 +1,11 @@
 export default (firebaseFunction: firebase.functions.Functions) => {
 	return {
 		// helloWord: firebaseFunction.httpsCallable('helloWorld2'),
-		addAdmin: firebaseFunction.httpsCallable('addAdmin'),
-		updateAdmin: firebaseFunction.httpsCallable('updateAdmin'),
-		deleteAdmin: firebaseFunction.httpsCallable('deleteAdmin'),
-		getAdmin: firebaseFunction.httpsCallable('getAdmin'),
-		getAllAdmins: firebaseFunction.httpsCallable('getAllAdmins'),
-		listFirebaseUsers: firebaseFunction.httpsCallable('listUsers')
+		addAdmin: firebaseFunction.httpsCallable('administrators_add'),
+		updateAdmin: firebaseFunction.httpsCallable('administrors_update'),
+		deleteAdmin: firebaseFunction.httpsCallable('administrators_delete'),
+		getAdmin: firebaseFunction.httpsCallable('administrators_get'),
+		getAllAdmins: firebaseFunction.httpsCallable('administrators_getAll'),
+		listFirebaseUsers: firebaseFunction.httpsCallable('administrators_listUser')
 	};
 };

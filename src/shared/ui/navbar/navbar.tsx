@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Menu, Icon, Affix } from 'antd';
 import { Link } from 'react-router-dom';
 
-import logo from '../../../modules/home/logo.svg';
+import logo from '../../../modules/home/River_Valley_High_School_crest.svg';
 
 const { SubMenu } = Menu;
 interface LinkType {

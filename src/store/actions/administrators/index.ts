@@ -49,6 +49,9 @@ export const addAdministrator: ActionCreator<
 	const requestType = requestTypes.ADMINISTRATORS_ADD;
 	dispatch(setRequestInProcess(true, requestType));
 	return firebaseFunctions.addAdmin(administrator).then(res => {
+		if (res.data.error) {
+			throw res.data.error;
+		}
 		const keyAdded = res.data;
 		dispatch(
 			mergeAdministrators({
@@ -67,6 +70,9 @@ export const fetchAdministrator: ActionCreator<
 	const requestType = requestTypes.ADMINISTRATORS_FETCH;
 	dispatch(setRequestInProcess(true, requestType));
 	return firebaseFunctions.getAdmin({ uid: administratorKey }).then(res => {
+		if (res.data.error) {
+			throw res.data.error;
+		}
 		const fetchedAdministrator = { key: administratorKey, ...res.data };
 		dispatch(
 			mergeAdministrators({
@@ -90,6 +96,9 @@ export const editAdministrator: ActionCreator<
 	return firebaseFunctions
 		.updateAdmin({ uid: administratorKey, ...administrator })
 		.then(res => {
+			if (res.data.error) {
+				throw res.data.error;
+			}
 			const keyEdited = res.data;
 			dispatch(
 				mergeAdministrators({
@@ -110,6 +119,9 @@ export const deleteAdministrator: ActionCreator<
 	return firebaseFunctions
 		.deleteAdmin({ uid: administratorKey })
 		.then(res => {
+			if (res.data.error) {
+				throw res.data.error;
+			}
 			dispatch(removeAdministratorFromList(administratorKey));
 			dispatch(setRequestInProcess(false, requestType));
 			return { success: true, message: res.data };
@@ -128,6 +140,9 @@ export const fetchAllAdministrator: ActionCreator<
 	const requestType = requestTypes.ADMINISTRATORS_FETCHALL;
 	dispatch(setRequestInProcess(true, requestType));
 	return firebaseFunctions.getAllAdmins().then(res => {
+		if (res.data.error) {
+			throw res.data.error;
+		}
 		const normalizedSnapshot = normalizeAdministratorsList(res.data);
 		dispatch(mergeAdministrators(normalizedSnapshot));
 		dispatch(setRequestInProcess(false, requestType));

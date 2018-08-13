@@ -3,7 +3,7 @@ import * as React from 'react';
 import './home.css';
 
 import GatesFromList from '../gate';
-import logo from './logo.svg';
+import logo from './River_Valley_High_School_crest.svg';
 const { TabPane } = Tabs;
 
 const homeComponent: React.SFC = () => (
