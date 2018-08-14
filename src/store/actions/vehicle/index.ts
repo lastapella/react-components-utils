@@ -21,20 +21,6 @@ import { RootState } from '../../configureStore';
 
 const database = firebaseApp.database();
 
-// @TODO DO THIS WITH normalizr https://www.npmjs.com/package/normalizr
-const normalizeVehiclesListSnapshot = (
-	snapshot: firebase.database.DataSnapshot
-) => {
-	const result: IVehicleState = {};
-	snapshot.forEach(childSnapshot => {
-		Object.assign(
-			result,
-			{ ...result },
-			{ [childSnapshot.key as string]: { ...childSnapshot.val() } }
-		);
-	});
-	return result;
-};
 
 export const mergeVehicles = (listVehicles: { [key: string]: IVehicle }) =>
 	action(MERGE_VEHICLES, { list: listVehicles });

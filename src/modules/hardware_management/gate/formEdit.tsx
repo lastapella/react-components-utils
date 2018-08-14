@@ -138,12 +138,12 @@ const GateForm = withFormik<PresenterProps, FormValues>({
 	handleSubmit: (
 		values,
 		{
-			props: { gateKey, editGate },
+			props: { gateKey, editGate, locationKey },
 			setSubmitting,
 			setErrors /* setValues, setStatus, and other goodies */
 		}
 	) => {
-		editGate(gateKey, values).then(() => {
+		editGate(locationKey, gateKey, values).then(() => {
 			message.success('Gate Edited');
 			setSubmitting(false);
 		});

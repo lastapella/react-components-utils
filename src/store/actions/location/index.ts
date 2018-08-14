@@ -18,24 +18,9 @@ import { ILocationState, ILocation } from '../../models/locationState';
 import * as requestTypes from '../../constants/requestTypes';
 import { setRequestInProcess } from '../request';
 import { RootState } from '../../configureStore';
+import { normalizeSnapshotList } from '../../utils/actions';
 
 const database = firebaseApp.database();
-
-// @TODO DO THIS WITH normalizr https://www.npmjs.com/package/normalizr
-const normalizeLocationsListSnapshot = (
-	snapshot: firebase.database.DataSnapshot
-) => {
-	const result: ILocationState = {};
-	snapshot.forEach(childSnapshot => {
-		Object.assign(
-			result,
-			{ ...result },
-			{ [childSnapshot.key as string]: { ...childSnapshot.val() } }
-		);
-	});
-	return result;
-};
-
 export const mergeLocations = (listLocations: ILocationState) =>
 	action(MERGE_LOCATIONS, { list: listLocations });
 
@@ -109,7 +94,7 @@ export const fetchAllLocation: ActionCreator<
 	const requestType = requestTypes.LOCATIONS_FETCHALL;
 	dispatch(setRequestInProcess(true, requestType));
 	return readRef(database, 'locations/').then(snapshot => {
-		const normalizedSnapshot = normalizeLocationsListSnapshot(snapshot);
+		const normalizedSnapshot = normalizeSnapshotList<ILocationState>(snapshot);
 		dispatch(mergeLocations(normalizedSnapshot));
 		dispatch(setRequestInProcess(false, requestType));
 		return normalizedSnapshot;

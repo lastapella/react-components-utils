@@ -169,11 +169,23 @@ const DriverForm = withFormik<PresenterProps, FormValues>({
 	// Transform outer props into form values
 	mapPropsToValues: props => {
 		const gatesValues = {};
-		Object.keys(props.gatesDefaultValue).map(gateKey => {
-			gatesValues[gateKey] =
-				props.driver && props.driver.gates[gateKey]
-					? props.driver.gates[gateKey]
-					: props.gatesDefaultValue[gateKey];
+		Object.keys(props.gatesDefaultValue).map(locationKey => {
+			gatesValues[locationKey] =
+				props.driver && props.driver.gates[locationKey]
+					? Object.keys(props.gatesDefaultValue[locationKey]).reduce(
+							(gateValues, gateKey) =>
+								props.driver.gates[locationKey][gateKey]
+									? {
+											...gateValues,
+											[gateKey]: props.driver.gates[locationKey][gateKey]
+									  }
+									: {
+											...gateValues,
+											[gateKey]: props.gatesDefaultValue[locationKey][gateKey]
+									  },
+							{}
+					  )
+					: props.gatesDefaultValue[locationKey];
 		});
 		return {
 			firstname: props.driver ? props.driver.firstname : '',
@@ -201,7 +213,7 @@ const DriverForm = withFormik<PresenterProps, FormValues>({
 				};
 			}
 		});
-		if(vehicles.length > 0) {
+		if (vehicles.length > 0) {
 			errors.vehicles = vehicles;
 		}
 		return errors;
@@ -222,7 +234,6 @@ const DriverForm = withFormik<PresenterProps, FormValues>({
 			setErrors /* setValues, setStatus, and other goodies */
 		}
 	) => {
-		console.log('SUBMIT');
 		const driverValues = {
 			...values,
 			vehicles: values.vehicles.map((vehicle: any) => vehicle.iunumber)

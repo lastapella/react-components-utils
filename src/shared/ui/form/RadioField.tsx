@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { FieldProps } from 'formik';
 import { Form, Radio } from 'antd';
+import { RadioChangeEvent } from 'antd/lib/radio';
 
 const FormItem = Form.Item;
 const RadioGroup = Radio.Group;
@@ -14,18 +15,20 @@ export const RadioGroupField: React.SFC<
 	}
 > = ({
 	field, // { name, value, onChange, onBlur }
-	form: { touched, errors }, // also values, setXXXX, handleXXXX, dirty, isValid, status, etc.
+	form: { touched, errors, setFieldValue }, // also values, setXXXX, handleXXXX, dirty, isValid, status, etc.
 	...props
 }) => {
 	const errorMsg = touched[field.name] && errors[field.name];
-
+	const handleChange = (e: RadioChangeEvent) => {
+		setFieldValue(field.name, e.target.checked);
+	};
 	return (
 		<FormItem
 			{...props}
 			help={errorMsg}
 			validateStatus={errorMsg ? 'error' : undefined}
 		>
-			<RadioGroup {...field} {...props}>
+			<RadioGroup {...field} {...props} onChange={handleChange}>
 				{props.values.map(
 					el =>
 						props.type === 'button' ? (

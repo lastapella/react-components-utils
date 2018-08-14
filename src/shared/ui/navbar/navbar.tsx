@@ -54,7 +54,7 @@ const linksLeftInit: LinkType[] = [
 			}
 		]
 	},
-	{ to: 'hardware', label: 'Hardware management', key: 'hardware' }
+	{ to: '/hardware', label: 'Hardware management', key: 'hardware' }
 ];
 const linksRightNoUser = [
 	{

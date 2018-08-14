@@ -19,12 +19,19 @@ export default ({ locations, handleShowModal, ...props }: PresenterProps) => {
 	return (
 		<Tabs tabBarExtraContent={actions}>
 			{Object.keys(locations).map((key, index) => (
-        
-				<TabPane tab={<span><Icon type="environment" />{locations[key].name}</span>} key={index}>
+				<TabPane
+					tab={
+						<span>
+							<Icon type="environment" />
+							{locations[key].name}
+						</span>
+					}
+					key={index}
+				>
 					<Divider orientation="left">Location Details</Divider>
 					<LocationForm location={locations[key]} locationKey={key} />
 					<Divider orientation="left">HardWare Connected</Divider>
-					<GateListView />
+					<GateListView locationKey={key} />
 				</TabPane>
 			))}
 		</Tabs>

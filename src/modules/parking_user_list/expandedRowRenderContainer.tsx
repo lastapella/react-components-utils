@@ -3,6 +3,10 @@ import { RootState } from '../../store';
 import Presenter from './expandedRowRenderPresenter';
 
 type PropsFromState = ReturnType<typeof mapStateToProps>;
+type PropsFromDispatch = ReturnType<typeof mapDispatchToProps>;
+interface OwnProps {
+	[key:string] :any
+}
 export type PresenterProps = PropsFromState;
 
 interface Props {
@@ -19,7 +23,11 @@ const mapStateToProps = (state: RootState, props: Props) => {
 	};
 };
 
-export default connect(
-	mapStateToProps
-	// mapDispatchToProps
+const mapDispatchToProps = () => {
+	return {}
+}
+
+export default connect<PropsFromState, PropsFromDispatch, OwnProps>(
+	mapStateToProps,
+	mapDispatchToProps
 )(Presenter);

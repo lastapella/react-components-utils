@@ -6,6 +6,7 @@ import {
 	REMOVE_ADMINISTRATOR_FROM_LIST
 } from '../../constants/actionTypes';
 import { IAdministratorState } from '../../models';
+import { removeWithKey, getConcatList } from '../../utils/reducers';
 
 const initialState: IAdministratorState = {};
 
@@ -39,13 +40,6 @@ const removeAdministratorFromList: (
 	return removeWithKey(state, key);
 };
 
-const removeWithKey = (list: IAdministratorState, key: string) => {
-	const { [key]: _, ...nextState } = list;
-	return nextState;
-	// return [...list.slice(0, index), ...list.slice(index + 1)];
-};
-const getConcatList = (currentList: IAdministratorState, concatList: IAdministratorState) => {
-	return { ...currentList, ...concatList };
-};
+
 
 export default reducer;

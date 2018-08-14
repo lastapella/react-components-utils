@@ -18,7 +18,7 @@ const homeComponent: React.SFC = () => (
 			</div>
 		</Row>
 		<Row>
-			<Card>
+			{/* <Card>
 				<Tabs defaultActiveKey="1" type="card">
 					<TabPane tab="Controllers/Gates" key="1">
 						<GatesFromList />
@@ -27,7 +27,7 @@ const homeComponent: React.SFC = () => (
 						IN PROGRESS
 					</TabPane>
 				</Tabs>
-			</Card>
+			</Card> */}
 		</Row>
 	</>
 );

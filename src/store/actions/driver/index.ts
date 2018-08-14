@@ -19,24 +19,9 @@ import * as requestTypes from '../../constants/requestTypes';
 import { setRequestInProcess } from '../request';
 import { RootState } from '../../configureStore';
 import { fetchVehicleList, updateVehicleDriversList } from '../vehicle';
+import { normalizeSnapshotList } from '../../utils/actions';
 
 const database = firebaseApp.database();
-
-// @TODO DO THIS WITH normalizr https://www.npmjs.com/package/normalizr
-const normalizeDriversListSnapshot = (
-	snapshot: firebase.database.DataSnapshot
-) => {
-	const result: IDriverState = {};
-	snapshot.forEach(childSnapshot => {
-		Object.assign(
-			result,
-			{ ...result },
-			{ [childSnapshot.key as string]: { ...childSnapshot.val() } }
-		);
-	});
-	return result;
-};
-
 export const mergeDrivers = (listDrivers: IDriverState) =>
 	action(MERGE_DRIVERS, { list: listDrivers });
 
@@ -122,7 +107,7 @@ export const fetchAllDriver: ActionCreator<
 	const requestType = requestTypes.DRIVERS_FETCHALL;
 	dispatch(setRequestInProcess(true, requestType));
 	return readRef(database, 'drivers/').then(snapshot => {
-		const normalizedSnapshot = normalizeDriversListSnapshot(snapshot);
+		const normalizedSnapshot = normalizeSnapshotList<IDriverState>(snapshot);
 		dispatch(mergeDrivers(normalizedSnapshot));
 		dispatch(setRequestInProcess(false, requestType));
 		return normalizedSnapshot;

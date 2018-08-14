@@ -1,10 +1,8 @@
 import * as React from 'react';
 
-import { RouteComponentProps } from 'react-router';
 import { connect } from 'react-redux';
 import { Action } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
-import { FieldProps, Field } from 'formik';
 
 import {
 	fetchAllLocation,
@@ -20,10 +18,13 @@ import { Button, Row, Tabs, Card } from 'antd';
 type PropsFromDispatch = ReturnType<typeof mapDispatchToProps>;
 type PropsFromState = ReturnType<typeof mapStateToProps>;
 
-type ContainerProps = PropsFromDispatch &
-	PropsFromState & { locationKey: string };
-export type PresenterProps = PropsFromDispatch &
-	PropsFromState & { locationKey: string };
+type ContainerProps = PropsFromDispatch & PropsFromState & OwnProps;
+export type PresenterProps = PropsFromDispatch & PropsFromState & OwnProps;
+
+interface OwnProps {
+	location: ILocation;
+	locationKey: string;
+}
 
 class FormContainer extends React.Component<ContainerProps, any> {
 	public constructor(props: ContainerProps) {
@@ -51,8 +52,6 @@ class FormContainer extends React.Component<ContainerProps, any> {
 	}
 
 	public render() {
-		const { isLoaded, modalVisible } = this.state;
-		const { location } = this.props;
 		return (
 			<Card>
 				<EditForm {...this.props} />{' '}
@@ -78,7 +77,7 @@ const mapDispatchToProps = (
 	};
 };
 
-export default connect(
+export default connect<PropsFromState, PropsFromDispatch, OwnProps>(
 	mapStateToProps,
 	mapDispatchToProps
 )(FormContainer);

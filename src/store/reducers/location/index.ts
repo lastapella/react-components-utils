@@ -6,6 +6,7 @@ import {
 	REMOVE_LOCATION_FROM_LIST
 } from '../../constants/actionTypes';
 import { ILocationState } from '../../models';
+import { removeWithKey, getConcatList } from '../../utils/reducers';
 
 const initialState: ILocationState = {};
 
@@ -39,13 +40,6 @@ const removeLocationFromList: (
 	return removeWithKey(state, key);
 };
 
-const removeWithKey = (list: ILocationState, key: string) => {
-	const { [key]: _, ...nextState } = list;
-	return nextState;
-	// return [...list.slice(0, index), ...list.slice(index + 1)];
-};
-const getConcatList = (currentList: ILocationState, concatList: ILocationState) => {
-	return { ...currentList, ...concatList };
-};
+
 
 export default reducer;

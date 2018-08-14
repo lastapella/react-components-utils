@@ -10,7 +10,10 @@ import AddForm from './addForm';
 import { ILocation } from '../../../store/models';
 
 type PropsFromDispatch = ReturnType<typeof mapDispatchToProps>;
-// type PropsFromState = ReturnType<typeof mapStateToProps>;
+type PropsFromState = ReturnType<typeof mapStateToProps>;
+interface OwnProps {
+	[key: string]: any;
+}
 
 type ContainerProps = PropsFromDispatch & {
 	modalVisible: boolean;
@@ -34,11 +37,12 @@ const mapDispatchToProps = (
 	dispatch: ThunkDispatch<RootState, void, Action>
 ) => {
 	return {
-		addLocation: (locationValues: ILocation) => dispatch(addLocation(locationValues))
+		addLocation: (locationValues: ILocation) =>
+			dispatch(addLocation(locationValues))
 	};
 };
 
-export default connect(
+export default connect<PropsFromState, PropsFromDispatch, OwnProps>(
 	mapStateToProps,
 	mapDispatchToProps
 )(FormContainer);

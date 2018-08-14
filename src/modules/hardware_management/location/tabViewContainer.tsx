@@ -1,6 +1,5 @@
 import * as React from 'react';
 
-import { RouteComponentProps } from 'react-router';
 import { connect } from 'react-redux';
 import { Action } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
@@ -9,19 +8,18 @@ import { FieldProps, Field } from 'formik';
 import { fetchAllLocation, deleteLocation } from '../../../store/actions';
 import { RootState } from '../../../store';
 import TabView from './tabView';
-import { ILocationState, ILocation } from '../../../store/models';
 import AddForm from './addFormContainer';
-import { Button, Row, Tabs } from 'antd';
 
 type PropsFromDispatch = ReturnType<typeof mapDispatchToProps>;
 type PropsFromState = ReturnType<typeof mapStateToProps>;
 
 type ContainerProps = PropsFromDispatch & PropsFromState & FieldProps<any>;
-
-export interface PresenterProps {
-	locations: ILocationState;
+export type PresenterProps = PropsFromState & {
 	handleShowModal: () => void;
 	// loading: boolean;
+};
+interface OwnProps {
+	[key: string]: any;
 }
 
 class TabViewContainer extends React.Component<ContainerProps, any> {
@@ -64,9 +62,11 @@ class TabViewContainer extends React.Component<ContainerProps, any> {
 						Add Location
 					</Button>
         </Row> */}
-        <TabView locations={locations} 		
-        			// tslint:disable-next-line:jsx-no-lambda
-              handleShowModal={() => this.handleShowModal()}/>
+				<TabView
+					locations={locations}
+					// tslint:disable-next-line:jsx-no-lambda
+					handleShowModal={() => this.handleShowModal()}
+				/>
 				<AddForm
 					modalVisible={modalVisible}
 					// tslint:disable-next-line:jsx-no-lambda
@@ -92,7 +92,7 @@ const mapDispatchToProps = (
 	};
 };
 
-export default connect(
+export default connect<PropsFromState, PropsFromDispatch, OwnProps>(
 	mapStateToProps,
 	mapDispatchToProps
 )(TabViewContainer);

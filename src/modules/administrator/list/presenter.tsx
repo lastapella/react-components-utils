@@ -2,7 +2,6 @@ import * as React from 'react';
 import { Table, Divider, Popconfirm } from 'antd';
 import { Link } from 'react-router-dom';
 
-
 const DELETE_TEXT = 'Are you sure you want to delete this user?';
 
 export default ({
@@ -14,7 +13,6 @@ export default ({
 	loading: boolean;
 	onDeleteRecord?: any;
 }) => {
-
 	const columns = [
 		{
 			title: 'Display Name',
@@ -48,7 +46,7 @@ export default ({
 						okText="Yes"
 						cancelText="No"
 					>
-						<Link to='#'> Delete </Link>
+						<Link to="#"> Delete </Link>
 					</Popconfirm>
 				</React.Fragment>
 			)
@@ -57,10 +55,11 @@ export default ({
 	return (
 		<React.Fragment>
 			<Table
+				style={{ overflowX: 'auto' }}
 				dataSource={dataSource}
 				columns={columns}
 				loading={loading}
-				scroll={{ x: 800 }}
+				scroll={{ x: window.window.innerWidth < 700 ? 700 : false }}
 				// expandedRowRender={expandedRowRender}
 				expandRowByClick={true}
 			/>

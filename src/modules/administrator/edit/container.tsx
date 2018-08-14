@@ -16,10 +16,10 @@ import AdministratorForm from './adminForm';
 
 type PropsFromDispatch = ReturnType<typeof mapDispatchToProps>;
 type PropsFromState = ReturnType<typeof mapStateToProps>;
+type OwnProps = RouteComponentProps<{ id: string }>;
 
 type ContainerProps = PropsFromDispatch &
-	PropsFromState &
-	RouteComponentProps<{ id: string }>;
+	PropsFromState & OwnProps;
 
 export type PresenterProps = PropsFromDispatch &
 	PropsFromState &
@@ -114,7 +114,7 @@ const mapDispatchToProps = (
 	};
 };
 
-export default connect(
+export default connect<PropsFromState, PropsFromDispatch, OwnProps>(
 	mapStateToProps,
 	mapDispatchToProps
 )(FormContainer);

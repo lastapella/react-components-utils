@@ -6,6 +6,7 @@ import {
 	REMOVE_DRIVER_FROM_LIST
 } from '../../constants/actionTypes';
 import { IDriverState } from '../../models';
+import { removeWithKey, getConcatList } from '../../utils/reducers';
 
 const initialState: IDriverState = {};
 
@@ -39,13 +40,6 @@ const removeDriverFromList: (
 	return removeWithKey(state, key);
 };
 
-const removeWithKey = (list: IDriverState, key: string) => {
-	const { [key]: _, ...nextState } = list;
-	return nextState;
-	// return [...list.slice(0, index), ...list.slice(index + 1)];
-};
-const getConcatList = (currentList: IDriverState, concatList: IDriverState) => {
-	return { ...currentList, ...concatList };
-};
+
 
 export default reducer;

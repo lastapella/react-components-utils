@@ -12,11 +12,13 @@ const DELETE_TEXT = 'Are you sure you want to delete this gate?';
 const PanelHeader = ({
 	gate,
 	gateKey,
+	locationKey,
 	deleteHandler
 }: {
 	gate: IGate;
 	gateKey: string;
-	deleteHandler: (gateKey: string) => void;
+	locationKey: string;
+	deleteHandler: (locationKey: string, gateKey: string) => void;
 }) => (
 	<Row
 		type="flex"
@@ -33,7 +35,7 @@ const PanelHeader = ({
 				// tslint:disable-next-line:jsx-no-lambda
 				onConfirm={e => {
 					e.preventDefault();
-					deleteHandler(gateKey);
+					deleteHandler(locationKey, gateKey);
 				}}
 				okText="Yes"
 				cancelText="No"
@@ -52,16 +54,23 @@ const PanelHeader = ({
 	</Row>
 );
 
-export default ({ gates, deleteHandler }: PresenterProps) => (
+export default ({ gates, deleteHandler, locationKey }: PresenterProps) => (
 	<Collapse bordered={true} defaultActiveKey={[]} accordion={true}>
 		{Object.keys(gates).map(key => {
 			const gate = gates[key];
 			return (
 				<Panel
-					header={<PanelHeader gate={gate} gateKey={key} deleteHandler={deleteHandler} />}
+					header={
+						<PanelHeader
+							gate={gate}
+							gateKey={key}
+							locationKey={locationKey}
+							deleteHandler={deleteHandler}
+						/>
+					}
 					key={`${key}`}
 				>
-					<FormEdit gateKey={key} />
+					<FormEdit locationKey={locationKey} gateKey={key} />
 				</Panel>
 			);
 		})}

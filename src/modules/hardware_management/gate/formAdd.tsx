@@ -119,13 +119,13 @@ const GateForm = withFormik<PresenterProps, FormValues>({
 	handleSubmit: (
 		values,
 		{
-			props: { addGate, handleCloseModal },
+			props: { addGate, handleCloseModal, locationKey },
 			setSubmitting,
 			resetForm,
 			setErrors /* setValues, setStatus, and other goodies */
 		}
 	) => {
-		addGate(values).then(() => {
+		addGate(locationKey, values).then(() => {
 			message.success('Gate Added');
 			setSubmitting(false);
 			handleCloseModal();

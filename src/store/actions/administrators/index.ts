@@ -5,12 +5,6 @@ import {
 } from '../../constants/actionTypes';
 import { action } from 'typesafe-actions';
 import { Dispatch, ActionCreator, Action } from 'redux';
-import {
-	addRef,
-	updateRef,
-	readRef,
-	removeRef
-} from '../../../lib/firebase/databaseUtils';
 import { firebaseApp } from '../../../lib/firebase/firebase';
 import getFunctions from '../../../lib/firebase/cloudFunctionsUtils';
 import {

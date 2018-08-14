@@ -18,13 +18,11 @@ import DriverForm from './driverForm';
 type PropsFromDispatch = ReturnType<typeof mapDispatchToProps>;
 type PropsFromState = ReturnType<typeof mapStateToProps>;
 
-type ContainerProps = PropsFromDispatch &
-	PropsFromState &
-	RouteComponentProps<{ id: string }>;
-
+type ContainerProps = PropsFromDispatch & PropsFromState & OwnProps;
 export type PresenterProps = PropsFromDispatch &
 	PropsFromState &
-	RouteComponentProps<{ id: string }> & { driverId?: string };
+	OwnProps & { driverId?: string };
+type OwnProps = RouteComponentProps<{ id: string }>;
 
 class FormContainer extends React.Component<ContainerProps, any> {
 	public constructor(props: any) {
@@ -102,9 +100,17 @@ const mapStateToProps = (state: RootState, props: any) => {
 		driver && driver.vehicles
 			? driver.vehicles.map(vehicleKey => state.vehicles[vehicleKey])
 			: null;
-			const gatesKey = Object.keys(state.gates);
-			const gatesDefaultValue = {}
-			gatesKey.forEach((key) => gatesDefaultValue[key] = false)
+	const locationsKey = Object.keys(state.gates);
+	const gatesDefaultValue = {};
+	locationsKey.forEach(
+		locationKey =>
+			(gatesDefaultValue[locationKey] = Object.keys(
+				state.gates[locationKey]
+			).reduce(
+				(defaultValue, gateKey) => ({ ...defaultValue, [gateKey]: false }),
+				{}
+			))
+	);
 	return {
 		driver,
 		vehicles: driverVehicles,
@@ -136,7 +142,7 @@ const mapDispatchToProps = (
 	};
 };
 
-export default connect(
+export default connect<PropsFromState, PropsFromDispatch, OwnProps>(
 	mapStateToProps,
 	mapDispatchToProps
 )(FormContainer);

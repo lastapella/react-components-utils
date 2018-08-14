@@ -1,15 +1,11 @@
 import * as React from 'react';
 
-import { RouteComponentProps } from 'react-router';
 import { connect } from 'react-redux';
 import { Action } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
-import { FieldProps, Field } from 'formik';
 
 import {
 	fetchAllGate,
-	addGate,
-	editGate,
 	deleteGate
 } from '../../../store/actions';
 import { RootState } from '../../../store';
@@ -20,11 +16,15 @@ import { Button, Row } from 'antd';
 
 type PropsFromDispatch = ReturnType<typeof mapDispatchToProps>;
 type PropsFromState = ReturnType<typeof mapStateToProps>;
+interface OwnProps {
+	locationKey: string;
+}
 
-type ContainerProps = PropsFromDispatch & PropsFromState & FieldProps<any>;
+type ContainerProps = PropsFromDispatch & PropsFromState & OwnProps;
 
 export type PresenterProps = PropsFromDispatch & {
 	gates: IGateState;
+	locationKey: string;
 	loading: boolean;
 };
 
@@ -39,7 +39,7 @@ class FormContainer extends React.Component<ContainerProps, any> {
 
 	public componentDidMount() {
 		// fetch all gates
-		this.props.fetchAllGates().then(() => {
+		this.props.fetchAllGates(this.props.locationKey).then(() => {
 			this.setState(() => ({
 				isLoaded: true
 			}));
@@ -55,7 +55,7 @@ class FormContainer extends React.Component<ContainerProps, any> {
 
 	public render() {
 		const { isLoaded, modalVisible } = this.state;
-		const { gates } = this.props;
+		const { locationKey } = this.props;
 		return (
 			<React.Fragment>
 				<Row type="flex" justify="end" style={{ marginBottom: '10px' }}>
@@ -68,8 +68,9 @@ class FormContainer extends React.Component<ContainerProps, any> {
 						Add Gate
 					</Button>
 				</Row>
-				<GatesFormList gates={gates} loading={!isLoaded} {...this.props} />{' '}
+				<GatesFormList loading={!isLoaded} {...this.props} />{' '}
 				<FormAdd
+					locationKey={locationKey}
 					modalVisible={modalVisible}
 					// tslint:disable-next-line:jsx-no-lambda
 					handleCloseModal={() => this.handleCloseModal()}
@@ -79,21 +80,23 @@ class FormContainer extends React.Component<ContainerProps, any> {
 	}
 }
 
-const mapStateToProps = (state: RootState, props: any) => {
+const mapStateToProps = (state: RootState, props: OwnProps) => {
 	return {
-		gates: state.gates
+		gates: state.gates[props.locationKey] || {},
+		locationKey: props.locationKey
 	};
 };
 const mapDispatchToProps = (
 	dispatch: ThunkDispatch<RootState, void, Action>
 ) => {
 	return {
-		fetchAllGates: () => dispatch(fetchAllGate()),
-		deleteHandler: (gateKey: string) => dispatch(deleteGate(gateKey))
+		fetchAllGates: (locationKey: string) => dispatch(fetchAllGate(locationKey)),
+		deleteHandler: (locationKey: string, gateKey: string) =>
+			dispatch(deleteGate(locationKey, gateKey))
 	};
 };
 
-export default connect(
+export default connect<PropsFromState, PropsFromDispatch, OwnProps>(
 	mapStateToProps,
 	mapDispatchToProps
 )(FormContainer);

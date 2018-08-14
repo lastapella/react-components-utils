@@ -10,16 +10,15 @@ import AddForm from './formAdd';
 import { IGate } from '../../../store/models';
 
 type PropsFromDispatch = ReturnType<typeof mapDispatchToProps>;
-// type PropsFromState = ReturnType<typeof mapStateToProps>;
+type PropsFromState = ReturnType<typeof mapStateToProps>;
+interface OwnProps {
+	modalVisible: boolean;
+	handleCloseModal: () => void;
+	locationKey: string;
+}
 
-type ContainerProps = PropsFromDispatch & {
-	modalVisible: boolean;
-	handleCloseModal: () => void;
-};
-export type PresenterProps = PropsFromDispatch & {
-	modalVisible: boolean;
-	handleCloseModal: () => void;
-};
+type ContainerProps = PropsFromDispatch & OwnProps;
+export type PresenterProps = PropsFromDispatch & OwnProps;
 
 class FormContainer extends React.Component<ContainerProps, any> {
 	public render() {
@@ -34,11 +33,11 @@ const mapDispatchToProps = (
 	dispatch: ThunkDispatch<RootState, void, Action>
 ) => {
 	return {
-		addGate: (gateValues: IGate) => dispatch(addGate(gateValues))
+		addGate: (locationKey: string, gateValues: IGate) => dispatch(addGate(locationKey, gateValues))
 	};
 };
 
-export default connect(
+export default connect<PropsFromState, PropsFromDispatch, OwnProps>(
 	mapStateToProps,
 	mapDispatchToProps
 )(FormContainer);

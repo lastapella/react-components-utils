@@ -96,7 +96,7 @@ const SwitchRoutes = ({
 				path="/administrators/list"
 				component={AdminEditListComponent}
 			/>
-						<PrivateRoute
+			<PrivateRoute
 				isAuthorized={isAuthenticatedAsAdmin}
 				messageText={getAuthorisationMessage('isAuthenticatedAsAdmin')}
 				exact={true}
