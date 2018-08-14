@@ -7,8 +7,11 @@ import {
 } from 'formik';
 import { Form as AntForm, Icon, Button, Row, Col, message } from 'antd';
 // import adminValidationSchema from './validationSchema';
-import { InputField } from '../../../shared/ui/form';
+import { InputField, SelectField } from '../../../shared/ui/form';
 import { PresenterProps } from './formEditContainer';
+import { InputNumberField } from '../../../shared/ui/form/InputNumberField';
+import HelperText from '../../../shared/ui/form/HelperText';
+import gateValidationSchema from './validationSchema';
 // @TODO
 interface FormValues {
 	[key: string]: any;
@@ -36,11 +39,8 @@ const InnerForm = ({
 					<Row type="flex" justify="space-between" align="middle" gutter={8}>
 						<Col xs={24} sm={24} md={12} lg={6}>
 							<Field
-								label="name"
+								label="Name"
 								required={true}
-								prefix={
-									<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />
-								}
 								name="name"
 								placeholder="Name"
 								component={InputField}
@@ -48,41 +48,28 @@ const InnerForm = ({
 						</Col>
 						<Col xs={24} sm={24} md={12} lg={6}>
 							<Field
-								label="Location"
+								label="Port number"
 								required={true}
-								prefix={
-									<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />
-								}
-								name="location"
-								placeholder="Location"
-								component={InputField}
+								min={0}
+								name="portNum"
+								placeholder="Port number"
+								component={InputNumberField}
 							/>
 						</Col>
 						<Col xs={24} sm={24} md={12} lg={6}>
 							<Field
-								label="IP Address"
-								required={true}
-								prefix={
-									<Icon type="mail" style={{ color: 'rgba(0,0,0,.25)' }} />
-								}
-								name="ipaddress"
-								placeholder="IP Address"
+								label="LCD Message"
+								name="message"
+								placeholder="LCD message"
 								component={InputField}
 							/>
 						</Col>
 						<Col xs={24} sm={24} md={12} lg={6}>
-							<Field
-								label="Description"
-								isTextArea={true}
-								row={4}
-								required={true}
-								prefix={
-									<Icon type="mail" style={{ color: 'rgba(0,0,0,.25)' }} />
-								}
-								name="description"
-								placeholder="Description"
-								component={InputField}
-							/>
+							<Field name="type" label="Type" component={SelectField}>
+								<option value="barrier">Barrier</option>
+								<option value="roadhump">Road hump</option>
+								<option value="other">Other</option>
+							</Field>
 						</Col>
 					</Row>
 				</Col>
@@ -110,28 +97,15 @@ const GateForm = withFormik<PresenterProps, FormValues>({
 	mapPropsToValues: props => {
 		return {
 			name: props.gate ? props.gate.name : '',
-			location: props.gate ? props.gate.location : '',
-			ipaddress: props.gate ? props.gate.ipaddress : '',
-			description: props.gate ? props.gate.description : ''
+			portNum: props.gate ? props.gate.portNum : '',
+			message: props.gate ? props.gate.message : '',
+			type: props.gate ? props.gate.type : ''
 		};
 	},
-	// validationSchema: driverValidationSchema,
+	validationSchema: gateValidationSchema,
 	// Add a custom validation function (this can be async too!)
-	// validate: (values, props) => {
+	// validate: (values, {location}) => {
 	// 	const errors: any = {};
-	// 	const iunumberList: string[] = values.vehicles.map(
-	// 		(vehicle: any) => vehicle.iunumber
-	// 	);
-	// 	const iunumberInError = iunumberList.map(
-	// 		(value, index, self) => (self.indexOf(value) !== index ? index : null)
-	// 	);
-	// 	iunumberInError.forEach(vehicleIndex => {
-	// 		if (vehicleIndex !== null) {
-	// 			errors.vehicles = {
-	// 				[vehicleIndex]: { iunumber: IU_NUMBER_MUST_BE_UNIQUE }
-	// 			};
-	// 		}
-	// 	});
 	// 	return errors;
 	// },
 	// Submission handler

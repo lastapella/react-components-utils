@@ -46,10 +46,13 @@ const mergeLocationGates: (
 
 const removeGateFromList: (
 	state: IGateState,
-	payload: { key: string; locationKey: string }
+	payload: { gateKey: string; locationKey: string }
 ) => IGateState = (state, payload) => {
-	const { key } = payload;
-	return removeWithKey(state, key);
+	const { gateKey, locationKey } = payload;
+	return {
+		...state,
+		[locationKey]: removeWithKey(state[locationKey], gateKey)
+	};
 };
 
 export default reducer;

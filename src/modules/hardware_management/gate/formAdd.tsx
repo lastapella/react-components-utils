@@ -7,8 +7,10 @@ import {
 } from 'formik';
 import { Form as AntForm, Icon, Button, Row, Col, message, Modal } from 'antd';
 // import adminValidationSchema from './validationSchema';
-import { InputField } from '../../../shared/ui/form';
+import { InputField, SelectField } from '../../../shared/ui/form';
 import { PresenterProps } from './formAddContainer';
+import { InputNumberField } from '../../../shared/ui/form/InputNumberField';
+import gateValidationSchema from './validationSchema';
 // @TODO
 interface FormValues {
 	[key: string]: any;
@@ -46,39 +48,33 @@ const InnerForm = ({
 				noValidate={true}
 			>
 				<Field
-					label="name"
+					label="Name"
 					required={true}
-					prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
 					name="name"
 					placeholder="Name"
+					onPressEnter={handleSubmit}
 					component={InputField}
 				/>
 				<Field
-					label="Location"
+					label="Port number"
 					required={true}
-					prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
-					name="location"
-					placeholder="Location"
-					component={InputField}
+					min={0}
+					name="portNum"
+					placeholder="Port number"
+					component={InputNumberField}
 				/>
 				<Field
-					label="IP Address"
-					required={true}
-					prefix={<Icon type="mail" style={{ color: 'rgba(0,0,0,.25)' }} />}
-					name="ipaddress"
-					placeholder="IP Address"
+					label="LCD Message"
+					name="message"
+					placeholder="LCD message"
+					onPressEnter={handleSubmit}
 					component={InputField}
 				/>
-				<Field
-					label="Description"
-					isTextArea={true}
-					row={4}
-					required={true}
-					prefix={<Icon type="mail" style={{ color: 'rgba(0,0,0,.25)' }} />}
-					name="description"
-					placeholder="Description"
-					component={InputField}
-				/>
+				<Field name="Type" label="type" component={SelectField}>
+					<option value="barrier">Barrier</option>
+					<option value="roadhump">Road hump</option>
+					<option value="other">Other</option>
+				</Field>
 			</Form>
 		</Modal>
 	);
@@ -91,12 +87,12 @@ const GateForm = withFormik<PresenterProps, FormValues>({
 	mapPropsToValues: props => {
 		return {
 			name: '',
-			location: '',
-			ipaddress: '',
-			description: ''
+			portNum: '',
+			message: '',
+			type: ''
 		};
 	},
-	// validationSchema: driverValidationSchema,
+	validationSchema: gateValidationSchema,
 	// Add a custom validation function (this can be async too!)
 	// validate: (values, props) => {
 	// 	const errors: any = {};

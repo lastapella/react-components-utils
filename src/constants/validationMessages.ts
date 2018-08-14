@@ -12,3 +12,5 @@ export const REQUIRED_FIELD = 'This field is required';
 export const INVALID_IU = 'IU number must be 10 digits long';
 export const IU_NUMBER_MUST_BE_UNIQUE =
 	'You cannot register two vehicles with the same IU number';
+
+export const LCD_MESSAGE_TOO_LONG = ' LCD message cannot exceed 20 characters';

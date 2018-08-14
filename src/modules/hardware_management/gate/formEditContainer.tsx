@@ -27,7 +27,8 @@ class FormContainer extends React.Component<ContainerProps, any> {
 
 const mapStateToProps = (state: RootState, props: OwnProps) => {
 	return {
-		gate: state.gates[props.locationKey][props.gateKey]
+		gate: state.gates[props.locationKey][props.gateKey],
+		location: state.locations[props.locationKey]
 	};
 };
 const mapDispatchToProps = (

@@ -29,8 +29,8 @@ export const mergeLocationGates = (listGates: IGateList, locationKey: string) =>
 export const mergeGates = (listGates: IGateState) =>
 	action(MERGE_GATES, { list: listGates });
 
-export const removeGateFromList = (locationKey: string, key: string) =>
-	action(REMOVE_GATE_FROM_LIST, { locationKey, key });
+export const removeGateFromList = (locationKey: string, gateKey: string) =>
+	action(REMOVE_GATE_FROM_LIST, { locationKey, gateKey });
 
 export const addGate: ActionCreator<
 	ThunkAction<Promise<any>, RootState, any, Action>

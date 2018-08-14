@@ -4,15 +4,13 @@ import { connect } from 'react-redux';
 import { Action } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 
-import {
-	fetchAllGate,
-	deleteGate
-} from '../../../store/actions';
+import { fetchAllGate, deleteGate } from '../../../store/actions';
 import { RootState } from '../../../store';
 import GatesFormList from './formList';
 import FormAdd from './formAddContainer';
 import { IGateState, IGate } from '../../../store/models';
-import { Button, Row } from 'antd';
+import { Button, Row, Col } from 'antd';
+import HelperText from '../../../shared/ui/form/HelperText';
 
 type PropsFromDispatch = ReturnType<typeof mapDispatchToProps>;
 type PropsFromState = ReturnType<typeof mapStateToProps>;
@@ -55,18 +53,34 @@ class FormContainer extends React.Component<ContainerProps, any> {
 
 	public render() {
 		const { isLoaded, modalVisible } = this.state;
-		const { locationKey } = this.props;
+		const { locationKey, gates, connectedHardwareCapacity } = this.props;
 		return (
 			<React.Fragment>
 				<Row type="flex" justify="end" style={{ marginBottom: '10px' }}>
-					<Button
-						type="primary"
-						icon="plus-circle-o"
-						// tslint:disable-next-line:jsx-no-lambda
-						onClick={() => this.handleShowModal()}
-					>
-						Add Gate
-					</Button>
+					<Col>
+						<Row type="flex" justify="end">
+							<Button
+								type="primary"
+								icon="plus-circle-o"
+								// tslint:disable-next-line:jsx-no-lambda
+								onClick={() => this.handleShowModal()}
+								disabled={
+									Object.keys(gates).length >= connectedHardwareCapacity
+										? true
+										: false
+								}
+							>
+								Add Gate
+							</Button>
+						</Row>
+						<Row type="flex" justify="end">
+							{Object.keys(gates).length >= connectedHardwareCapacity ? (
+								<HelperText>
+									You cannot add more hardware to this location
+								</HelperText>
+							) : null}
+						</Row>
+					</Col>
 				</Row>
 				<GatesFormList loading={!isLoaded} {...this.props} />{' '}
 				<FormAdd
@@ -83,6 +97,8 @@ class FormContainer extends React.Component<ContainerProps, any> {
 const mapStateToProps = (state: RootState, props: OwnProps) => {
 	return {
 		gates: state.gates[props.locationKey] || {},
+		connectedHardwareCapacity:
+			state.locations[props.locationKey].connectHWCapacity,
 		locationKey: props.locationKey
 	};
 };

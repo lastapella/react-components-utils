@@ -9,6 +9,7 @@ import { Form as AntForm, Icon, Button, Row, Col, message } from 'antd';
 // import adminValidationSchema from './validationSchema';
 import { InputField } from '../../../shared/ui/form';
 import { PresenterProps } from './editFormContainer';
+import { InputNumberField } from '../../../shared/ui/form/InputNumberField';
 // @TODO
 interface FormValues {
 	[key: string]: any;
@@ -39,7 +40,10 @@ const InnerForm = ({
 								label="name"
 								required={true}
 								prefix={
-									<Icon type="info-circle-o" style={{ color: 'rgba(0,0,0,.25)' }} />
+									<Icon
+										type="info-circle-o"
+										style={{ color: 'rgba(0,0,0,.25)' }}
+									/>
 								}
 								name="name"
 								placeholder="Name"
@@ -50,12 +54,10 @@ const InnerForm = ({
 							<Field
 								label="Capacity of connected Hardware devices"
 								required={true}
-								prefix={
-									<Icon type="tablet" style={{ color: 'rgba(0,0,0,.25)' }} />
-								}
+								min={0}
 								name="connectHWCapacity"
 								placeholder="Capacity of connected Hardware devices"
-								component={InputField}
+								component={InputNumberField}
 							/>
 						</Col>
 						<Col xs={24} sm={24} md={12} lg={8}>
@@ -75,7 +77,6 @@ const InnerForm = ({
 								label="Address"
 								isTextArea={true}
 								row={4}
-								required={true}
 								name="address"
 								placeholder="Address"
 								component={InputField}
@@ -86,10 +87,6 @@ const InnerForm = ({
 								label="Description"
 								isTextArea={true}
 								row={4}
-								required={true}
-								// prefix={
-								// 	<Icon type="info-circle-o" style={{ color: 'rgba(0,0,0,.25)' }} />
-								// }
 								name="description"
 								placeholder="Description"
 								component={InputField}
@@ -122,7 +119,7 @@ const LocationForm = withFormik<PresenterProps, FormValues>({
 		return {
 			name: props.location ? props.location.name : '',
 			address: props.location ? props.location.address : '',
-			connectHWCapacity: props.location ? props.location.connectHWCapacity : 0,
+			connectHWCapacity: props.location ? props.location.connectHWCapacity : '',
 			ipaddress: props.location ? props.location.ipaddress : '',
 			description: props.location ? props.location.description : ''
 		};

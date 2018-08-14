@@ -9,6 +9,7 @@ import { Form as AntForm, Icon, Button, Row, Col, message, Modal } from 'antd';
 // import adminValidationSchema from './validationSchema';
 import { InputField } from '../../../shared/ui/form';
 import { PresenterProps } from './addFormContainer';
+import { InputNumberField } from '../../../shared/ui/form/InputNumberField';
 // @TODO
 interface FormValues {
 	[key: string]: any;
@@ -48,20 +49,21 @@ const InnerForm = ({
 				<Field
 					label="name"
 					required={true}
-					prefix={<Icon type="info-circle-o" style={{ color: 'rgba(0,0,0,.25)' }} />}
+					prefix={
+						<Icon type="info-circle-o" style={{ color: 'rgba(0,0,0,.25)' }} />
+					}
 					name="name"
 					placeholder="Name"
+					onPressEnter={handleSubmit}
 					component={InputField}
 				/>
 				<Field
 					label="Capacity of connected Hardware devices"
 					required={true}
-					prefix={
-						<Icon type="tablet" style={{ color: 'rgba(0,0,0,.25)' }} />
-					}
+					min={0}
 					name="connectHWCapacity"
 					placeholder="Capacity of connected Hardware devices"
-					component={InputField}
+					component={InputNumberField}
 				/>
 				<Field
 					label="IP Address"
@@ -69,24 +71,25 @@ const InnerForm = ({
 					prefix={<Icon type="global" style={{ color: 'rgba(0,0,0,.25)' }} />}
 					name="ipaddress"
 					placeholder="IP Address"
+					onPressEnter={handleSubmit}
 					component={InputField}
 				/>
 				<Field
 					label="Address"
 					isTextArea={true}
 					row={4}
-					required={true}
 					name="address"
 					placeholder="Address"
+					onPressEnter={handleSubmit}
 					component={InputField}
 				/>
 				<Field
 					label="Description"
 					isTextArea={true}
 					row={4}
-					required={true}
 					name="description"
 					placeholder="Description"
+					onPressEnter={handleSubmit}
 					component={InputField}
 				/>
 			</Form>
@@ -102,7 +105,7 @@ const LocationForm = withFormik<PresenterProps, FormValues>({
 		return {
 			name: '',
 			address: '',
-			connectHWCapacity: 0,
+			connectHWCapacity: '',
 			ipaddress: '',
 			description: ''
 		};
