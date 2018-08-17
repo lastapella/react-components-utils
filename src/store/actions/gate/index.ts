@@ -20,6 +20,7 @@ import * as requestTypes from '../../constants/requestTypes';
 import { setRequestInProcess } from '../request';
 import { RootState } from '../../configureStore';
 import { normalizeSnapshotList } from '../../utils/actions';
+import { GATES_REF } from '../../constants/firebaseDBRef';
 
 const database = firebaseApp.database();
 
@@ -37,7 +38,7 @@ export const addGate: ActionCreator<
 > = (locationKey: string, gate: IGate) => (dispatch, getState) => {
 	const requestType = requestTypes.GATES_ADD;
 	dispatch(setRequestInProcess(true, requestType));
-	return addRef(database, `gates/${locationKey}/`, gate).then(keyAdded => {
+	return addRef(database, `${GATES_REF}${locationKey}/`, gate).then(keyAdded => {
 		dispatch(
 			mergeLocationGates(
 				{ ...getState().gates[locationKey], [keyAdded]: { ...gate } },
@@ -54,7 +55,7 @@ export const fetchGate: ActionCreator<
 > = (locationKey: string, gateKey: string) => (dispatch, getState) => {
 	const requestType = requestTypes.GATES_FETCH;
 	dispatch(setRequestInProcess(true, requestType));
-	return readRef(database, `gates/${locationKey}/${gateKey}`).then(snapshot => {
+	return readRef(database, `${GATES_REF}${locationKey}/${gateKey}`).then(snapshot => {
 		const fetchedGate = { key: snapshot.key, ...snapshot.val() };
 		dispatch(
 			mergeLocationGates(
@@ -78,7 +79,7 @@ export const editGate: ActionCreator<
 ) => {
 	const requestType = requestTypes.GATES_EDIT;
 	dispatch(setRequestInProcess(true, requestType));
-	return updateRef(database, `gates/${locationKey}/${gateKey}`, gate).then(
+	return updateRef(database, `${GATES_REF}${locationKey}/${gateKey}`, gate).then(
 		() => {
 			dispatch(
 				mergeLocationGates(
@@ -97,7 +98,7 @@ export const deleteGate: ActionCreator<
 > = (locationKey: string, gateKey: string) => (dispatch, getState) => {
 	const requestType = requestTypes.GATES_DELETE;
 	dispatch(setRequestInProcess(true, requestType));
-	return removeRef(database, `gates/${locationKey}/${gateKey}`)
+	return removeRef(database, `${GATES_REF}${locationKey}/${gateKey}`)
 		.then(() => {
 			dispatch(removeGateFromList(locationKey, gateKey));
 			dispatch(setRequestInProcess(false, requestType));
@@ -117,14 +118,14 @@ export const fetchAllGate: ActionCreator<
 	const requestType = requestTypes.GATES_FETCHALL;
 	dispatch(setRequestInProcess(true, requestType));
 	if (locationKey) {
-		return readRef(database, `gates/${locationKey}/`).then(snapshot => {
+		return readRef(database, `${GATES_REF}${locationKey}/`).then(snapshot => {
 			const normalizedSnapshot = normalizeSnapshotList<IGateList>(snapshot);
 			dispatch(mergeLocationGates(normalizedSnapshot, locationKey));
 			dispatch(setRequestInProcess(false, requestType));
 			return normalizedSnapshot;
 		});
 	} else {
-		return readRef(database, `gates/`).then(snapshot => {
+		return readRef(database, `${GATES_REF}`).then(snapshot => {
 			const normalizedSnapshot = normalizeSnapshotList<IGateState>(snapshot);
 			dispatch(mergeGates(normalizedSnapshot));
 			dispatch(setRequestInProcess(false, requestType));

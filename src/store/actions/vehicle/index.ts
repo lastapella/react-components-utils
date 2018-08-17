@@ -18,9 +18,9 @@ import * as requestTypes from '../../constants/requestTypes';
 
 import { setRequestInProcess } from '../request';
 import { RootState } from '../../configureStore';
+import { VEHICLES_REF } from '../../constants/firebaseDBRef';
 
 const database = firebaseApp.database();
-
 
 export const mergeVehicles = (listVehicles: { [key: string]: IVehicle }) =>
 	action(MERGE_VEHICLES, { list: listVehicles });
@@ -33,7 +33,7 @@ export const addVehicle: ActionCreator<
 > = (vehicle: IVehicle) => (dispatch, getState) => {
 	const requestType = requestTypes.VEHICLES_ADD;
 	dispatch(setRequestInProcess(true, requestType));
-	return addRef(database, 'vehicles/', vehicle, vehicle.iunumber).then(
+	return addRef(database, `${VEHICLES_REF}`, vehicle, vehicle.iunumber).then(
 		keyAdded => {
 			dispatch(
 				mergeVehicles({ ...getState().vehicles, [keyAdded]: { ...vehicle } })
@@ -48,7 +48,7 @@ export const fetchVehicle: ActionCreator<
 > = (vehicleKey: string) => (dispatch, getState) => {
 	const requestType = `${requestTypes.VEHICLES_FETCH}/${vehicleKey}`;
 	dispatch(setRequestInProcess(true, requestType));
-	return readRef(database, 'vehicles/' + vehicleKey).then(snapshot => {
+	return readRef(database, `${VEHICLES_REF}` + vehicleKey).then(snapshot => {
 		const fetchedVehicle = {
 			[snapshot.key as string]: snapshot.val() as IVehicle
 		};
@@ -72,13 +72,15 @@ export const editVehicle: ActionCreator<
 > = (vehicleKey: string, vehicle: IVehicle) => (dispatch, getState) => {
 	const requestType = requestTypes.VEHICLES_EDIT;
 	dispatch(setRequestInProcess(true, requestType));
-	return updateRef(database, 'vehicles/' + vehicleKey, vehicle).then(() => {
-		dispatch(
-			mergeVehicles({ ...getState().vehicles, [vehicleKey]: { ...vehicle } })
-		);
-		dispatch(setRequestInProcess(false, requestType));
-		return vehicleKey;
-	});
+	return updateRef(database, `${VEHICLES_REF}` + vehicleKey, vehicle).then(
+		() => {
+			dispatch(
+				mergeVehicles({ ...getState().vehicles, [vehicleKey]: { ...vehicle } })
+			);
+			dispatch(setRequestInProcess(false, requestType));
+			return vehicleKey;
+		}
+	);
 };
 
 export const deleteVehicle: ActionCreator<
@@ -86,7 +88,7 @@ export const deleteVehicle: ActionCreator<
 > = (vehicleKey: string) => (dispatch, getState) => {
 	const requestType = requestTypes.VEHICLES_DELETE;
 	dispatch(setRequestInProcess(true, requestType));
-	return removeRef(database, 'vehicles/' + vehicleKey)
+	return removeRef(database, `${VEHICLES_REF}` + vehicleKey)
 		.then(() => {
 			dispatch(removeVehicleFromList(vehicleKey));
 			dispatch(setRequestInProcess(false, requestType));

@@ -19,6 +19,7 @@ import * as requestTypes from '../../constants/requestTypes';
 import { setRequestInProcess } from '../request';
 import { RootState } from '../../configureStore';
 import { normalizeSnapshotList } from '../../utils/actions';
+import { LOCATIONS_REF } from '../../constants/firebaseDBRef';
 
 const database = firebaseApp.database();
 export const mergeLocations = (listLocations: ILocationState) =>
@@ -32,8 +33,10 @@ export const addLocation: ActionCreator<
 > = (location: ILocation) => (dispatch, getState) => {
 	const requestType = requestTypes.LOCATIONS_ADD;
 	dispatch(setRequestInProcess(true, requestType));
-	return addRef(database, 'locations/', location).then(keyAdded => {
-		dispatch(mergeLocations({ ...getState().locations, [keyAdded]: { ...location } }));
+	return addRef(database, '${LOCATIONS_REF}', location).then(keyAdded => {
+		dispatch(
+			mergeLocations({ ...getState().locations, [keyAdded]: { ...location } })
+		);
 		dispatch(setRequestInProcess(false, requestType));
 		return keyAdded;
 	});
@@ -44,7 +47,7 @@ export const fetchLocation: ActionCreator<
 > = (locationKey: string) => (dispatch, getState) => {
 	const requestType = requestTypes.LOCATIONS_FETCH;
 	dispatch(setRequestInProcess(true, requestType));
-	return readRef(database, 'locations/' + locationKey).then(snapshot => {
+	return readRef(database, `${LOCATIONS_REF}` + locationKey).then(snapshot => {
 		const fetchedLocation = { key: snapshot.key, ...snapshot.val() };
 		dispatch(
 			mergeLocations({
@@ -62,11 +65,18 @@ export const editLocation: ActionCreator<
 > = (locationKey: string, location: ILocation) => (dispatch, getState) => {
 	const requestType = requestTypes.LOCATIONS_EDIT;
 	dispatch(setRequestInProcess(true, requestType));
-	return updateRef(database, 'locations/' + locationKey, location).then(() => {
-		dispatch(mergeLocations({ ...getState().locations, [locationKey]: { ...location } }));
-		dispatch(setRequestInProcess(false, requestType));
-		return locationKey;
-	});
+	return updateRef(database, `${LOCATIONS_REF}` + locationKey, location).then(
+		() => {
+			dispatch(
+				mergeLocations({
+					...getState().locations,
+					[locationKey]: { ...location }
+				})
+			);
+			dispatch(setRequestInProcess(false, requestType));
+			return locationKey;
+		}
+	);
 };
 
 export const deleteLocation: ActionCreator<
@@ -74,7 +84,7 @@ export const deleteLocation: ActionCreator<
 > = (locationKey: string) => (dispatch, getState) => {
 	const requestType = requestTypes.LOCATIONS_DELETE;
 	dispatch(setRequestInProcess(true, requestType));
-	return removeRef(database, 'locations/' + locationKey)
+	return removeRef(database, `${LOCATIONS_REF}` + locationKey)
 		.then(() => {
 			dispatch(removeLocationFromList(locationKey));
 			dispatch(setRequestInProcess(false, requestType));
@@ -93,7 +103,7 @@ export const fetchAllLocation: ActionCreator<
 > = () => (dispatch, getState) => {
 	const requestType = requestTypes.LOCATIONS_FETCHALL;
 	dispatch(setRequestInProcess(true, requestType));
-	return readRef(database, 'locations/').then(snapshot => {
+	return readRef(database, `${LOCATIONS_REF}`).then(snapshot => {
 		const normalizedSnapshot = normalizeSnapshotList<ILocationState>(snapshot);
 		dispatch(mergeLocations(normalizedSnapshot));
 		dispatch(setRequestInProcess(false, requestType));

@@ -20,6 +20,7 @@ import { setRequestInProcess } from '../request';
 import { RootState } from '../../configureStore';
 import { fetchVehicleList, updateVehicleDriversList } from '../vehicle';
 import { normalizeSnapshotList } from '../../utils/actions';
+import { DRIVERS_REF } from '../../constants/firebaseDBRef';
 
 const database = firebaseApp.database();
 export const mergeDrivers = (listDrivers: IDriverState) =>
@@ -33,7 +34,7 @@ export const addDriver: ActionCreator<
 > = (driver: IDriver) => (dispatch, getState) => {
 	const requestType = requestTypes.DRIVERS_ADD;
 	dispatch(setRequestInProcess(true, requestType));
-	return addRef(database, 'drivers/', driver).then(keyAdded => {
+	return addRef(database, `${DRIVERS_REF}`, driver).then(keyAdded => {
 		dispatch(
 			mergeDrivers({ ...getState().drivers, [keyAdded]: { ...driver } })
 		);
@@ -47,7 +48,7 @@ export const fetchDriver: ActionCreator<
 > = (driverKey: string) => (dispatch, getState) => {
 	const requestType = requestTypes.DRIVERS_FETCH;
 	dispatch(setRequestInProcess(true, requestType));
-	return readRef(database, 'drivers/' + driverKey).then(snapshot => {
+	return readRef(database, `${DRIVERS_REF}` + driverKey).then(snapshot => {
 		const fetchedDriver = { key: snapshot.key, ...snapshot.val() };
 		dispatch(
 			mergeDrivers({
@@ -66,7 +67,7 @@ export const editDriver: ActionCreator<
 > = (driverKey: string, driver: IDriver) => (dispatch, getState) => {
 	const requestType = requestTypes.DRIVERS_EDIT;
 	dispatch(setRequestInProcess(true, requestType));
-	return updateRef(database, 'drivers/' + driverKey, driver).then(() => {
+	return updateRef(database, `${DRIVERS_REF}` + driverKey, driver).then(() => {
 		dispatch(
 			mergeDrivers({ ...getState().drivers, [driverKey]: { ...driver } })
 		);
@@ -81,7 +82,7 @@ export const deleteDriver: ActionCreator<
 	const requestType = requestTypes.DRIVERS_DELETE;
 	dispatch(setRequestInProcess(true, requestType));
 	const keysVehicleListRemoved = getState().drivers[driverKey].vehicles || [];
-	return removeRef(database, 'drivers/' + driverKey)
+	return removeRef(database, `${DRIVERS_REF}` + driverKey)
 		.then(() => {
 			return Promise.all(
 				keysVehicleListRemoved.map(key =>
@@ -106,7 +107,7 @@ export const fetchAllDriver: ActionCreator<
 > = () => (dispatch, getState) => {
 	const requestType = requestTypes.DRIVERS_FETCHALL;
 	dispatch(setRequestInProcess(true, requestType));
-	return readRef(database, 'drivers/').then(snapshot => {
+	return readRef(database, `${DRIVERS_REF}`).then(snapshot => {
 		const normalizedSnapshot = normalizeSnapshotList<IDriverState>(snapshot);
 		dispatch(mergeDrivers(normalizedSnapshot));
 		dispatch(setRequestInProcess(false, requestType));
