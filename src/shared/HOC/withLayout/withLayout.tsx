@@ -1,7 +1,7 @@
 import { Layout } from 'antd';
 import * as React from 'react';
 import getComponentDisplayName from '../utils';
-import NavBar from '../../ui/navbar/navBarWithFirebase';
+import NavBar from '../../ui/navbar';
 const { Content, Footer } = Layout;
 import './withLayout.css';
 interface State {
