@@ -66,11 +66,11 @@ const InnerForm = ({
 					component={InputNumberField}
 				/>
 				<Field
-					label="IP Address"
+					label="IP Address or URL"
 					required={true}
 					prefix={<Icon type="global" style={{ color: 'rgba(0,0,0,.25)' }} />}
-					name="ipaddress"
-					placeholder="IP Address"
+					name="url"
+					placeholder="IP Address or URL"
 					onPressEnter={handleSubmit}
 					component={InputField}
 				/>
@@ -106,7 +106,7 @@ const LocationForm = withFormik<PresenterProps, FormValues>({
 			name: '',
 			address: '',
 			connectHWCapacity: '',
-			ipaddress: '',
+			url: '',
 			description: ''
 		};
 	},

@@ -1,29 +1,23 @@
 import * as React from 'react';
 // import { Redirect } from 'react-router';
 import { Spin } from 'antd';
-import withFirebaseAuth, {
-	InjectedProps
-} from '../../firebase/withFirebaseAuth';
+// import withFirebaseAuth, {
+// 	InjectedProps
+// } from '../../firebase/withFirebaseAuth';
+import { firebaseUIConfig, firebaseApp } from '../../lib/firebase/firebase';
 import { RouteComponentProps } from 'react-router';
 
 // import {Redirect } from 'react-router-dom';
 
-class LogoutComponent extends React.Component<
-	 InjectedProps & RouteComponentProps<any>,
-	any
-> {
-	public constructor(props: InjectedProps & RouteComponentProps<any>) {
+class LogoutComponent extends React.Component<RouteComponentProps<any>, any> {
+	public constructor(props: RouteComponentProps<any>) {
 		super(props);
 		this.state = {
 			signedOut: false
 		};
 	}
 	public async componentDidMount() {
-		await this.props.firebaseAuth.signOut();
-		setTimeout(() => {
-			// this.props.history.replace('/');
-			window.location.replace('/');
-		}, 1000);
+		firebaseApp.auth().signOut().then(()=> window.location.replace('/'));
 	}
 	public render() {
 		return (
@@ -41,4 +35,4 @@ class LogoutComponent extends React.Component<
 		);
 	}
 }
-export default withFirebaseAuth(LogoutComponent);
+export default LogoutComponent;

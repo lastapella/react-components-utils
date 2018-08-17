@@ -1,3 +1,5 @@
+To deploy on S3 Bucket: aws s3 sync build/ s3://YOUR_S3_DEPLOY_BUCKET_NAME
+
 This project was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app).
 
 Below you will find some information on how to perform common tasks.<br>

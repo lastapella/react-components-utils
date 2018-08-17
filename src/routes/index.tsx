@@ -7,7 +7,6 @@ import LoginComponent from '../modules/login';
 import LogoutComponent from '../modules/logout';
 import ProfileEditComponent from '../modules/user_profile_edit';
 import PrivateRoute from './privateRoute';
-import withFirebaseUser from '../firebase/withFirebaseUser';
 import ListUsersComponent from '../modules/parking_user_list';
 import ParkingUserFormComponent from '../modules/parking_user_edit';
 import AdminEditFormComponent from '../modules/administrator/edit';
@@ -17,6 +16,8 @@ import {
 	isAuthenticated as isAuthenticatedFunc,
 	isAuthenticatedAsAdmin as isAuthenticatedAsAdminFunc
 } from '../lib/firebase/authorizations';
+import { RootState } from '../store';
+import { connect } from 'react-redux';
 // import { RegisterConnector } from "../modules/register/RegisterConnector";
 // import { LoginConnector } from "../modules/login/LoginConnector";
 
@@ -124,19 +125,14 @@ const SwitchRoutes = ({
 );
 const SwitchRoutesWithLayout = withLayout(SwitchRoutes);
 
-interface WithUserProps extends React.Props<any> {
-	authUser: firebase.User;
-	currentUser: firebase.User;
-}
-
 interface RoutesState {
 	isAuthenticated: boolean;
 	isAuthenticatedAsAdmin: boolean;
 	isLoaded: boolean;
 }
 
-class Routes extends React.Component<WithUserProps, RoutesState> {
-	public constructor(props: WithUserProps) {
+class Routes extends React.Component<RoutesProps, RoutesState> {
+	public constructor(props: RoutesProps) {
 		super(props);
 		this.state = {
 			isAuthenticated: false,
@@ -145,7 +141,8 @@ class Routes extends React.Component<WithUserProps, RoutesState> {
 		};
 	}
 
-	public setAuthentications(authUser: firebase.User) {
+	public setAuthentications(authUser: firebase.User | null) {
+		
 		return Promise.all([
 			isAuthenticatedFunc(authUser),
 			isAuthenticatedAsAdminFunc(authUser)
@@ -198,4 +195,27 @@ const authorizationMessages = {
 };
 const getAuthorisationMessage = (auth: string) =>
 	authorizationMessages[auth] || authorizationMessages.default;
-export default withFirebaseUser()(Routes);
+
+type PropsFromDispatch = ReturnType<typeof mapDispatchToProps>;
+type PropsFromState = ReturnType<typeof mapStateToProps>;
+interface OwnProps {
+	[key: string]: any;
+}
+
+type RoutesProps = PropsFromDispatch & PropsFromState;
+
+const mapStateToProps = (state: RootState, props: any) => {
+	return {
+		authUser: state.user.user
+	};
+};
+const mapDispatchToProps = () =>
+	// dispatch: ThunkDispatch<RootState, void, Action>
+	{
+		return {};
+	};
+
+export default connect<PropsFromState, PropsFromDispatch, OwnProps>(
+	mapStateToProps,
+	mapDispatchToProps
+)(Routes);

@@ -67,7 +67,7 @@ const InnerForm = ({
 								prefix={
 									<Icon type="global" style={{ color: 'rgba(0,0,0,.25)' }} />
 								}
-								name="ipaddress"
+								name="url"
 								placeholder="IP Address/URL"
 								component={InputField}
 							/>
@@ -120,7 +120,7 @@ const LocationForm = withFormik<PresenterProps, FormValues>({
 			name: props.location ? props.location.name : '',
 			address: props.location ? props.location.address : '',
 			connectHWCapacity: props.location ? props.location.connectHWCapacity : '',
-			ipaddress: props.location ? props.location.ipaddress : '',
+			url: props.location ? props.location.url : '',
 			description: props.location ? props.location.description : ''
 		};
 	},

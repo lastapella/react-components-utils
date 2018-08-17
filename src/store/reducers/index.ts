@@ -5,6 +5,7 @@ import administrators from './administrators';
 import vehicles from './vehicle';
 import gates from './gate';
 import locations from './location';
+import user from './user'
 
 export default combineReducers({
 	request,
@@ -12,5 +13,6 @@ export default combineReducers({
 	administrators,
 	vehicles,
 	gates,
-	locations
+	locations,
+	user
 });

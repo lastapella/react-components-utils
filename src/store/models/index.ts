@@ -4,3 +4,4 @@ export * from './administratorState';
 export * from './vehicleState';
 export * from './gateState';
 export * from './locationState';
+export * from './userState';

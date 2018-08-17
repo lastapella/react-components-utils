@@ -1,24 +1,24 @@
 import * as React from 'react';
-import { InjectedProps } from '../../firebase/withFirebaseAuth';
+// import { InjectedProps } from '../../firebase/withFirebaseAuth';
+import {
+	firebaseUIConfig,
+	firebaseApp,
+} from '../../lib/firebase/firebase';
 // tslint:disable-next-line:no-var-requires
 const StyledFirebaseAuth = require('react-firebaseui/StyledFirebaseAuth')
 	.default;
 
 class SignInScreen extends React.Component<
-	React.Props<any> & InjectedProps,
+	React.Props<any>,
 	any
 > {
 	render() {
-		const { firebaseAuth, firebaseUIConfig } = this.props;
+		// const { firebaseAuth, firebaseUIConfig } = this.props;
 		return (
-			<div>
-				<h1>My App</h1>
-				<p>Please sign-in:</p>
 				<StyledFirebaseAuth
 					uiConfig={firebaseUIConfig}
-					firebaseAuth={firebaseAuth}
+					firebaseAuth={firebaseApp.auth()}
 				/>
-			</div>
 		);
 	}
 }

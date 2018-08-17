@@ -1,13 +1,13 @@
 import { firebaseApp } from './firebase';
 import { readRef } from './databaseUtils';
 
-export const isAuthenticated = async (authUser: firebase.User) => {
+export const isAuthenticated = async (authUser: firebase.User | null) => {
 	await authUser;
 	return !!authUser;
 };
 
 export const isAuthenticatedAsAdmin = (
-	authUser: firebase.User,
+	authUser: firebase.User | null,
 	role = null
 ) => {
 	return authUser
