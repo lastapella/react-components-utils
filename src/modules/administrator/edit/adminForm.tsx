@@ -37,6 +37,11 @@ interface FormValues {
 const formatError = (error: any) => {
 	return error.message ? error.message : 'an error occured';
 };
+const formatMapToList = (roleMap: { [key: string]: boolean }) =>
+	Object.keys(roleMap).filter(key => !!roleMap[key]);
+
+const formatListToMap = (roleList: string[]) =>
+	roleList.reduce((map, value) => ({ ...map, [value]: true }), {});
 
 const InnerForm = ({
 	values,
@@ -145,7 +150,7 @@ const AdminForm = withFormik<PresenterProps, FormValues>({
 			disabled: props.administrator ? props.administrator.disabled : false,
 			password: props.administrator ? props.administrator.password : '',
 			uid: props.administrator ? props.administrator.uid : '',
-			role: props.administrator ? props.administrator.role : []
+			role: props.administrator ? formatMapToList(props.administrator.role) : []
 		};
 	},
 	validationSchema: adminValidationSchema,
@@ -177,12 +182,13 @@ const AdminForm = withFormik<PresenterProps, FormValues>({
 			setErrors /* setValues, setStatus, and other goodies */
 		}
 	) => {
+		const formatedValue = { ...values, role: formatListToMap(values.role) };
 		if (administrator && administratorId) {
 			// EDIT MODE
-			editAdministrator(administratorId, values)
+			editAdministrator(administratorId, formatedValue)
 				.then(res => {
-						message.success('Administrator edited');
-						history.push('/administrators/list');
+					message.success('Administrator edited');
+					history.push('/administrators/list');
 				})
 				.catch(err => {
 					if (process.env.NODE_ENV !== 'production') {
@@ -193,11 +199,10 @@ const AdminForm = withFormik<PresenterProps, FormValues>({
 				});
 		} else {
 			// NEW MODE
-			addAdministrator(values)
+			addAdministrator(formatedValue)
 				.then(res => {
-
-						message.success('New administrator added');
-						history.push('/administrators/list');
+					message.success('New administrator added');
+					history.push('/administrators/list');
 				})
 				.catch(err => {
 					if (process.env.NODE_ENV !== 'production') {

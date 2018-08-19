@@ -13,6 +13,7 @@ import {
 	readRef,
 	removeRef
 } from '../../../lib/firebase/databaseUtils';
+import firebaseFunctions from '../../../lib/firebase/cloudFunctionsUtils';
 import { firebaseApp } from '../../../lib/firebase/firebase';
 import { IGateState, IGate, IGateList } from '../../models/gateState';
 
@@ -38,37 +39,18 @@ export const addGate: ActionCreator<
 > = (locationKey: string, gate: IGate) => (dispatch, getState) => {
 	const requestType = requestTypes.GATES_ADD;
 	dispatch(setRequestInProcess(true, requestType));
-	return addRef(database, `${GATES_REF}${locationKey}/`, gate).then(keyAdded => {
-		dispatch(
-			mergeLocationGates(
-				{ ...getState().gates[locationKey], [keyAdded]: { ...gate } },
-				locationKey
-			)
-		);
-		dispatch(setRequestInProcess(false, requestType));
-		return keyAdded;
-	});
-};
-
-export const fetchGate: ActionCreator<
-	ThunkAction<Promise<any>, RootState, any, Action>
-> = (locationKey: string, gateKey: string) => (dispatch, getState) => {
-	const requestType = requestTypes.GATES_FETCH;
-	dispatch(setRequestInProcess(true, requestType));
-	return readRef(database, `${GATES_REF}${locationKey}/${gateKey}`).then(snapshot => {
-		const fetchedGate = { key: snapshot.key, ...snapshot.val() };
-		dispatch(
-			mergeLocationGates(
-				{
-					...getState().gates[locationKey],
-					[snapshot.key as string]: snapshot.val()
-				},
-				locationKey
-			)
-		);
-		dispatch(setRequestInProcess(false, requestType));
-		return fetchedGate;
-	});
+	return addRef(database, `${GATES_REF}${locationKey}/`, gate).then(
+		keyAdded => {
+			dispatch(
+				mergeLocationGates(
+					{ ...getState().gates[locationKey], [keyAdded]: { ...gate } },
+					locationKey
+				)
+			);
+			dispatch(setRequestInProcess(false, requestType));
+			return keyAdded;
+		}
+	);
 };
 
 export const editGate: ActionCreator<
@@ -79,18 +61,20 @@ export const editGate: ActionCreator<
 ) => {
 	const requestType = requestTypes.GATES_EDIT;
 	dispatch(setRequestInProcess(true, requestType));
-	return updateRef(database, `${GATES_REF}${locationKey}/${gateKey}`, gate).then(
-		() => {
-			dispatch(
-				mergeLocationGates(
-					{ ...getState().gates[locationKey], [gateKey]: { ...gate } },
-					locationKey
-				)
-			);
-			dispatch(setRequestInProcess(false, requestType));
-			return gateKey;
-		}
-	);
+	return updateRef(
+		database,
+		`${GATES_REF}${locationKey}/${gateKey}`,
+		gate
+	).then(() => {
+		dispatch(
+			mergeLocationGates(
+				{ ...getState().gates[locationKey], [gateKey]: { ...gate } },
+				locationKey
+			)
+		);
+		dispatch(setRequestInProcess(false, requestType));
+		return gateKey;
+	});
 };
 
 export const deleteGate: ActionCreator<
@@ -110,6 +94,29 @@ export const deleteGate: ActionCreator<
 			}
 			return false;
 		});
+};
+
+export const fetchGate: ActionCreator<
+	ThunkAction<Promise<any>, RootState, any, Action>
+> = (locationKey: string, gateKey: string) => (dispatch, getState) => {
+	const requestType = requestTypes.GATES_FETCH;
+	dispatch(setRequestInProcess(true, requestType));
+	return readRef(database, `${GATES_REF}${locationKey}/${gateKey}`).then(
+		snapshot => {
+			const fetchedGate = { key: snapshot.key, ...snapshot.val() };
+			dispatch(
+				mergeLocationGates(
+					{
+						...getState().gates[locationKey],
+						[snapshot.key as string]: snapshot.val()
+					},
+					locationKey
+				)
+			);
+			dispatch(setRequestInProcess(false, requestType));
+			return fetchedGate;
+		}
+	);
 };
 
 export const fetchAllGate: ActionCreator<
@@ -132,4 +139,12 @@ export const fetchAllGate: ActionCreator<
 			return normalizedSnapshot;
 		});
 	}
+};
+
+export const updateMessageFromHardware: ActionCreator<
+	ThunkAction<Promise<any>, RootState, any, Action>
+> = (locationKey: string, gateKey: string) => (dispatch, getState) => {
+	const requestType = requestTypes.GATES_UPDATE_LCD_MESSAGE;
+	dispatch(setRequestInProcess(true, requestType));
+	return firebaseFunctions.refreshLCDMessage({ locationKey, gateKey });
 };

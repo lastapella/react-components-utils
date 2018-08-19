@@ -4,7 +4,11 @@ import { connect } from 'react-redux';
 import { Action } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 
-import { editGate } from '../../../store/actions';
+import {
+	editGate,
+	fetchGate,
+	updateMessageFromHardware
+} from '../../../store/actions';
 import { RootState } from '../../../store';
 import EditForm from './formEdit';
 import { IGate } from '../../../store/models';
@@ -36,7 +40,11 @@ const mapDispatchToProps = (
 ) => {
 	return {
 		editGate: (locationKey: string, gateKey: string, gateValues: IGate) =>
-			dispatch(editGate(locationKey, gateKey, gateValues))
+			dispatch(editGate(locationKey, gateKey, gateValues)),
+		updateMessageFromHardware: (locationKey: string, gateKey: string) =>
+			dispatch(updateMessageFromHardware(locationKey, gateKey)),
+		fetchGate: (locationKey: string, gateKey: string) =>
+			dispatch(fetchGate(locationKey, gateKey))
 	};
 };
 

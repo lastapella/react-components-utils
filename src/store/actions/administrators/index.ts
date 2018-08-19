@@ -5,8 +5,7 @@ import {
 } from '../../constants/actionTypes';
 import { action } from 'typesafe-actions';
 import { Dispatch, ActionCreator, Action } from 'redux';
-import { firebaseApp } from '../../../lib/firebase/firebase';
-import getFunctions from '../../../lib/firebase/cloudFunctionsUtils';
+import firebaseFunctions from '../../../lib/firebase/cloudFunctionsUtils';
 import {
 	IAdministratorState,
 	IAdministrator
@@ -16,7 +15,6 @@ import * as requestTypes from '../../constants/requestTypes';
 import { setRequestInProcess } from '../request';
 import { RootState } from '../../configureStore';
 
-const firebaseFunctions = getFunctions(firebaseApp.functions());
 
 // @TODO DO THIS WITH normalizr https://www.npmjs.com/package/normalizr
 const normalizeAdministratorsList = (snapshot: any[]) => {

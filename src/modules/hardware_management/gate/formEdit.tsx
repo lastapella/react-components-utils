@@ -10,6 +10,7 @@ import { Form as AntForm, Icon, Button, Row, Col, message } from 'antd';
 import { InputField, SelectField } from '../../../shared/ui/form';
 import { PresenterProps } from './formEditContainer';
 import { InputNumberField } from '../../../shared/ui/form/InputNumberField';
+import LCDMessageSuffix from './lcdMessageFieldSuffix';
 import HelperText from '../../../shared/ui/form/HelperText';
 import gateValidationSchema from './validationSchema';
 // @TODO
@@ -27,7 +28,11 @@ const InnerForm = ({
 	setFieldTouched,
 	handleSubmit,
 	dirty,
-	isSubmitting
+	isSubmitting,
+	gateKey,
+	locationKey,
+	updateMessageFromHardware,
+	fetchGate
 }: FormikProps<FormValues> & PresenterProps) => {
 	return (
 		<Form
@@ -61,6 +66,16 @@ const InnerForm = ({
 								label="LCD Message"
 								name="message"
 								placeholder="LCD message"
+								suffix={
+									<LCDMessageSuffix
+										{...{
+											gateKey,
+											locationKey,
+											updateMessageFromHardware,
+											fetchGate
+										}}
+									/>
+								}
 								component={InputField}
 							/>
 						</Col>
