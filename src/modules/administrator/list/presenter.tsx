@@ -55,7 +55,6 @@ export default ({
 	return (
 		<React.Fragment>
 			<Table
-				style={{ overflowX: 'auto' }}
 				dataSource={dataSource}
 				columns={columns}
 				loading={loading}

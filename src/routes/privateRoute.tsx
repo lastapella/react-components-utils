@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Route, Redirect, RouteProps } from 'react-router-dom';
 import { message } from 'antd';
 
-interface PrivateRouteProps {
+interface PrivateRouteProps  {
 	component: React.ComponentType<any>;
 	messageText: string;
 	redirectPath?: string;

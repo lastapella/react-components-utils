@@ -58,9 +58,26 @@ export const linksLeftInit: LinkType[] = [
 	},
 	{
 		to: '/hardware',
-		label: 'Hardware management',
+		label: 'Hardware',
 		key: 'hardware',
-		icon: 'tool'
+		icon: 'tool',
+		children: [
+			{
+				to: '/hardware/management',
+				label: 'Management',
+				key: 'hardware:management'
+			},
+			{
+				to: '/hardware/events',
+				label: 'Events',
+				key: 'hardware:events'
+			},
+			{
+				to: '/hardware/data',
+				label: 'Data',
+				key: 'hardware:data'
+			}
+		]
 	}
 ];
 export const linksRightNoUser = [

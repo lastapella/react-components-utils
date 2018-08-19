@@ -11,7 +11,8 @@ import ListUsersComponent from '../modules/parking_user_list';
 import ParkingUserFormComponent from '../modules/parking_user_edit';
 import AdminEditFormComponent from '../modules/administrator/edit';
 import AdminEditListComponent from '../modules/administrator/list';
-import HardwareTabView from '../modules/hardware_management';
+import HardwareManagementTabView from '../modules/hardware_management';
+import EventTabView from '../modules/events';
 import {
 	isAuthenticated as isAuthenticatedFunc,
 	isAuthenticatedAsAdmin as isAuthenticatedAsAdminFunc
@@ -38,6 +39,9 @@ import { connect } from 'react-redux';
 // 		<h3>Topic</h3>
 // 	</div>
 // );
+
+const InProgress = () => <>IN PROGRESS</>;
+
 const SwitchRoutes = ({
 	isAuthenticated,
 	isAuthenticatedAsAdmin
@@ -101,8 +105,22 @@ const SwitchRoutes = ({
 				isAuthorized={isAuthenticatedAsAdmin}
 				messageText={getAuthorisationMessage('isAuthenticatedAsAdmin')}
 				exact={true}
-				path="/hardware"
-				component={HardwareTabView}
+				path="/hardware/management"
+				component={HardwareManagementTabView}
+			/>
+			<PrivateRoute
+				isAuthorized={isAuthenticatedAsAdmin}
+				messageText={getAuthorisationMessage('isAuthenticatedAsAdmin')}
+				exact={true}
+				path="/hardware/events"
+				component={EventTabView}
+			/>
+			<PrivateRoute
+				isAuthorized={isAuthenticatedAsAdmin}
+				messageText={getAuthorisationMessage('isAuthenticatedAsAdmin')}
+				exact={true}
+				path="/hardware/data"
+				component={InProgress}
 			/>
 
 			<PrivateRoute
@@ -142,7 +160,6 @@ class Routes extends React.Component<RoutesProps, RoutesState> {
 	}
 
 	public setAuthentications(authUser: firebase.User | null) {
-		
 		return Promise.all([
 			isAuthenticatedFunc(authUser),
 			isAuthenticatedAsAdminFunc(authUser)

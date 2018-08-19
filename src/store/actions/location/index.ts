@@ -33,7 +33,7 @@ export const addLocation: ActionCreator<
 > = (location: ILocation) => (dispatch, getState) => {
 	const requestType = requestTypes.LOCATIONS_ADD;
 	dispatch(setRequestInProcess(true, requestType));
-	return addRef(database, '${LOCATIONS_REF}', location).then(keyAdded => {
+	return addRef(database, `${LOCATIONS_REF}`, location).then(keyAdded => {
 		dispatch(
 			mergeLocations({ ...getState().locations, [keyAdded]: { ...location } })
 		);
@@ -47,7 +47,7 @@ export const fetchLocation: ActionCreator<
 > = (locationKey: string) => (dispatch, getState) => {
 	const requestType = requestTypes.LOCATIONS_FETCH;
 	dispatch(setRequestInProcess(true, requestType));
-	return readRef(database, `${LOCATIONS_REF}` + locationKey).then(snapshot => {
+	return readRef(database, `${LOCATIONS_REF}${locationKey}`).then(snapshot => {
 		const fetchedLocation = { key: snapshot.key, ...snapshot.val() };
 		dispatch(
 			mergeLocations({
@@ -65,7 +65,7 @@ export const editLocation: ActionCreator<
 > = (locationKey: string, location: ILocation) => (dispatch, getState) => {
 	const requestType = requestTypes.LOCATIONS_EDIT;
 	dispatch(setRequestInProcess(true, requestType));
-	return updateRef(database, `${LOCATIONS_REF}` + locationKey, location).then(
+	return updateRef(database, `${LOCATIONS_REF}${locationKey}`, location).then(
 		() => {
 			dispatch(
 				mergeLocations({
