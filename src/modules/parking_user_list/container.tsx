@@ -6,7 +6,7 @@ import { RootState } from '../../store';
 import {
 	fetchAllDriver,
 	deleteDriver,
-	syncVehicles
+	fetchAllVehicles
 } from '../../store/actions';
 import ListComponent from './listContainer';
 
@@ -29,7 +29,7 @@ const mapDispatchToProps = (
 	return {
 		deleteDriver: (driverKey: string) => dispatch(deleteDriver(driverKey)),
 		fetchAllDriver: () => dispatch(fetchAllDriver()),
-		syncVehicles: () => dispatch(syncVehicles())
+		fetchAllVehicles: () => dispatch(fetchAllVehicles())
 	};
 };
 

@@ -146,5 +146,7 @@ export const updateMessageFromHardware: ActionCreator<
 > = (locationKey: string, gateKey: string) => (dispatch, getState) => {
 	const requestType = requestTypes.GATES_UPDATE_LCD_MESSAGE;
 	dispatch(setRequestInProcess(true, requestType));
-	return firebaseFunctions.refreshLCDMessage({ locationKey, gateKey });
+	return firebaseFunctions
+		.refreshLCDMessage({ locationKey, gateKey })
+		.then(() => dispatch(setRequestInProcess(true, requestType)));
 };

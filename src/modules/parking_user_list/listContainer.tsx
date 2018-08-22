@@ -15,7 +15,7 @@ class ListUserContainer extends React.Component<ListContainerProps, any> {
 	}
 	public fetchAllDrivers = () => {
 		this.props.fetchAllDriver().then(() => {
-			this.props.syncVehicles().then(() => {
+			this.props.fetchAllVehicles().then(() => {
 				this.setState(() => ({ isLoaded: true }));
 			});
 		});

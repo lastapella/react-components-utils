@@ -6,10 +6,10 @@ import { Row, Col } from 'antd';
 
 import { RootState } from '../../store';
 import { IGateState } from '../../store/models';
-import { fetchAllGate } from '../../store/actions';
-import ListEvent from './listEventContainer';
+import { fetchAllGate, fetchAllVehicles } from '../../store/actions';
+import ListData from './listDataContainer';
 
-class ListsEventContainer extends React.Component<ContainerProps, any> {
+class ListsDataContainer extends React.Component<ContainerProps, any> {
 	public constructor(props: ContainerProps) {
 		super(props);
 		this.state = {
@@ -23,7 +23,8 @@ class ListsEventContainer extends React.Component<ContainerProps, any> {
 			this.setState(() => ({
 				isLoaded: true
 			}));
-		});
+    });
+    this.props.fetchAllVehicles();
 	}
 
 	public render() {
@@ -33,7 +34,7 @@ class ListsEventContainer extends React.Component<ContainerProps, any> {
 			<Row type="flex" gutter={8}>
 				{Object.keys(gates).map((gateKey, index) => (
 					<Col key={index} xs={24} sm={24} md={24} lg={12}>
-						<ListEvent {...{ gateKey, locationKey }} />
+						<ListData {...{ gateKey, locationKey }} />
 					</Col>
 				))}
 			</Row>
@@ -65,11 +66,12 @@ const mapDispatchToProps = (
 	dispatch: ThunkDispatch<RootState, void, Action>
 ) => {
 	return {
-		fetchAllGates: (locationKey: string) => dispatch(fetchAllGate(locationKey))
+    fetchAllGates: (locationKey: string) => dispatch(fetchAllGate(locationKey)),
+    fetchAllVehicles: () => dispatch(fetchAllVehicles())
 	};
 };
 
 export default connect<PropsFromState, PropsFromDispatch, OwnProps>(
 	mapStateToProps,
 	mapDispatchToProps
-)(ListsEventContainer);
+)(ListsDataContainer);

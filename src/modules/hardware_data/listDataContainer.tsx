@@ -4,11 +4,12 @@ import { ThunkDispatch } from 'redux-thunk';
 import { connect } from 'react-redux';
 
 import { RootState } from '../../store';
-import { IGateState } from '../../store/models';
+import { IGateState, IVehicleState } from '../../store/models';
 
-import ListEvent from './listEvent';
+import ListData from './listData';
+import { fetchHardwareDataPerGate } from '../../store/actions';
 
-class ListEventContainer extends React.Component<ContainerProps, any> {
+class ListDataContainer extends React.Component<ContainerProps, any> {
 	public constructor(props: ContainerProps) {
 		super(props);
 		this.state = {
@@ -18,7 +19,7 @@ class ListEventContainer extends React.Component<ContainerProps, any> {
 
 	public componentDidMount() {
 		// fetch all gates
-		this.props.fetchEvents(this.props.gateKey).then(() => {
+		this.props.fetchData(this.props.gateKey).then(() => {
 			this.setState(() => ({
 				isLoaded: true
 			}));
@@ -27,10 +28,26 @@ class ListEventContainer extends React.Component<ContainerProps, any> {
 
 	public render() {
 		const { isLoaded } = this.state;
-		const { locationKey, gate, events } = this.props;
-		return <ListEvent {...{ gate, dataSource: events, loading: !isLoaded }} />;
+		const { locationKey, gate, data } = this.props;
+		return <ListData {...{ gate, dataSource: data, loading: !isLoaded }} />;
 	}
 }
+
+const formatVehicleData = (vehicleMap: object, vehicleList: IVehicleState) => {
+	return Object.keys(vehicleMap)
+		.map(key => {
+			return {
+				type: 'IU',
+				data: key,
+				driverCount:
+					vehicleList[key] && vehicleList[key].drivers
+						? vehicleList[key].drivers.length
+						: 0,
+				...vehicleMap[key]
+			};
+		})
+		.filter(vehicle => !vehicle.removed);
+};
 
 type PropsFromDispatch = ReturnType<typeof mapDispatchToProps>;
 type PropsFromState = ReturnType<typeof mapStateToProps>;
@@ -48,10 +65,16 @@ export type PresenterProps = PropsFromDispatch & {
 };
 
 const mapStateToProps = (state: RootState, props: OwnProps) => {
-	console.log(props.gateKey);
+	const vehicleList = state.hardwareData[props.gateKey]
+		? formatVehicleData(
+				state.hardwareData[props.gateKey].vehicles_list,
+				state.vehicles
+		  )
+		: [];
+
 	return {
 		gate: state.gates[props.locationKey][props.gateKey] || {},
-		events: []
+		data: vehicleList
 		// locationKey: props.locationKey
 	};
 };
@@ -60,12 +83,11 @@ const mapDispatchToProps = (
 ) => {
 	return {
 		// fetchAllGates: (locationKey: string) => dispatch(fetchAllGate(locationKey))
-		fetchEvents: (gateKey: string) =>
-			Promise.resolve(console.log('FETCH EVENT for gate : ' + gateKey))
+		fetchData: (gateKey: string) => dispatch(fetchHardwareDataPerGate(gateKey))
 	};
 };
 
 export default connect<PropsFromState, PropsFromDispatch, OwnProps>(
 	mapStateToProps,
 	mapDispatchToProps
-)(ListEventContainer);
+)(ListDataContainer);

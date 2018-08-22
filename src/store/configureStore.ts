@@ -10,7 +10,9 @@ import {
 	IVehicleState,
 	IGateState,
 	ILocationState,
-	IUserState
+	IUserState,
+	IEventState,
+	IHardwareData
 } from './models';
 import rootReducer from './reducers';
 
@@ -22,6 +24,8 @@ export interface RootState {
 	gates: IGateState;
 	locations: ILocationState;
 	user: IUserState;
+	events: IEventState;
+	hardwareData: IHardwareData;
 }
 
 let enhancers: any;

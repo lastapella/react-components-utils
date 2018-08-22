@@ -1,11 +1,10 @@
 import * as React from 'react';
-import { Table, Divider,  Button, Row } from 'antd';
-
+import { Table, Divider, Button, Row, Tag } from 'antd';
 
 export default ({
 	gate,
 	dataSource,
-	loading,
+	loading
 }: {
 	gate: any;
 	dataSource: any;
@@ -18,22 +17,30 @@ export default ({
 			key: 'type'
 		},
 		{
-			title: 'Action',
-			dataIndex: 'action',
-			key: 'action'
+			title: 'Data',
+			dataIndex: 'data',
+			key: 'data'
 		},
 		{
-			title: 'Date',
-			dataIndex: 'datetime',
-			key: 'datetime'
+			title: 'Driver Count',
+			dataIndex: 'driverCount',
+			key: 'driverCount'
+		},
+		{
+			title: 'Sync with hardware',
+			dataIndex: 'sendToHardware',
+			key: 'sendToHardware',
+			render: (record: any) =>
+				record.sendToHardware ? (
+					<Tag color="green">Yes</Tag>
+				) : (
+					<Tag color="red">No</Tag>
+				)
 		}
 	];
 	return (
 		<React.Fragment>
 			<Divider orientation="left">{gate.name}</Divider>
-			<Row type="flex" justify="end">
-				<Button icon="reload">Refresh with latest events</Button>
-			</Row>
 			<Table
 				dataSource={dataSource}
 				columns={columns}

@@ -5,3 +5,5 @@ export * from './vehicle';
 export * from './gate';
 export * from './location';
 export * from './user';
+export * from './event';
+export * from './hardwareData';

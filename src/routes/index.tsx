@@ -13,6 +13,7 @@ import AdminEditFormComponent from '../modules/administrator/edit';
 import AdminEditListComponent from '../modules/administrator/list';
 import HardwareManagementTabView from '../modules/hardware_management';
 import EventTabView from '../modules/events';
+import DataTabView from '../modules/hardware_data';
 import {
 	isAuthenticated as isAuthenticatedFunc,
 	isAuthenticatedAsAdmin as isAuthenticatedAsAdminFunc
@@ -120,7 +121,7 @@ const SwitchRoutes = ({
 				messageText={getAuthorisationMessage('isAuthenticatedAsAdmin')}
 				exact={true}
 				path="/hardware/data"
-				component={InProgress}
+				component={DataTabView}
 			/>
 
 			<PrivateRoute
@@ -130,7 +131,6 @@ const SwitchRoutes = ({
 				path="/profile"
 				component={ProfileEditComponent}
 			/>
-			{/*  tslint:disable-next-line:jsx-no-lambda */}
 			<PrivateRoute
 				isAuthorized={isAuthenticated}
 				messageText={getAuthorisationMessage('isAuthenticated')}

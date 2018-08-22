@@ -19,6 +19,7 @@ import * as requestTypes from '../../constants/requestTypes';
 import { setRequestInProcess } from '../request';
 import { RootState } from '../../configureStore';
 import { VEHICLES_REF } from '../../constants/firebaseDBRef';
+import { normalizeSnapshotList } from '../../utils/actions';
 
 const database = firebaseApp.database();
 
@@ -51,10 +52,6 @@ export const fetchVehicle: ActionCreator<
 	return readRef(database, `${VEHICLES_REF}` + vehicleKey).then(snapshot => {
 		const fetchedVehicle = {
 			[snapshot.key as string]: snapshot.val() as IVehicle
-		};
-		const test = {
-			...getState().vehicles,
-			...fetchedVehicle
 		};
 		dispatch(
 			mergeVehicles({
@@ -176,21 +173,16 @@ export const updateVehicleDriversList: ActionCreator<
 	}
 };
 
-export const syncVehicles: ActionCreator<
+export const fetchAllVehicles: ActionCreator<
 	ThunkAction<Promise<any>, RootState, any, Action>
 > = () => (dispatch, getState) => {
 	const driverState = getState().drivers;
-	const requestType = requestTypes.VEHICLES_FETCHLIST;
+	const requestType = requestTypes.VEHICLES_FETCHALL;
 	dispatch(setRequestInProcess(true, requestType));
-	return Promise.all(
-		Object.keys(driverState).map(driverKey => {
-			return driverState[driverKey].vehicles
-				? dispatch(fetchVehicleList(driverState[driverKey].vehicles))
-				: Promise.resolve([]);
-		})
-	).then(values => {
-		dispatch(setRequestInProcess(true, requestType));
-		return values;
+	return readRef(database, `${VEHICLES_REF}`).then(snapshot => {
+		const normalizedSnapshot = normalizeSnapshotList<IVehicleState>(snapshot);
+		dispatch(mergeVehicles(normalizedSnapshot));
+		dispatch(setRequestInProcess(false, requestType));
 	});
 	// const vehicleKeyList = getState().drivers
 };
